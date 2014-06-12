@@ -6,6 +6,7 @@
 package com.ar.vuforiatemplate.core;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
@@ -31,6 +32,7 @@ import android.widget.Switch;
 
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARObjectRender;
+import com.ar.vuforiatemplate.shaders.OpenGLShaders;
 import com.ar.vuforiatemplate.utils.LoadingDialogHandler;
 import com.ar.vuforiatemplate.utils.SampleApplicationControl;
 import com.ar.vuforiatemplate.utils.SampleApplicationException;
@@ -535,9 +537,8 @@ public abstract class ActivityImageTargets extends Activity implements
 		_arObjectsMediator.initRendering();
 	}
 
-	@Override
-	public void compileShaders() {
-		_arObjectsMediator.compileShaders();
+	public void compileShaders(Map<String, OpenGLShaders> aShaders) {
+		_arObjectsMediator.compileShaders(aShaders);
 	}
 
 	@Override

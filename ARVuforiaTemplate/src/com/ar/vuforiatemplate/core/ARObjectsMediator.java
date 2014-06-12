@@ -1,6 +1,7 @@
 package com.ar.vuforiatemplate.core;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,11 +11,7 @@ import android.util.Log;
 
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARObjectRender;
-import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
-import com.ar.vuforiatemplate.shaders.NormalsShaders;
-import com.ar.vuforiatemplate.shaders.SimpleShaders;
-import com.ar.vuforiatemplate.shaders.TransparentShaders;
-import com.ar.vuforiatemplate.shaders.VideoShaders;
+import com.ar.vuforiatemplate.shaders.OpenGLShaders;
 import com.ar.vuforiatemplate.utils.Texture;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.qualcomm.vuforia.TrackableResult;
@@ -55,12 +52,11 @@ public class ARObjectsMediator {
 		arObject.onTrackingRenderUpdate(aResult);
 	}
 
-	public void compileShaders() {
-		_arModule.compileShader("simple", new SimpleShaders());
-		_arModule.compileShader("simple_normal", new NormalsShaders());
-		_arModule.compileShader("transparent", new TransparentShaders());
-		_arModule.compileShader("hue_animation", new HueAnimationShaders());
-		_arModule.compileShader("video", new VideoShaders());
+	public void compileShaders(Map<String, OpenGLShaders> aShaders) {
+		for (String shaderName : aShaders.keySet()) {
+			_arModule.compileShader( shaderName, aShaders.get(shaderName));
+		}
+
 	}
 
 	public ARObjectRender getRenderObject(String aTargetName,

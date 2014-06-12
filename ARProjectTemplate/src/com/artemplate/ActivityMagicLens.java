@@ -2,7 +2,9 @@ package com.artemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,8 @@ import com.ar.vuforiatemplate.core.ActivityImageTargets;
 import com.ar.vuforiatemplate.core.ActivityTargetsEvents;
 import com.ar.vuforiatemplate.meshobjects.TextureObject;
 import com.ar.vuforiatemplate.objects.ARTexture;
+import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
+import com.ar.vuforiatemplate.shaders.OpenGLShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
@@ -118,6 +122,18 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 	@Override
 	public void onTargetTrack(Trackable arg0) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void compileShaders() {
+		Map<String, OpenGLShaders> shaders = new TreeMap<String, OpenGLShaders>();
+//		shaders.put("simple", new SimpleShaders());
+//		shaders.put("simple_normal", new NormalsShaders());
+//		shaders.put("transparent", new TransparentShaders());
+		shaders.put("hue_animation", new HueAnimationShaders());
+//		shaders.put("video", new VideoShaders());
+
+		_arObjectsMediator.compileShaders(shaders);
 	}
 
 }

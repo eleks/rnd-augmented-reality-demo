@@ -3,7 +3,9 @@ package com.medicinemagazine;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,9 @@ import com.ar.vuforiatemplate.meshobjects.TextureObject;
 import com.ar.vuforiatemplate.meshobjects.WavefrontModelObject;
 import com.ar.vuforiatemplate.objects.AR3DObject;
 import com.ar.vuforiatemplate.objects.ARVideo;
+import com.ar.vuforiatemplate.shaders.NormalsShaders;
+import com.ar.vuforiatemplate.shaders.OpenGLShaders;
+import com.ar.vuforiatemplate.shaders.VideoShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
@@ -138,6 +143,15 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 
 	@Override
 	public void onTargetTrack(Trackable arg0) {
+	}
+	
+	@Override
+	public void compileShaders() {
+		Map<String, OpenGLShaders> shaders = new TreeMap<String, OpenGLShaders>();
+		shaders.put("simple_normal", new NormalsShaders());
+		shaders.put("video", new VideoShaders());
+
+		_arObjectsMediator.compileShaders(shaders);
 	}
 
 }
