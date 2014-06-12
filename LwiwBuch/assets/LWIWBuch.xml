@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="CoverLast" size="475.000000 777.866943" />
+    <ImageTarget name="MapZolochiv" size="1359.000000 1320.000000" />
+    <ImageTarget name="BoimKapelle" size="1424.000000 2148.000000" />
+    <ImageTarget name="RynokSq" size="1176.000000 1176.000000" />
+    <ImageTarget name="SvobodyAve" size="1396.000000 1396.000000" />
+    <ImageTarget name="LevDanylovych" size="1500.000000 2024.000000" />
+    <ImageTarget name="LvivMap" size="1168.000000 1032.000000" />
+    <ImageTarget name="LWIWBuchLogo" size="1314.000000 658.000000" />
+    <ImageTarget name="cover" size="230.000000 388.000000" />
+  </Tracking>
+</QCARConfig>

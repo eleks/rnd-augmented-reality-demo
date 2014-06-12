@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Medecine Magazine</string>
+    <string name="app_description">AR for Medecine Magazine</string>
+
+    <string name="button_extended_tracking">Stop extended tracking</string>
+
+    <string name="splash_screen_description">Vuforia Splash</string>
+    
+</resources>

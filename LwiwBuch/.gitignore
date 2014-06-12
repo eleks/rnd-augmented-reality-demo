@@ -1,0 +1,8 @@
+# Android
+.classpath
+.externalToolBuilders/
+.project
+bin/
+gen/
+project.properties
+.settings/
