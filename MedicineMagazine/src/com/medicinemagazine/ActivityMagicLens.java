@@ -60,10 +60,10 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		try {
 			WavefrontModelObject wavefrontObject = new WavefrontModelObject();
 			wavefrontObject.loadModel(getResources().getAssets(),
-					"obj/skeleton_low.obj");
+					"obj/Female_body_medium.obj");
 			arModule.addMeshObject("skeleton", wavefrontObject);
 		} catch (IOException e) {
-			Log.e(LOGTAG, "Unable to load skeleton_low.obj");
+			Log.e(LOGTAG, "Unable to load Female_body_medium.obj");
 		}
 
 		// Video

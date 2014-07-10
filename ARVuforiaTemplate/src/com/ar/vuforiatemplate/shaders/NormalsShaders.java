@@ -68,8 +68,8 @@ public class NormalsShaders implements OpenGLShaders
         + "void main() \n"
         + "{ \n" 
 		+ "    vec3 norm = normalize(normal.rgb); \n" 
-		+ "    float minLight = 0.35; \n"
-		+ "    float light = dot(norm, vec3(0.7, 0.2, 0.1) ) + minLight; \n"
+		+ "    float minLight = 0.4; \n"
+		+ "    float light = dot(norm, vec3(0.7, 0.2, 0.1) ) * (1.0 - minLight) + minLight; \n"
 		+ "    gl_FragColor = vec4( vec3(light), 1.0); \n"
 		+ "} \n";
 
