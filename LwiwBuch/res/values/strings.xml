@@ -7,6 +7,7 @@
     <string name="button_target_hint">Pages with targets</string>
     <string name="text_target_hint">- cover\n- cover (inside): Rynok square, theatre of Opera\n- pg.9: Lev Danylovych\n- pg.33: Rynok square\n- pg.55: Chapel of the Boim family\n- pg.138: map of Zolochiv\n- back cover (indside): map of Lviv\n- back cover: Castle</string>
     <string name="button_extended_tracking">Stop extended tracking</string>
+    <string name="button_camera_shot">Create custom target</string>
 
     <string name="splash_screen_description">Vuforia Splash</string>
     

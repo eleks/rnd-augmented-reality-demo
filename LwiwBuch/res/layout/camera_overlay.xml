@@ -19,6 +19,14 @@
         android:layout_centerHorizontal="true"
         android:text="@string/button_target_hint" />
 
+    <Button
+        android:id="@+id/buttonCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/button_camera_shot" />
+
     <TextView
         android:id="@+id/textHint"
         android:layout_width="wrap_content"
