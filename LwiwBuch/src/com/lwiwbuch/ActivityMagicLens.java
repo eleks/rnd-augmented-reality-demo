@@ -60,13 +60,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(LOGTAG, "onCreate");
 
-		boolean medicineMagazine = false;
-
-		if (medicineMagazine) {
-			addDataset("Medicine.xml");
-		} else {
-			addDataset("LWIWBuch.xml");
-		}
+		addDataset("LWIWBuch.xml");
 
 		// AR Module
 		ARModule arModule;
@@ -76,123 +70,81 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		// MeshObjects
 		arModule.addMeshObject("texture", new TextureObject());
 
-		if (!medicineMagazine) {
-			try {
-				WavefrontModelObject wavefrontObject = new WavefrontModelObject();
-				wavefrontObject.loadModel(getResources().getAssets(),
-				// "obj/ZolochivCastle.obj");
-						"obj/sphere.obj");
-				arModule.addMeshObject("castle", wavefrontObject);
-			} catch (IOException e) {
-				Log.e(LOGTAG, "Unable to load monkey.obj");
-			}
+		try {
+			WavefrontModelObject wavefrontObject = new WavefrontModelObject();
+			wavefrontObject.loadModel(getResources().getAssets(),
+			// "obj/ZolochivCastle.obj");
+					"obj/sphere.obj");
+			arModule.addMeshObject("castle", wavefrontObject);
+		} catch (IOException e) {
+			Log.e(LOGTAG, "Unable to load monkey.obj");
 		}
 
-		if (medicineMagazine) {
-			try {
-				WavefrontModelObject wavefrontObject = new WavefrontModelObject();
-				wavefrontObject.loadModel(getResources().getAssets(),
-						"obj/skeleton_low.obj");
-				arModule.addMeshObject("skeleton", wavefrontObject);
-			} catch (IOException e) {
-				Log.e(LOGTAG, "Unable to load skeleton_low.obj");
-			}
-		}
+		// ARObjects
+		// Cover
+		Vector<String> coverTexAnim = new Vector<String>();
+		coverTexAnim.add("cover_ar_yellow_alpha.png");
+		coverTexAnim.add("cover_ar_red_alpha.png");
 
-		// Logo
-		if (!medicineMagazine) {
-			// ARObjects
-			// Cover
-			Vector<String> coverTexAnim = new Vector<String>();
-			coverTexAnim.add("cover_ar_yellow_alpha.png");
-			coverTexAnim.add("cover_ar_red_alpha.png");
+		ARTextureAnimation cover = new ARTextureAnimation(
+				arModule.getMeshObject("texture"), arModule.getShader(
+						"transparent", true), coverTexAnim);
+		arModule.addARObjectManagement("cover", cover);
 
-			ARTextureAnimation cover = new ARTextureAnimation(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"transparent", true), coverTexAnim);
-			arModule.addARObjectManagement("cover", cover);
+		// Lwiw buch logo animation
+		ARTexture logo = new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("hue_animation", true),
+				"LWIWBuchLogo_mask.png");
+		arModule.addARObjectManagement("LWIWBuchLogo", logo);
 
-			// Lwiw buch logo animation
-			ARTexture logo = new ARTexture(arModule.getMeshObject("texture"),
-					arModule.getShader("hue_animation", true),
-					"LWIWBuchLogo_mask.png");
-			arModule.addARObjectManagement("LWIWBuchLogo", logo);
+		// Lev Danylovych Wikipedia
+		ARTexture lev = new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("transparent", true), "wiki_logo.png");
+		lev.mCallBack = new LevCallBack();
+		arModule.addARObjectManagement("LevDanylovych", lev);
 
-			// Lev Danylovych Wikipedia
-			ARTexture lev = new ARTexture(arModule.getMeshObject("texture"),
-					arModule.getShader("transparent", true), "wiki_logo.png");
-			lev.mCallBack = new LevCallBack();
-			arModule.addARObjectManagement("LevDanylovych", lev);
+		// Lviv Map
+		ARTexture lvivMap = new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("transparent", true), "googlemaps_icon.png");
+		lvivMap.mCallBack = new LvivMapCallBack();
+		arModule.addARObjectManagement("LvivMap", lvivMap);
 
-			// Lviv Map
-			ARTexture lvivMap = new ARTexture(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"transparent", true), "googlemaps_icon.png");
-			lvivMap.mCallBack = new LvivMapCallBack();
-			arModule.addARObjectManagement("LvivMap", lvivMap);
+		// Zolochiv Map
+		ARTexture zolochivMap = new ARTexture(
+				arModule.getMeshObject("texture"), arModule.getShader(
+						"transparent", true), "googlemaps_icon.png");
+		zolochivMap.mCallBack = new ZolochivMapCallBack();
+		arModule.addARObjectManagement("MapZolochiv", zolochivMap);
 
-			// Zolochiv Map
-			ARTexture zolochivMap = new ARTexture(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"transparent", true), "googlemaps_icon.png");
-			zolochivMap.mCallBack = new ZolochivMapCallBack();
-			arModule.addARObjectManagement("MapZolochiv", zolochivMap);
+		// Rynok sq.
+		ARTexture rynokSq = new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("transparent", true), "directions_icon.png");
+		rynokSq.mCallBack = new RynokSqCallBack();
+		arModule.addARObjectManagement("RynokSq", rynokSq);
 
-			// Rynok sq.
-			ARTexture rynokSq = new ARTexture(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"transparent", true), "directions_icon.png");
-			rynokSq.mCallBack = new RynokSqCallBack();
-			arModule.addARObjectManagement("RynokSq", rynokSq);
+		// Svobody ave.
+		ARTexture svobodyAve = new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("transparent", true), "directions_icon.png");
+		svobodyAve.mCallBack = new SvobodyAveCallBack();
+		arModule.addARObjectManagement("SvobodyAve", svobodyAve);
 
-			// Svobody ave.
-			ARTexture svobodyAve = new ARTexture(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"transparent", true), "directions_icon.png");
-			svobodyAve.mCallBack = new SvobodyAveCallBack();
-			arModule.addARObjectManagement("SvobodyAve", svobodyAve);
+		// Boim Kapelle
+		ARVideo boimKapelle = new ARVideo(arModule.getMeshObject("texture"),
+				arModule.getShader("video", true), "Video.mp4", this);
+		boimKapelle.mObjectRender.mScaleRelX = 0.8f;
+		boimKapelle.mObjectRender.mScaleRelY = 0.4f;
+		boimKapelle.mInternalCallBack = new VideoFullscreenCallBack(this,
+				"Video.mp4");
+		arModule.addARObjectManagement("BoimKapelle", boimKapelle);
 
-			// Boim Kapelle
-			ARVideo boimKapelle = new ARVideo(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"video", true), "Video.mp4", this);
-			boimKapelle.mObjectRender.mScaleRelX = 0.8f;
-			boimKapelle.mObjectRender.mScaleRelY = 0.4f;
-			boimKapelle.mInternalCallBack = new VideoFullscreenCallBack(this,
-					"Video.mp4");
-			arModule.addARObjectManagement("BoimKapelle", boimKapelle);
-
-			// Back cover
-			AR3DObject backCover = new AR3DObject(
-					arModule.getMeshObject("castle"), arModule.getShader(
-							"simple_normal", true), "building/Buildings.jpeg");
-			backCover.setScale(5.0f);
-			backCover.setRotation(90.0f, 0.0f, 0.0f);
-			backCover.mNeedsExtendedTracking = true;
-			arModule.addARObjectManagement("CoverLast", backCover);
-		}
-
-		// --- MEDICINE BOOK --- ///
-		if (medicineMagazine) {
-			// Video
-			ARVideo medicineVideo = new ARVideo(
-					arModule.getMeshObject("texture"), arModule.getShader(
-							"video", true), "MedicineVideo.mp4", this);
-			medicineVideo.mObjectRender.mScaleRelX = 0.8f;
-			medicineVideo.mObjectRender.mScaleRelY = 0.2f;
-			medicineVideo.mInternalCallBack = new VideoFullscreenCallBack(this,
-					"MedicineVideo.mp4");
-			arModule.addARObjectManagement("medicineVideo", medicineVideo);
-
-			// Skeleton
-			AR3DObject skeleton = new AR3DObject(
-					arModule.getMeshObject("skeleton"), arModule.getShader(
-							"simple_normal", true), "building/Buildings.jpeg");
-			skeleton.setScale(100.0f);
-			skeleton.setRotation(90.0f, 0.0f, 0.0f);
-			skeleton.mNeedsExtendedTracking = true;
-			arModule.addARObjectManagement("sceleton", skeleton);
-		}
+		// Back cover
+		AR3DObject backCover = new AR3DObject(arModule.getMeshObject("castle"),
+				arModule.getShader("simple_normal", true),
+				"building/Buildings.jpeg");
+		backCover.setScale(5.0f);
+		backCover.setRotation(90.0f, 0.0f, 0.0f);
+		backCover.mNeedsExtendedTracking = true;
+		arModule.addARObjectManagement("CoverLast", backCover);
 
 		// create Objects Mediator
 		_arObjectsMediator = new ARObjectsMediator(arModule);
@@ -330,7 +282,8 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 	}
 
 	@Override
-	public void onTargetTrack(Trackable arg0) {
+	public void onTargetTrack(Trackable trackable) {
+		Log.i(LOGTAG, "tracking: "+ trackable.getName() );
 	}
 
 	@Override
