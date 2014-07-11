@@ -3,9 +3,19 @@
 
     <string name="app_name">AR Custom Target</string>
     <string name="app_description">AR Vuforia project with custom targets</string>
-
     <string name="button_extended_tracking">Stop extended tracking</string>
-
     <string name="splash_screen_description">Vuforia Splash</string>
-    
+
+    <string-array name="menu_drawer_array">
+        <item>First</item>
+        <item>Second</item>
+        <item>Third</item>
+        <item>Forth</item>
+        <item>Fifth</item>
+        <item>Sixth</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>
