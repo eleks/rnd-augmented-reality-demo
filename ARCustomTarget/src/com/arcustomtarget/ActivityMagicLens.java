@@ -14,7 +14,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,8 +29,8 @@ import android.widget.ListView;
 
 import com.ar.vuforiatemplate.core.ARModule;
 import com.ar.vuforiatemplate.core.ARObjectsMediator;
-import com.ar.vuforiatemplate.core.ActivityImageTargets;
 import com.ar.vuforiatemplate.core.ActivityTargetsEvents;
+import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.meshobjects.TextureObject;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
@@ -43,10 +42,8 @@ import com.arcustomtarget.ui.DrawerMenuArrayAdapter;
 import com.arcustomtarget.ui.DrawerMenuItem;
 import com.qualcomm.vuforia.Trackable;
 
-public class ActivityMagicLens extends FragmentActivity 
-//ActivityImageTargets implements
-//		ActivityTargetsEvents, MultiGestureListener {
-{
+public class ActivityMagicLens extends FragmentActivityImageTargets implements
+		ActivityTargetsEvents, MultiGestureListener {
 	private static final String LOGTAG = "ActivityMagicLens";
 	private Gestures _gestures;
 
@@ -66,30 +63,16 @@ public class ActivityMagicLens extends FragmentActivity
 	// Camera fragment
 	Fragment _cameraFragment;
 
-// !!!
-//	public ActivityMagicLens() {
-//		super(R.id.loading_indicator, R.layout.camera_overlay);
-//	}
+	public ActivityMagicLens() {
+		//super(R.id.loading_indicator, R.layout.camera_overlay);
+		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(LOGTAG, "onCreate");
-
-		setContentView(R.layout.activity_with_drawer_layout);
-
-		UpdateActionBar(this);
-		PrepareDrawerMenu(savedInstanceState);
-
-		_cameraFragment = new CameraFragment();
-		
-// !!!		
-		if (true)
-			return; //!!!
-
+		Log.d(LOGTAG, "onCreate 1");
 		// Vuforia
-// !!!		
-//		addDataset("vuforia/test.xml");
+		addDataset("vuforia/test.xml");
 
 		// AR Module
 		ARModule arModule = new ARModule();
@@ -105,12 +88,8 @@ public class ActivityMagicLens extends FragmentActivity
 		arModule.addARObjectManagement("wiki", wiki);
 
 		// create Objects Mediator
-// !!!
-//		_arObjectsMediator = new ARObjectsMediator(arModule);
+		_arObjectsMediator = new ARObjectsMediator(arModule);
 
-		super.onCreate(savedInstanceState);
-
-// !!!
 		// UI
 		// Extended tracking button
 //		_extendedTrackingButton = (Button) findViewById(R.id.buttonExtended);
@@ -123,8 +102,16 @@ public class ActivityMagicLens extends FragmentActivity
 //		});
 
 		// gestures
-// !!!
-//		_gestures = new Gestures(this, this);
+		_gestures = new Gestures(this, this);
+
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_with_drawer_layout);
+
+		UpdateActionBar(this);
+		PrepareDrawerMenu(savedInstanceState);
+
+		_cameraFragment = new CameraFragment();
 	}
 
 	@Override
@@ -320,58 +307,52 @@ public class ActivityMagicLens extends FragmentActivity
 		return super.onTouchEvent(event);
 	}
 
-// !!!
-//	@Override
+	// @Override
 	public void loadTextures() {
 		List<String> files = new ArrayList<String>();
 		files.add("images/wikipedia_mask.png");
 
-// !!!
-//		_arObjectsMediator.loadTextures(files, getAssets());
+		_arObjectsMediator.loadTextures(files, getAssets());
 	}
 
-// !!!
-//	@Override
+	@Override
 	public void updateActiveARObjects(Set<String> trackablesName) {
-//		super.updateActiveARObjects(trackablesName);
-//
-//		// Extended tracking
-//		if (startExtendedTrackingIfNeeded(trackablesName)
-//				&& (null != _extendedTrackingButton)) {
-//			runOnUiThread(new Runnable() {
-//				public void run() {
-//					_extendedTrackingButton.setVisibility(View.VISIBLE);
-//				}
-//			});
-//		}
-//
+		super.updateActiveARObjects(trackablesName);
+
+		// Extended tracking
+		if (startExtendedTrackingIfNeeded(trackablesName)
+				&& (null != _extendedTrackingButton)) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					_extendedTrackingButton.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+
 	}
 
-// !!!
-//	@Override
+	@Override
 	public boolean onGesture(GestureInfo aGestureInfo) {
-//		boolean result = super.onGesture(aGestureInfo);
-//
-//		return _arObjectsMediator.onGesture(aGestureInfo) || result;
-		return false;
+		boolean result = super.onGesture(aGestureInfo);
+
+		return _arObjectsMediator.onGesture(aGestureInfo) || result;
 	}
 
-//	@Override
+	// @Override
 	public void onTargetTrack(Trackable arg0) {
 		// TODO Auto-generated method stub
 	}
 
-// !!!
-//	@Override
+	@Override
 	public void compileShaders() {
-//		Map<String, OpenGLShaders> shaders = new TreeMap<String, OpenGLShaders>();
-//		// shaders.put("simple", new SimpleShaders());
-//		// shaders.put("simple_normal", new NormalsShaders());
-//		// shaders.put("transparent", new TransparentShaders());
-//		shaders.put("hue_animation", new HueAnimationShaders());
-//		// shaders.put("video", new VideoShaders());
-//
-//		_arObjectsMediator.compileShaders(shaders);
+		Map<String, OpenGLShaders> shaders = new TreeMap<String, OpenGLShaders>();
+		// shaders.put("simple", new SimpleShaders());
+		// shaders.put("simple_normal", new NormalsShaders());
+		// shaders.put("transparent", new TransparentShaders());
+		shaders.put("hue_animation", new HueAnimationShaders());
+		// shaders.put("video", new VideoShaders());
+
+		_arObjectsMediator.compileShaders(shaders);
 	}
 
 }
