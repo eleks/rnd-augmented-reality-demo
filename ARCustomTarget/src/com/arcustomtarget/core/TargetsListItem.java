@@ -1,9 +1,13 @@
 package com.arcustomtarget.core;
 
 public class TargetsListItem {
+	public final static int TARGET_TEXT = 0;
+	public final static int TARGET_URL = 1;
+	public final static int TARGET_VIDEO = 2;
+
 	public String mCaption = "caption";
-	public int mType = 0;
-	public String mURL;
+	public int mType = TARGET_TEXT;
+	public String mData;
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;
@@ -14,9 +18,9 @@ public class TargetsListItem {
 		mType = aType;
 	}
 
-	public TargetsListItem(String aName, String aURL, int aType) {
+	public TargetsListItem(String aName, String aData, int aType) {
 		mCaption = aName;
-		mURL = aURL;
+		mData = aData;
 		mType = aType;
 	}
 

@@ -32,11 +32,13 @@ public class TargetsFragment extends Fragment {
 		getActivity().setTitle(menuItemName);
 
 		// targets
-		TargetsListItem item1 = new TargetsListItem("abcd");
-		TargetsListItem item2 = new TargetsListItem("abcd 2");
-		TargetsListItem item3 = new TargetsListItem("abcd 3");
+		TargetsListItem item1 = new TargetsListItem("abcd", TargetsListItem.TARGET_TEXT);
+		TargetsListItem item2 = new TargetsListItem("abcd 2", TargetsListItem.TARGET_URL);
+		TargetsListItem item3 = new TargetsListItem("abcd 3", TargetsListItem.TARGET_VIDEO);
+		TargetsListItem item4 = new TargetsListItem("abcd 3", TargetsListItem.TARGET_VIDEO);
+		TargetsListItem item5 = new TargetsListItem("abcd 3", 10);
 
-		_targetsList = new TargetsListItem[] { item1, item2, item3 };
+		_targetsList = new TargetsListItem[] { item1, item2, item3, item4, item5 };
 
 		_targetsListView = (ListView) rootView.findViewById(R.id.targets_list);
 		_targetsListView.setAdapter(new TargetsListArrayAdapter(getActivity(),

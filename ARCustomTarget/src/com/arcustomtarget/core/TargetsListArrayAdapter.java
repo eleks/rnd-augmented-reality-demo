@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.arcustomtarget.R;
 
-public class TargetsListArrayAdapter  extends ArrayAdapter<TargetsListItem> {
+public class TargetsListArrayAdapter extends ArrayAdapter<TargetsListItem> {
 	private final Context _context;
 	private final TargetsListItem[] _values;
 
@@ -24,14 +24,34 @@ public class TargetsListArrayAdapter  extends ArrayAdapter<TargetsListItem> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) _context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.targets_list_icon_item, parent,
-				false);
+		View rowView = inflater.inflate(R.layout.targets_list_icon_item,
+				parent, false);
 
 		// icon
 		ImageView icon = (ImageView) rowView.findViewById(R.id.imageTargetItem);
-//		if (null != _values[position].mDrawable)
-//			icon.setImageDrawable(values[position].mDrawable);
-		icon.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon));
+		// if (null != _values[position].mDrawable)
+		// icon.setImageDrawable(values[position].mDrawable);
+		int icon_id;
+
+		switch (_values[position].mType) {
+		case TargetsListItem.TARGET_TEXT:
+			icon_id = android.R.drawable.ic_dialog_email;
+			break;
+
+		case TargetsListItem.TARGET_URL:
+			icon_id = android.R.drawable.ic_dialog_info;
+			break;
+
+		case TargetsListItem.TARGET_VIDEO:
+			icon_id = android.R.drawable.ic_dialog_map;
+			break;
+
+		default:
+			icon_id = android.R.color.transparent;
+			break;
+		}
+
+		icon.setImageDrawable(_context.getResources().getDrawable(icon_id));
 
 		// caption
 		TextView caption = (TextView) rowView.findViewById(R.id.textTargetItem);
