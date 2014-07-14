@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.text.Layout;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -344,14 +345,17 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity impl
 			// that the OpenGL ES surface view gets added
 			// BEFORE the camera is started and video
 			// background is configured.
+
 			addContentView(_GlView, new LayoutParams(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT));
 
 			// Sets the UILayout to be drawn in front of the camera
-			_UILayout.bringToFront();
+			if (null != _UILayout) {
+				//_UILayout.bringToFront();
 
-			// Sets the layout background to transparent
-			_UILayout.setBackgroundColor(Color.TRANSPARENT);
+				// Sets the layout background to transparent
+				_UILayout.setBackgroundColor(Color.TRANSPARENT);
+			}
 
 			try {
 				_vuforiaAppSession.startAR(CameraDevice.CAMERA.CAMERA_DEFAULT);

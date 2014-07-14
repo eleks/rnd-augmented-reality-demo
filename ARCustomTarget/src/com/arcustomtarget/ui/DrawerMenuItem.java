@@ -22,5 +22,5 @@ public class DrawerMenuItem {
 		mDrawable = aDrawable;
 		mFragment = aFragment;
 	}
-
+	
 }

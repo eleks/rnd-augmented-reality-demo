@@ -30,12 +30,15 @@ public final class LoadingDialogHandler extends Handler {
 			return;
 		}
 
-		if (msg.what == SHOW_LOADING_DIALOG) {
-			mLoadingDialogContainer.setVisibility(View.VISIBLE);
-
-		} else if (msg.what == HIDE_LOADING_DIALOG) {
-			mLoadingDialogContainer.setVisibility(View.GONE);
+		if (null != mLoadingDialogContainer) {
+			if (msg.what == SHOW_LOADING_DIALOG) {
+				mLoadingDialogContainer.setVisibility(View.VISIBLE);
+	
+			} else if (msg.what == HIDE_LOADING_DIALOG) {
+				mLoadingDialogContainer.setVisibility(View.GONE);
+			}
 		}
+
 	}
 
 }

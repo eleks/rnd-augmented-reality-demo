@@ -9,7 +9,11 @@ import java.util.TreeMap;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -35,6 +38,8 @@ import com.ar.vuforiatemplate.meshobjects.TextureObject;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
+import com.ar.vuforiatemplate.utils.SampleApplicationException;
+import com.ar.vuforiatemplate.utils.SampleApplicationGLView;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
@@ -46,6 +51,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		ActivityTargetsEvents, MultiGestureListener {
 	private static final String LOGTAG = "ActivityMagicLens";
 	private Gestures _gestures;
+
+	protected static final int TRAVEL_BOOK_REQUEST_CODE = 123;
 
 	// UI
 	Button _extendedTrackingButton;
@@ -64,7 +71,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	Fragment _cameraFragment;
 
 	public ActivityMagicLens() {
-		//super(R.id.loading_indicator, R.layout.camera_overlay);
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
 	}
 
@@ -92,14 +98,14 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		// UI
 		// Extended tracking button
-//		_extendedTrackingButton = (Button) findViewById(R.id.buttonExtended);
-//		_extendedTrackingButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				if (stopExtendedTracking())
-//					_extendedTrackingButton.setVisibility(View.INVISIBLE);
-//			}
-//		});
+		// _extendedTrackingButton = (Button) findViewById(R.id.buttonExtended);
+		// _extendedTrackingButton.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// if (stopExtendedTracking())
+		// _extendedTrackingButton.setVisibility(View.INVISIBLE);
+		// }
+		// });
 
 		// gestures
 		_gestures = new Gestures(this, this);
@@ -112,6 +118,41 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		PrepareDrawerMenu(savedInstanceState);
 
 		_cameraFragment = new CameraFragment();
+	}
+
+	@Override
+	public void onInitARDone(SampleApplicationException exception) {
+		super.onInitARDone(exception);
+		updateViewZPosition();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		updateViewZPosition();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateViewZPosition();
+	}
+
+	private void updateViewZPosition() {
+		//FIXME: bad code ! (put GLSurfaceView to back)
+		View v = (View) findViewById(R.id.drawer_layout);
+		if (null != v) {
+			Log.i(LOGTAG, "OK !!!");
+			v.bringToFront();
+		} else
+			Log.e(LOGTAG, "findViewById(R.id.drawer_layout) Error !!!");
+
+		View p = (View) findViewById(R.id.loading_indicator2);
+		if (null != p) {
+			Log.i(LOGTAG, "OK2 !!!");
+			p.setVisibility(View.INVISIBLE);
+		} else
+			Log.e(LOGTAG, "findViewById(R.id.loading_indicator2) Error !!!");
 	}
 
 	@Override
@@ -252,8 +293,16 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	private void selectItem(int position) {
 		Log.i(LOGTAG, "selectItem " + position);
 
-		if ((position < _menuDrawerTitles.length)
-				&& (null != _menuDrawerTitles[position].mFragment)
+		if (position >= _menuDrawerTitles.length)
+			return;
+
+		if (_menuDrawerTitles[position].mCaption.equals("Travel Book")) {
+			onTravelBookClicked();
+			_drawerLayout.closeDrawer(_drawerList);
+			return;
+		}
+
+		if ((null != _menuDrawerTitles[position].mFragment)
 				&& (_currentFragmentPosition != position)) {
 
 			// update the main content by replacing fragments
@@ -355,4 +404,40 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		_arObjectsMediator.compileShaders(shaders);
 	}
 
+	private boolean isPackageExists(String targetPackage) {
+		List<ApplicationInfo> packages;
+		PackageManager pm;
+		pm = getPackageManager();
+		packages = pm.getInstalledApplications(0);
+		for (ApplicationInfo packageInfo : packages) {
+			if (packageInfo.packageName.equals(targetPackage))
+				return true;
+		}
+		return false;
+	}
+
+	private void onTravelBookClicked() {
+		if (isPackageExists("com.lwiwbuch")) {
+			final Intent intent = new Intent("com.lwiwbuch.ActivitySplashScreen");
+			intent.setPackage("com.lwiwbuch");
+			try {
+				startActivityForResult(intent, TRAVEL_BOOK_REQUEST_CODE);
+			} catch (ActivityNotFoundException anfe) {
+				// show an error dialog before exiting
+				AlertDialog alertDialog = new AlertDialog.Builder(this)
+						.create();
+				alertDialog.setTitle("Client apk not found");
+				alertDialog
+						.setMessage("You need to install the customized Barcode Scanning client apk first");
+				alertDialog.show();
+			}
+
+		} else {
+			// show an error dialog before exiting
+			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			alertDialog.setTitle("Alert");
+			alertDialog.setMessage("Please install Travel Book app");
+			alertDialog.show();
+		}
+	}
 }
