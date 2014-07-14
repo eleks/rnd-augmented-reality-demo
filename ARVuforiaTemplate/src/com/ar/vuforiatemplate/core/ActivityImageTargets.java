@@ -53,7 +53,7 @@ import com.qualcomm.vuforia.Vuforia;
 
 public abstract class ActivityImageTargets extends Activity implements
 		SampleApplicationControl, ActivityTargetsEvents, MultiGestureListener {
-	private static final String LOGTAG = "ImageTargets";
+	private static final String LOGTAG = "ActivityImageTargets";
 
 	// AR Mediator
 	protected ARObjectsMediator _arObjectsMediator;

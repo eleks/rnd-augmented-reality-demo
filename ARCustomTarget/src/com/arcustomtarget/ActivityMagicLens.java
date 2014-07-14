@@ -67,6 +67,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	// Camera fragment
 	Fragment _cameraFragment;
+	Fragment _targetsFragment;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
@@ -75,6 +76,11 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(LOGTAG, "onCreate 1");
+
+		// Fragments
+		_cameraFragment = new CameraFragment();
+		_targetsFragment = new TargetsFragment();
+
 		// Vuforia
 		addDataset("vuforia/test.xml");
 
@@ -114,8 +120,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);
-
-		_cameraFragment = new CameraFragment();
 	}
 
 	@Override
@@ -217,7 +221,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		DrawerMenuItem item1 = new DrawerMenuItem("Camera", getResources()
 				.getDrawable(R.drawable.icon), _cameraFragment);
 		DrawerMenuItem item2 = new DrawerMenuItem("Targets", getResources()
-				.getDrawable(R.drawable.icon), new TargetsFragment());
+				.getDrawable(R.drawable.icon), _targetsFragment);
 		DrawerMenuItem item3 = new DrawerMenuItem("Travel Book");
 		DrawerMenuItem item4 = new DrawerMenuItem("About");
 
