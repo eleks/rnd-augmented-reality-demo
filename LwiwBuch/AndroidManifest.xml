@@ -79,7 +79,7 @@
         -->
         <!-- Splash Screen Activity -->
         <activity
-            android:name="com.lwiwbuch.ActivitySplashScreen"
+            android:name="ActivitySplashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
             android:noHistory="true"
             android:screenOrientation="portrait" >
@@ -87,14 +87,18 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <!-- Activity with camera -->
         <activity
-            android:name="com.lwiwbuch.ActivityMagicLens"
+            android:name="ActivityMagicLens"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
             android:noHistory="false"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <!-- Vuforia's activity -->
         <activity
@@ -108,9 +112,9 @@
             android:name="com.ar.vuforiatemplate.video.FullscreenPlayback"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
             android:exported="false"
-            android:noHistory="false"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:noHistory="false"
             android:screenOrientation="landscape" >
         </activity>
     </application>

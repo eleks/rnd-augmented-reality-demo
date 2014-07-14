@@ -52,8 +52,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	private static final String LOGTAG = "ActivityMagicLens";
 	private Gestures _gestures;
 
-	protected static final int TRAVEL_BOOK_REQUEST_CODE = 123;
-
 	// UI
 	Button _extendedTrackingButton;
 
@@ -418,24 +416,23 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	private void onTravelBookClicked() {
 		if (isPackageExists("com.lwiwbuch")) {
-			final Intent intent = new Intent("com.lwiwbuch.ActivitySplashScreen");
+			final Intent intent = new Intent("com.lwiwbuch/.ActivitySplashScreen"); //.ActivitySplashScreen");
 			intent.setPackage("com.lwiwbuch");
+			intent.setAction("android.intent.action.MAIN");
 			try {
-				startActivityForResult(intent, TRAVEL_BOOK_REQUEST_CODE);
+				startActivity(intent);
 			} catch (ActivityNotFoundException anfe) {
-				// show an error dialog before exiting
 				AlertDialog alertDialog = new AlertDialog.Builder(this)
 						.create();
 				alertDialog.setTitle("Client apk not found");
 				alertDialog
-						.setMessage("You need to install the customized Barcode Scanning client apk first");
+						.setMessage("Exception: "+anfe.getLocalizedMessage());
 				alertDialog.show();
 			}
 
 		} else {
-			// show an error dialog before exiting
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Alert");
+			alertDialog.setTitle("App not found");
 			alertDialog.setMessage("Please install Travel Book app");
 			alertDialog.show();
 		}
