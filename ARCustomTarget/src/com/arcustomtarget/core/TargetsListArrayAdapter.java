@@ -31,25 +31,7 @@ public class TargetsListArrayAdapter extends ArrayAdapter<TargetsListItem> {
 		ImageView icon = (ImageView) rowView.findViewById(R.id.imageTargetItem);
 		// if (null != _values[position].mDrawable)
 		// icon.setImageDrawable(values[position].mDrawable);
-		int icon_id;
-
-		switch (_values[position].mType) {
-		case TargetsListItem.TARGET_TEXT:
-			icon_id = android.R.drawable.ic_dialog_email;
-			break;
-
-		case TargetsListItem.TARGET_URL:
-			icon_id = android.R.drawable.ic_dialog_info;
-			break;
-
-		case TargetsListItem.TARGET_VIDEO:
-			icon_id = android.R.drawable.ic_dialog_map;
-			break;
-
-		default:
-			icon_id = android.R.color.transparent;
-			break;
-		}
+		int icon_id = _values[position].getDrawableId();
 
 		icon.setImageDrawable(_context.getResources().getDrawable(icon_id));
 

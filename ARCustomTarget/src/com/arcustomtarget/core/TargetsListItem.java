@@ -24,4 +24,36 @@ public class TargetsListItem {
 		mType = aType;
 	}
 
+	public int getDrawableId() {
+		switch (mType) {
+		case TargetsListItem.TARGET_TEXT:
+			return android.R.drawable.ic_dialog_email;
+
+		case TargetsListItem.TARGET_URL:
+			return android.R.drawable.ic_dialog_info;
+
+		case TargetsListItem.TARGET_VIDEO:
+			return android.R.drawable.ic_dialog_map;
+
+		default:
+			return android.R.color.transparent;
+		}
+	}
+
+	public String getDrawableCaption() {
+		switch (mType) {
+		case TargetsListItem.TARGET_TEXT:
+			return "Text";
+
+		case TargetsListItem.TARGET_URL:
+			return "URL";
+
+		case TargetsListItem.TARGET_VIDEO:
+			return "Video";
+
+		default:
+			return "Unknown";
+		}
+	}
+
 }
