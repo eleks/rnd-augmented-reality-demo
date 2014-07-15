@@ -47,12 +47,14 @@
         android:orientation="horizontal" >
 
         <Button
+            android:id="@+id/targetDialogButtonEdit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="Edit" />
 
         <Button
+            android:id="@+id/targetDialogButtonDelete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

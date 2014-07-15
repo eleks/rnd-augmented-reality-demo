@@ -25,17 +25,18 @@ public class TargetsFragment extends Fragment {
 	private ListView _targetsListView;
 	private TargetsListItem[] _targetsList;
 
+	private View _rootView;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.second_fragment, container,
-				false);
+		_rootView = inflater
+				.inflate(R.layout.second_fragment, container, false);
 		// int i = getArguments().getInt(ARG_NUMBER);
-		String menuItemName = "Some name";
+		// String menuItemName = "Some name";
 		// getResources().getStringArray(
 		// R.array.menu_drawer_array)[i];
-
-		getActivity().setTitle(menuItemName);
+		// getActivity().setTitle(menuItemName);
 
 		// targets
 		TargetsListItem item1 = new TargetsListItem("abcd", "smth.",
@@ -51,12 +52,29 @@ public class TargetsFragment extends Fragment {
 		_targetsList = new TargetsListItem[] { item1, item2, item3, item4,
 				item5 };
 
-		_targetsListView = (ListView) rootView.findViewById(R.id.targets_list);
-		_targetsListView.setAdapter(new TargetsListArrayAdapter(getActivity(),
-				_targetsList));
+		updateList();
+
 		_targetsListView.setOnItemClickListener(new TargetClickListener());
 
-		return rootView;
+		return _rootView;
+	}
+
+	private void updateList() {
+		_targetsListView = (ListView) _rootView.findViewById(R.id.targets_list);
+		_targetsListView.setAdapter(new TargetsListArrayAdapter(getActivity(),
+				_targetsList));
+	}
+
+	private synchronized void removeTargetWithId(int id) {
+		TargetsListItem[] tmp = new TargetsListItem[_targetsList.length - 1];
+		for (int i=0; i<id; i++)
+			tmp[i] = _targetsList[i];
+		for (int i=id+1; i<_targetsList.length; i++)
+			tmp[i-1] = _targetsList[i];
+
+		_targetsList = tmp;
+
+		updateList();
 	}
 
 	class TargetClickListener implements ListView.OnItemClickListener {
@@ -64,10 +82,12 @@ public class TargetsFragment extends Fragment {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			if (position < _targetsList.length)
-				showDialog(position);
+				showInfoDialog(position);
 		}
 
-		private void showDialog(int id) {
+		private void showInfoDialog(int id) {
+			final int fId = id;
+
 			// custom dialog
 			Context context = getActivity();
 
@@ -90,14 +110,36 @@ public class TargetsFragment extends Fragment {
 			// Target data text
 			TextView text = (TextView) dialog
 					.findViewById(R.id.targetDialogText);
-			text.setText( _targetsList[id].mData );
+			text.setText(_targetsList[id].mData);
 
-			Button dialogButton = (Button) dialog
+			// OK button
+			Button dialogButtonOK = (Button) dialog
 					.findViewById(R.id.targetDialogButtonOK);
 			// if button is clicked, close the custom dialog
-			dialogButton.setOnClickListener(new OnClickListener() {
+			dialogButtonOK.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+
+			// Edit button
+			Button dialogButtonEdit = (Button) dialog
+					.findViewById(R.id.targetDialogButtonEdit);
+			dialogButtonEdit.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+				}
+			});
+
+			// Delete button
+			Button dialogButtonDelete = (Button) dialog
+					.findViewById(R.id.targetDialogButtonDelete);
+			dialogButtonDelete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					removeTargetWithId(fId);
 					dialog.dismiss();
 				}
 			});
