@@ -6,12 +6,25 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/targets_list"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/targets_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/target_add_new"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:dividerHeight="0dp" />
+        android:text="Add new target" />
 
 </LinearLayout>
