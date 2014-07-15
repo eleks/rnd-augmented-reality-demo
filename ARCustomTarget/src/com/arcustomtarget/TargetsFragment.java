@@ -213,7 +213,7 @@ public class TargetsFragment extends Fragment {
 				}
 			});
 
-			// OK button
+			// Cancel button
 			Button dialogButtonCancel = (Button) dialog
 					.findViewById(R.id.targetEditDialogButtonCancel);
 			dialogButtonCancel.setOnClickListener(new OnClickListener() {

@@ -11,6 +11,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -39,7 +40,6 @@ import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
 import com.ar.vuforiatemplate.utils.SampleApplicationException;
-import com.ar.vuforiatemplate.utils.SampleApplicationGLView;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
@@ -141,19 +141,17 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	}
 
 	private void updateViewZPosition() {
-		//FIXME: bad code ! (put GLSurfaceView to back)
+		// FIXME: bad code ! (put GLSurfaceView to back)
 		View v = (View) findViewById(R.id.drawer_layout);
-		if (null != v) {
-			Log.i(LOGTAG, "OK !!!");
+		if (null != v)
 			v.bringToFront();
-		} else
+		else
 			Log.e(LOGTAG, "findViewById(R.id.drawer_layout) Error !!!");
 
 		View p = (View) findViewById(R.id.loading_indicator2);
-		if (null != p) {
-			Log.i(LOGTAG, "OK2 !!!");
+		if (null != p)
 			p.setVisibility(View.INVISIBLE);
-		} else
+		else
 			Log.e(LOGTAG, "findViewById(R.id.loading_indicator2) Error !!!");
 	}
 
@@ -304,6 +302,12 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			return;
 		}
 
+		if (_menuDrawerTitles[position].mCaption.equals("About")) {
+			onAboutClicked();
+			_drawerLayout.closeDrawer(_drawerList);
+			return;
+		}
+
 		if ((null != _menuDrawerTitles[position].mFragment)
 				&& (_currentFragmentPosition != position)) {
 
@@ -420,7 +424,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	private void onTravelBookClicked() {
 		if (isPackageExists("com.lwiwbuch")) {
-			final Intent intent = new Intent("com.lwiwbuch/.ActivitySplashScreen"); //.ActivitySplashScreen");
+			final Intent intent = new Intent(
+					"com.lwiwbuch/.ActivitySplashScreen"); // .ActivitySplashScreen");
 			intent.setPackage("com.lwiwbuch");
 			intent.setAction("android.intent.action.MAIN");
 			try {
@@ -429,8 +434,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				AlertDialog alertDialog = new AlertDialog.Builder(this)
 						.create();
 				alertDialog.setTitle("Client apk not found");
-				alertDialog
-						.setMessage("Exception: "+anfe.getLocalizedMessage());
+				alertDialog.setMessage("Exception: "
+						+ anfe.getLocalizedMessage());
 				alertDialog.show();
 			}
 
@@ -441,4 +446,18 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			alertDialog.show();
 		}
 	}
+
+	private void onAboutClicked() {
+		new AlertDialog.Builder(this)
+				.setTitle("About")
+				.setMessage("Augmented Reality test app. Made by (r)Eleks")
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// continue with delete
+							}
+						}).setIcon(android.R.drawable.ic_dialog_info).show();
+	}
+
 }
