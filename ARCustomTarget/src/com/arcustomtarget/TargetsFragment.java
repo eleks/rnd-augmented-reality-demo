@@ -11,8 +11,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.arcustomtarget.core.TargetsListArrayAdapter;
@@ -67,13 +69,18 @@ public class TargetsFragment extends Fragment {
 
 	private synchronized void removeTargetWithId(int id) {
 		TargetsListItem[] tmp = new TargetsListItem[_targetsList.length - 1];
-		for (int i=0; i<id; i++)
+		for (int i = 0; i < id; i++)
 			tmp[i] = _targetsList[i];
-		for (int i=id+1; i<_targetsList.length; i++)
-			tmp[i-1] = _targetsList[i];
+		for (int i = id + 1; i < _targetsList.length; i++)
+			tmp[i - 1] = _targetsList[i];
 
 		_targetsList = tmp;
 
+		updateList();
+	}
+
+	private synchronized void changeTargetWithId(int id, TargetsListItem item) {
+		_targetsList[id] = item;
 		updateList();
 	}
 
@@ -115,7 +122,6 @@ public class TargetsFragment extends Fragment {
 			// OK button
 			Button dialogButtonOK = (Button) dialog
 					.findViewById(R.id.targetDialogButtonOK);
-			// if button is clicked, close the custom dialog
 			dialogButtonOK.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -129,7 +135,8 @@ public class TargetsFragment extends Fragment {
 			dialogButtonEdit.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+					showEditDialog(fId);
+					dialog.dismiss();
 				}
 			});
 
@@ -140,6 +147,78 @@ public class TargetsFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					removeTargetWithId(fId);
+					dialog.dismiss();
+				}
+			});
+
+			dialog.show();
+		}
+
+		private void showEditDialog(int id) {
+			final int fId = id;
+
+			// custom dialog
+			Context context = getActivity();
+
+			final Dialog dialog = new Dialog(context);
+			dialog.setContentView(R.layout.target_edit_dialog_layout);
+
+			// Caption
+			dialog.setTitle(_targetsList[id].mCaption);
+
+			// Caption text
+			final EditText editTextCaption = (EditText) dialog
+					.findViewById(R.id.targetEditDialogTextCaption);
+			editTextCaption.setText(_targetsList[id].mCaption);
+
+			// Radio buttons
+			final RadioButton textRadioButton = (RadioButton) dialog
+					.findViewById(R.id.radioButtonText);
+			final RadioButton urlRadioButton = (RadioButton) dialog
+					.findViewById(R.id.radioButtonURL);
+			final RadioButton videoRadioButton = (RadioButton) dialog
+					.findViewById(R.id.radioButtonVideo);
+
+			if (_targetsList[id].mType == TargetsListItem.TARGET_TEXT)
+				textRadioButton.setChecked(true);
+			else if (_targetsList[id].mType == TargetsListItem.TARGET_URL)
+				urlRadioButton.setChecked(true);
+			else if (_targetsList[id].mType == TargetsListItem.TARGET_VIDEO)
+				videoRadioButton.setChecked(true);
+
+			// Data text
+			final EditText editTextData = (EditText) dialog
+					.findViewById(R.id.targetEditDialogTextData);
+			editTextData.setText(_targetsList[id].mData);
+
+			// OK button
+			Button dialogButtonOK = (Button) dialog
+					.findViewById(R.id.targetEditDialogButtonOK);
+			dialogButtonOK.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					TargetsListItem item = new TargetsListItem(
+							editTextCaption.getText().toString());
+					item.mData = editTextData.getText().toString();
+					if (textRadioButton.isChecked())
+						item.mType = TargetsListItem.TARGET_TEXT;
+					else if (urlRadioButton.isChecked())
+						item.mType = TargetsListItem.TARGET_URL;
+					else if (videoRadioButton.isChecked())
+						item.mType = TargetsListItem.TARGET_VIDEO;
+
+					changeTargetWithId(fId, item);
+
+					dialog.dismiss();
+				}
+			});
+
+			// OK button
+			Button dialogButtonCancel = (Button) dialog
+					.findViewById(R.id.targetEditDialogButtonCancel);
+			dialogButtonCancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
 					dialog.dismiss();
 				}
 			});
