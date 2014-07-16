@@ -73,8 +73,8 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		try {
 			WavefrontModelObject wavefrontObject = new WavefrontModelObject();
 			wavefrontObject.loadModel(getResources().getAssets(),
-			// "obj/ZolochivCastle.obj");
-					"obj/sphere.obj");
+			 "obj/ZolochivCastle.obj");
+//					"obj/sphere.obj");
 			arModule.addMeshObject("castle", wavefrontObject);
 		} catch (IOException e) {
 			Log.e(LOGTAG, "Unable to load monkey.obj");
