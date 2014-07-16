@@ -49,6 +49,7 @@ import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
+import com.ar.vuforiatemplate.shaders.TransparentShaders;
 import com.ar.vuforiatemplate.utils.SampleApplicationException;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
@@ -391,6 +392,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public void loadTextures() {
 		List<String> files = new ArrayList<String>();
 		files.add("images/wikipedia_mask.png");
+		files.add("images/www_icon.png");
 
 		_arObjectsMediator.loadTextures(files, getAssets());
 	}
@@ -428,7 +430,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		Map<String, OpenGLShaders> shaders = new TreeMap<String, OpenGLShaders>();
 		// shaders.put("simple", new SimpleShaders());
 		// shaders.put("simple_normal", new NormalsShaders());
-		// shaders.put("transparent", new TransparentShaders());
+		shaders.put("transparent", new TransparentShaders());
 		shaders.put("hue_animation", new HueAnimationShaders());
 		// shaders.put("video", new VideoShaders());
 
@@ -554,7 +556,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				&& (_lastTakePictureId < mTargetsList.length)) {
 			ARModule arModule = _arObjectsMediator.getModule();
 			ARObjectManagement mngmnt = mTargetsList[_lastTakePictureId]
-					.getARObjectManagement(arModule);
+					.getARObjectManagement(this, arModule);
 			arModule.addARObjectManagement(_lastTargetName, mngmnt);
 
 			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);

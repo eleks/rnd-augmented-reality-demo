@@ -1,5 +1,9 @@
 package com.arcustomtarget.core;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+
 import com.ar.vuforiatemplate.core.ARModule;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
@@ -11,7 +15,7 @@ public class TargetsListItem {
 
 	public String mCaption = "caption";
 	public int mType = TARGET_TEXT;
-	public String mData;
+	public String mData = "www.google.com";
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;
@@ -60,10 +64,34 @@ public class TargetsListItem {
 		}
 	}
 
-	public ARObjectManagement getARObjectManagement(ARModule arModule) {
+	public ARObjectManagement getARObjectManagement(Activity aActivity,
+			ARModule arModule) {
+		if (mType == TARGET_URL) {
+			ARTexture ar = new ARTexture(arModule.getMeshObject("texture"),
+					arModule.getShader("transparent", true),
+					"images/www_icon.png");
+			ar.mCallBack = new URLCallBack(aActivity, mData);
+			return ar;
+		}
+
 		return new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("hue_animation", true),
 				"images/wikipedia_mask.png");
 	}
 
+	class URLCallBack implements ARObjectManagement.CallBack {
+		private String _URL;
+		private Activity _activity;
+
+		public URLCallBack(Activity aActivity, String aURL) {
+			_activity = aActivity;
+			_URL = aURL;
+		}
+
+		@Override
+		public void callBackMethod() {
+			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(_URL));
+			_activity.startActivity(i);
+		}
+	}
 }
