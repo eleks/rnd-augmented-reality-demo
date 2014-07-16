@@ -55,7 +55,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	// UI
 	Button _extendedTrackingButton;
-	Button _updateTargetButton;
 
 	// Drawer menu
 	private DrawerLayout _drawerLayout;
@@ -84,7 +83,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		_targetsFragment = new TargetsFragment();
 
 		// Vuforia
-		addDataset("vuforia/test.xml");
+		// addDataset("vuforia/test.xml");
 
 		// AR Module
 		ARModule arModule = new ARModule();
@@ -119,14 +118,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_with_drawer_layout);
-
-		_updateTargetButton = (Button) findViewById(R.id.buttonUpdateTarget);
-		_updateTargetButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-			}
-		});
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);
@@ -232,8 +223,10 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				.getDrawable(R.drawable.icon), _targetsFragment);
 		DrawerMenuItem item3 = new DrawerMenuItem("Travel Book");
 		DrawerMenuItem item4 = new DrawerMenuItem("About");
+		DrawerMenuItem item5 = new DrawerMenuItem("--- Update Target ---");
 
-		_menuDrawerTitles = new DrawerMenuItem[] { item1, item2, item3, item4 };
+		_menuDrawerTitles = new DrawerMenuItem[] { item1, item2, item3, item4,
+				item5 };
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		_drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -314,6 +307,14 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		if (_menuDrawerTitles[position].mCaption.equals("About")) {
 			onAboutClicked();
+			_drawerLayout.closeDrawer(_drawerList);
+			return;
+		}
+
+		if (_menuDrawerTitles[position].mCaption
+				.equals("--- Update Target ---")) {
+			if (isUserDefinedTargetsRunning())
+				startBuild();
 			_drawerLayout.closeDrawer(_drawerList);
 			return;
 		}
@@ -403,9 +404,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		return _arObjectsMediator.onGesture(aGestureInfo) || result;
 	}
 
-	// @Override
+	@Override
 	public void onTargetTrack(Trackable arg0) {
-		// TODO Auto-generated method stub
+		super.onTargetTrack(arg0);
 	}
 
 	@Override

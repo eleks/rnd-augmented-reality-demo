@@ -100,6 +100,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 
 		_activity.initRendering();
 		_activity.compileShaders();
+		_activity.updateRendering();
 
 		// Hide the Loading Dialog
 		_activity.loadingDialogHandler
@@ -129,6 +130,8 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 		_targetPositiveDimensions.clear();
 
 		Set<String> trackableNames = new TreeSet<String>();
+
+		_activity.customTargetRenderer();
 
 		// did we find any trackables this frame?
 		for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++) {
@@ -184,17 +187,21 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			// deal with the modelview and projection matrices
 			float[] modelViewProjection = new float[16];
 
-//			if (renderObject.mMeshObject.getClass() != SampleApplication3DModel.class) {
-//				Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f,
-//						(float) objectScaleZ);
-//			} else {
-//				Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
-//				Matrix.rotateM(modelViewMatrix, 0, 90.0f, 0, 1.0f, 0);
-//			}
+			// if (renderObject.mMeshObject.getClass() !=
+			// SampleApplication3DModel.class) {
+			// Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f,
+			// (float) objectScaleZ);
+			// } else {
+			// Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
+			// Matrix.rotateM(modelViewMatrix, 0, 90.0f, 0, 1.0f, 0);
+			// }
 
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationX, 1.0f, 0, 0);
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationY, 0, 1.0f, 0);
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationZ, 0, 0, 1.0f);
+			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationX,
+					1.0f, 0, 0);
+			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationY,
+					0, 1.0f, 0);
+			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationZ,
+					0, 0, 1.0f);
 
 			Matrix.scaleM(modelViewMatrix, 0, (float) objectScaleX,
 					(float) objectScaleY, (float) objectScaleZ);

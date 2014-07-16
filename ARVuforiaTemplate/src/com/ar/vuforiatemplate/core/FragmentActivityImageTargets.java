@@ -19,7 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -32,6 +32,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.Switch;
 
+import com.ar.vuforiatemplate.customTarget.RefFreeFrame;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARObjectRender;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
@@ -46,6 +47,7 @@ import com.ar.vuforiatemplate.ux.MultiGestureListener;
 import com.ar.vuforiatemplate.video.FullscreenPlayback;
 import com.qualcomm.vuforia.CameraDevice;
 import com.qualcomm.vuforia.DataSet;
+import com.qualcomm.vuforia.ImageTargetBuilder;
 import com.qualcomm.vuforia.ImageTracker;
 import com.qualcomm.vuforia.State;
 import com.qualcomm.vuforia.Trackable;
@@ -92,6 +94,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			this);
 
 	boolean _isDroidDevice = false;
+
+	// Custom target
+	int targetBuilderCounter = 1;
+	private RefFreeFrame refFreeFrame;
 
 	public FragmentActivityImageTargets(int aLoadingIndicatorId,
 			int aCameraOverlayLayout) {
@@ -241,6 +247,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 	// Initializes AR application components.
 	private void initApplicationAR() {
+		// Custom target
+		refFreeFrame = new RefFreeFrame(this, _vuforiaAppSession);
+		refFreeFrame.init();
+
 		// Create OpenGL ES view:
 		int depthSize = 16;
 		int stencilSize = 0;
@@ -251,6 +261,9 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 		_renderer = new ImageTargetRenderer2(this, _vuforiaAppSession);
 		_GlView.setRenderer(_renderer);
+
+		// Custom target
+		initCustomTargetBuilder();
 	}
 
 	private void startLoadingAnimation() {
@@ -289,9 +302,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		if (_currentDataset == null)
 			return false;
 
-		if (!_currentDataset.load(
-				_datasetStrings.get(_currentDatasetSelectionIndex),
-				DataSet.STORAGE_TYPE.STORAGE_APPRESOURCE))
+		if ((_datasetStrings.size() > _currentDatasetSelectionIndex)
+				&& (!_currentDataset.load(
+						_datasetStrings.get(_currentDatasetSelectionIndex),
+						DataSet.STORAGE_TYPE.STORAGE_APPRESOURCE)))
 			return false;
 
 		if (!imageTracker.activateDataSet(_currentDataset))
@@ -386,6 +400,53 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			doUnloadTrackersData();
 			doLoadTrackersData();
 		}
+
+		// Custom target
+		{
+			TrackerManager trackerManager = TrackerManager.getInstance();
+			ImageTracker imageTracker = (ImageTracker) trackerManager
+					.getTracker(ImageTracker.getClassType());
+
+			if (refFreeFrame.hasNewTrackableSource()) {
+				Log.d(LOGTAG,
+						"Attempting to transfer the trackable source to the dataset");
+
+				// Deactivate current dataset
+				imageTracker.deactivateDataSet(imageTracker.getActiveDataSet());
+
+				// Clear the oldest target if the dataset is full or the dataset
+				// already contains five user-defined targets.
+				if (_currentDataset.hasReachedTrackableLimit()
+						|| _currentDataset.getNumTrackables() >= 5)
+					_currentDataset.destroy(_currentDataset.getTrackable(0));
+
+				// if (mExtendedTracking && dataSetUserDef.getNumTrackables() >
+				// 0)
+				// {
+				// // We need to stop the extended tracking for the previous
+				// target
+				// // so we can enable it for the new one
+				// int previousCreatedTrackableIndex =
+				// dataSetUserDef.getNumTrackables() - 1;
+				//
+				// dataSetUserDef.getTrackable(previousCreatedTrackableIndex)
+				// .stopExtendedTracking();
+				// }
+
+				// Add new trackable source
+				Trackable trackable = _currentDataset
+						.createTrackable(refFreeFrame.getNewTrackableSource());
+
+				// Reactivate current dataset
+				imageTracker.activateDataSet(_currentDataset);
+
+				// if (mExtendedTracking)
+				// {
+				// trackable.startExtendedTracking();
+				// }
+			}
+		}
+
 	}
 
 	@Override
@@ -439,6 +500,11 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		// Indicate if the trackers were deinitialized correctly
 		boolean result = true;
 
+		// Custom target
+		if (refFreeFrame != null)
+			refFreeFrame.deInit();
+
+		// Tracker manager
 		TrackerManager tManager = TrackerManager.getInstance();
 		tManager.deinitTracker(ImageTracker.getClassType());
 
@@ -566,13 +632,105 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		_arObjectsMediator.updateActiveAR(trackablesName);
 	}
 
+	public void onTargetTrack(Trackable arg0) {
+		Log.i(LOGTAG, "!!! target :" + arg0.getName());
+	}
+
+	// Custom target methods
 	public void targetCreated() {
-		// TODO Auto-generated method stub
+		if (refFreeFrame != null)
+			refFreeFrame.reset();
 	}
 
 	public Texture createTexture(String string) {
-		// TODO Auto-generated method stub
-		return null;
+		return Texture.loadTextureFromApk(string, getAssets());
+	}
+
+	public void startBuild() {
+		TrackerManager trackerManager = TrackerManager.getInstance();
+		ImageTracker imageTracker = (ImageTracker) trackerManager
+				.getTracker(ImageTracker.getClassType());
+
+		if (imageTracker != null) {
+			ImageTargetBuilder targetBuilder = imageTracker
+					.getImageTargetBuilder();
+			if (targetBuilder != null) {
+				// Uncomment this block to show and error message if
+				// the frame quality is Low
+				// if (targetBuilder.getFrameQuality() ==
+				// ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW)
+				// {
+				// showErrorDialogInUIThread();
+				// }
+
+				String name;
+				do {
+					name = "UserTarget-" + targetBuilderCounter;
+					Log.d(LOGTAG, "TRYING " + name);
+					targetBuilderCounter++;
+				} while (!targetBuilder.build(name, 320.0f));
+
+				refFreeFrame.setCreating();
+			}
+		}
+	}
+
+	void updateRendering() {
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		refFreeFrame.initGL(metrics.widthPixels, metrics.heightPixels);
+	}
+
+	public boolean isUserDefinedTargetsRunning() {
+		TrackerManager trackerManager = TrackerManager.getInstance();
+		ImageTracker imageTracker = (ImageTracker) trackerManager
+				.getTracker(ImageTracker.getClassType());
+
+		if (imageTracker != null) {
+			ImageTargetBuilder targetBuilder = imageTracker
+					.getImageTargetBuilder();
+			if (targetBuilder != null) {
+				Log.e(LOGTAG, "Quality> " + targetBuilder.getFrameQuality());
+				return (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE) ? true
+						: false;
+			}
+		}
+
+		return false;
+	}
+
+	private void initCustomTargetBuilder() {
+		startUserDefinedTargets();
+	}
+
+	private boolean startUserDefinedTargets() {
+		Log.d(LOGTAG, "startUserDefinedTargets");
+
+		TrackerManager trackerManager = TrackerManager.getInstance();
+		ImageTracker imageTracker = (ImageTracker) (trackerManager
+				.getTracker(ImageTracker.getClassType()));
+		if (imageTracker != null) {
+			ImageTargetBuilder targetBuilder = imageTracker
+					.getImageTargetBuilder();
+
+			if (targetBuilder != null) {
+				// if needed, stop the target builder
+				if (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE)
+					targetBuilder.stopScan();
+
+				imageTracker.stop();
+
+				targetBuilder.startScan();
+
+			}
+		} else
+			return false;
+
+		return true;
+	}
+
+	public void customTargetRenderer() {
+		refFreeFrame.render();
 	}
 
 }

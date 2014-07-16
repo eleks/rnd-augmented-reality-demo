@@ -78,14 +78,14 @@ public class RefFreeFrame {
 	}
 
 	// FIXME: getTexture !!!
-	void init() {
+	public void init() {
 		// load the frame texture
 		frameGL.getTextures();
 
 		trackableSource = null;
 	}
 
-	void deInit() {
+	public void deInit() {
 		TrackerManager trackerManager = TrackerManager.getInstance();
 		ImageTracker imageTracker = (ImageTracker) (trackerManager
 				.getTracker(ImageTracker.getClassType()));
@@ -99,7 +99,7 @@ public class RefFreeFrame {
 		}
 	}
 
-	void initGL(int screenWidth, int screenHeight) {
+	public void initGL(int screenWidth, int screenHeight) {
 		frameGL.init(screenWidth, screenHeight);
 
 		Renderer renderer = Renderer.getInstance();
@@ -117,12 +117,12 @@ public class RefFreeFrame {
 		reset();
 	}
 
-	void reset() {
+	public void reset() {
 		curStatus = STATUS.STATUS_IDLE;
 
 	}
 
-	void setCreating() {
+	public void setCreating() {
 		curStatus = STATUS.STATUS_CREATING;
 	}
 
@@ -186,7 +186,7 @@ public class RefFreeFrame {
 		curStatus = newStatus;
 	}
 
-	void render() {
+	public void render() {
 		// Get the image tracker
 		TrackerManager trackerManager = TrackerManager.getInstance();
 		ImageTracker imageTracker = (ImageTracker) (trackerManager
@@ -225,11 +225,11 @@ public class RefFreeFrame {
 		frameGL.renderViewfinder();
 	}
 
-	boolean hasNewTrackableSource() {
+	public boolean hasNewTrackableSource() {
 		return (trackableSource != null);
 	}
 
-	TrackableSource getNewTrackableSource() {
+	public TrackableSource getNewTrackableSource() {
 		TrackableSource result = trackableSource;
 		trackableSource = null;
 		return result;
