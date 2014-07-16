@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -54,6 +55,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	// UI
 	Button _extendedTrackingButton;
+	Button _updateTargetButton;
 
 	// Drawer menu
 	private DrawerLayout _drawerLayout;
@@ -117,6 +119,14 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_with_drawer_layout);
+
+		_updateTargetButton = (Button) findViewById(R.id.buttonUpdateTarget);
+		_updateTargetButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+			}
+		});
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);

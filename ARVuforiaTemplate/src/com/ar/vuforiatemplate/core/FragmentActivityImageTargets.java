@@ -40,6 +40,7 @@ import com.ar.vuforiatemplate.utils.SampleApplicationControl;
 import com.ar.vuforiatemplate.utils.SampleApplicationException;
 import com.ar.vuforiatemplate.utils.SampleApplicationGLView;
 import com.ar.vuforiatemplate.utils.SampleApplicationSession;
+import com.ar.vuforiatemplate.utils.Texture;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
 import com.ar.vuforiatemplate.video.FullscreenPlayback;
@@ -53,8 +54,9 @@ import com.qualcomm.vuforia.Tracker;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vuforia;
 
-public abstract class FragmentActivityImageTargets extends FragmentActivity implements
-		SampleApplicationControl, ActivityTargetsEvents, MultiGestureListener {
+public abstract class FragmentActivityImageTargets extends FragmentActivity
+		implements SampleApplicationControl, ActivityTargetsEvents,
+		MultiGestureListener {
 	private static final String LOGTAG = "ImageTargets";
 
 	// AR Mediator
@@ -80,7 +82,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity impl
 
 	private View _flashOptionView;
 
-	//private RelativeLayout _UILayout;
+	// private RelativeLayout _UILayout;
 	private ViewGroup _UILayout; // !!!
 
 	private int _loadingIndicatorId;
@@ -253,8 +255,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity impl
 
 	private void startLoadingAnimation() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		_UILayout = (ViewGroup) inflater.inflate(_cameraOverlayLayout,
-				null, false);
+		_UILayout = (ViewGroup) inflater.inflate(_cameraOverlayLayout, null,
+				false);
 
 		_UILayout.setVisibility(View.VISIBLE);
 		_UILayout.setBackgroundColor(Color.BLACK);
@@ -351,7 +353,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity impl
 
 			// Sets the UILayout to be drawn in front of the camera
 			if (null != _UILayout) {
-				//_UILayout.bringToFront();
+				// _UILayout.bringToFront();
 
 				// Sets the layout background to transparent
 				_UILayout.setBackgroundColor(Color.TRANSPARENT);
@@ -562,6 +564,15 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity impl
 	public void updateActiveARObjects(Set<String> trackablesName) {
 		// AR mediator update active object
 		_arObjectsMediator.updateActiveAR(trackablesName);
+	}
+
+	public void targetCreated() {
+		// TODO Auto-generated method stub
+	}
+
+	public Texture createTexture(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
