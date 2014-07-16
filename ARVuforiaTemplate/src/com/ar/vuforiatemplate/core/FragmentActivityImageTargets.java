@@ -99,6 +99,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	int targetBuilderCounter = 1;
 	private RefFreeFrame refFreeFrame;
 
+	protected String _lastTargetName;
+
 	public FragmentActivityImageTargets(int aLoadingIndicatorId,
 			int aCameraOverlayLayout) {
 		_loadingIndicatorId = aLoadingIndicatorId;
@@ -666,6 +668,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				String name;
 				do {
 					name = "UserTarget-" + targetBuilderCounter;
+					_lastTargetName = name;
 					Log.d(LOGTAG, "TRYING " + name);
 					targetBuilderCounter++;
 				} while (!targetBuilder.build(name, 320.0f));

@@ -1,5 +1,9 @@
 package com.arcustomtarget.core;
 
+import com.ar.vuforiatemplate.core.ARModule;
+import com.ar.vuforiatemplate.objects.ARObjectManagement;
+import com.ar.vuforiatemplate.objects.ARTexture;
+
 public class TargetsListItem {
 	public final static int TARGET_TEXT = 0;
 	public final static int TARGET_URL = 1;
@@ -54,6 +58,12 @@ public class TargetsListItem {
 		default:
 			return "Unknown";
 		}
+	}
+
+	public ARObjectManagement getARObjectManagement(ARModule arModule) {
+		return new ARTexture(arModule.getMeshObject("texture"),
+				arModule.getShader("hue_animation", true),
+				"images/wikipedia_mask.png");
 	}
 
 }

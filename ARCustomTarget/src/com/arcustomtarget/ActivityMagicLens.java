@@ -1,5 +1,14 @@
 package com.arcustomtarget;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -37,6 +45,7 @@ import com.ar.vuforiatemplate.core.ARObjectsMediator;
 import com.ar.vuforiatemplate.core.ActivityTargetsEvents;
 import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.meshobjects.TextureObject;
+import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
@@ -44,6 +53,7 @@ import com.ar.vuforiatemplate.utils.SampleApplicationException;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
+import com.arcustomtarget.core.TargetsListItem;
 import com.arcustomtarget.ui.DrawerMenuArrayAdapter;
 import com.arcustomtarget.ui.DrawerMenuItem;
 import com.qualcomm.vuforia.Trackable;
@@ -51,7 +61,11 @@ import com.qualcomm.vuforia.Trackable;
 public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		ActivityTargetsEvents, MultiGestureListener {
 	private static final String LOGTAG = "ActivityMagicLens";
+	private static final String DAT_FILE_NAME = "Targets.dat";
 	private Gestures _gestures;
+
+	public static int FRAGMENT_CAMERA_POSITION = 0;
+	public static int FRAGMENT_TARGETS_POSITION = 1;
 
 	// UI
 	Button _extendedTrackingButton;
@@ -66,9 +80,13 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	private CharSequence _title;
 	private DrawerMenuItem[] _menuDrawerTitles;
 
-	// Camera fragment
-	Fragment _cameraFragment;
-	Fragment _targetsFragment;
+	// fragments
+	CameraFragment _cameraFragment;
+	TargetsFragment _targetsFragment;
+
+	// Targets
+	static public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
+	private int _lastTakePictureId = -1;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
@@ -80,7 +98,10 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		// Fragments
 		_cameraFragment = new CameraFragment();
+		_cameraFragment.setActivity(this);
+
 		_targetsFragment = new TargetsFragment();
+		_targetsFragment.setActivity(this);
 
 		// Vuforia
 		// addDataset("vuforia/test.xml");
@@ -121,6 +142,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);
+
+		// Custom targets
+		loadTargets();
 	}
 
 	@Override
@@ -223,10 +247,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				.getDrawable(R.drawable.icon), _targetsFragment);
 		DrawerMenuItem item3 = new DrawerMenuItem("Travel Book");
 		DrawerMenuItem item4 = new DrawerMenuItem("About");
-		DrawerMenuItem item5 = new DrawerMenuItem("--- Update Target ---");
 
-		_menuDrawerTitles = new DrawerMenuItem[] { item1, item2, item3, item4,
-				item5 };
+		_menuDrawerTitles = new DrawerMenuItem[] { item1, item2, item3, item4 };
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		_drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -293,7 +315,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		}
 	}
 
-	private void selectItem(int position) {
+	public void selectItem(int position) {
 		Log.i(LOGTAG, "selectItem " + position);
 
 		if (position >= _menuDrawerTitles.length)
@@ -307,14 +329,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		if (_menuDrawerTitles[position].mCaption.equals("About")) {
 			onAboutClicked();
-			_drawerLayout.closeDrawer(_drawerList);
-			return;
-		}
-
-		if (_menuDrawerTitles[position].mCaption
-				.equals("--- Update Target ---")) {
-			if (isUserDefinedTargetsRunning())
-				startBuild();
 			_drawerLayout.closeDrawer(_drawerList);
 			return;
 		}
@@ -471,4 +485,80 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 						}).setIcon(android.R.drawable.ic_dialog_info).show();
 	}
 
+	public void loadTargets() {
+		File file = new File(this.getFilesDir(), DAT_FILE_NAME);
+		if (file.exists()) {
+			try {
+				InputStream inFile = new FileInputStream(file);
+
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inFile));
+				// StringBuilder out = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					// out.append(line);
+					Log.i(LOGTAG, "loadTargets !!! readed from file : " + line);
+				}
+
+				reader.close();
+				inFile.close();
+			} catch (IOException e) {
+				Log.e(LOGTAG, "loadTargets IOException : " + e.getMessage());
+				e.printStackTrace();
+			}
+		} else
+			Log.e(LOGTAG, "loadTargets: file does not exists: " + DAT_FILE_NAME);
+	}
+
+	public void saveTargets() {
+		File file = new File(this.getFilesDir(), DAT_FILE_NAME);
+		try {
+			file.createNewFile();
+		} catch (Exception e) {
+			Log.e(LOGTAG, "saveTargets exception : " + e.getMessage());
+			return;
+		}
+
+		if (file.exists()) {
+			try {
+				OutputStream outFile = new FileOutputStream(file);
+
+				String str = "Hello smb.!";
+				outFile.write(str.getBytes());
+				outFile.close();
+
+				Log.i(LOGTAG, "saveTargets !!! wrote to file : " + str);
+			} catch (FileNotFoundException e) {
+				Log.e(LOGTAG,
+						"saveTargets FileNotFoundException : " + e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.e(LOGTAG, "saveTargets IOException : " + e.getMessage());
+				e.printStackTrace();
+			}
+		} else
+			Log.e(LOGTAG, "saveTargets: file does not exists: " + DAT_FILE_NAME);
+	}
+
+	public void prepateToTakeAPicture(int id) {
+		_lastTakePictureId = id;
+		_cameraFragment.prepareToTakeAPicture(id);
+	}
+
+	@Override
+	public void targetCreated() {
+		super.targetCreated();
+		Log.i(LOGTAG, "Target created " + _lastTargetName);
+
+		if ((_lastTakePictureId >= 0)
+				&& (_lastTakePictureId < mTargetsList.length)) {
+			ARModule arModule = _arObjectsMediator.getModule();
+			ARObjectManagement mngmnt = mTargetsList[_lastTakePictureId]
+					.getARObjectManagement(arModule);
+			arModule.addARObjectManagement(_lastTargetName, mngmnt);
+
+			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);
+			_lastTakePictureId = -1;
+		}
+	}
 }

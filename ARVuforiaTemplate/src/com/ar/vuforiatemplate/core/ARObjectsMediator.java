@@ -154,4 +154,8 @@ public class ARObjectsMediator {
 		_arModule.onTrackingResume(aARObjects);
 	}
 
+	public ARModule getModule() {
+		return _arModule;
+	}
+
 }
