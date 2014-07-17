@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -86,6 +87,11 @@ public class ARObjectsMediator {
 			_arModule.addTexture(fileName, t);
 		}
 
+	}
+
+	public void addTextTexture(String aText) {
+		Texture t = Texture.createTextureWithText(aText, 100, Color.YELLOW);
+		_arModule.addTexture(aText, t);
 	}
 
 	public void clearTextures() {

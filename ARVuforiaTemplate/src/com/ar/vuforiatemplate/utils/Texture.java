@@ -14,6 +14,8 @@ import java.nio.ByteOrder;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -89,4 +91,33 @@ public class Texture {
 		texture.mSuccess = true;
 		return texture;
 	}
+
+	private static Bitmap textAsBitmap(String text, float textSize, int textColor) {
+		Paint paint = new Paint();
+		paint.setTextSize(textSize);
+		paint.setColor(textColor);
+		paint.setTextAlign(Paint.Align.LEFT);
+		int width = (int) (paint.measureText(text) + 0.5f); // round
+		float baseline = (int) (-paint.ascent() + 0.5f); // ascent() is negative
+		int height = (int) (baseline + paint.descent() + 0.5f);
+		Bitmap image = Bitmap.createBitmap(width, height,
+				Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(image);
+		canvas.drawText(text, 0, baseline, paint);
+		return image;
+	}
+
+	public static Texture createTextureWithText(String aText, float aSize,
+			int aColor) {
+
+		Bitmap bitMap = textAsBitmap(aText, aSize, aColor);
+
+		int[] data = new int[bitMap.getWidth() * bitMap.getHeight()];
+		bitMap.getPixels(data, 0, bitMap.getWidth(), 0, 0, bitMap.getWidth(),
+				bitMap.getHeight());
+
+		return loadTextureFromIntBuffer(data, bitMap.getWidth(),
+				bitMap.getHeight());
+	}
+
 }

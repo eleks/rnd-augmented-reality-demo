@@ -8,6 +8,7 @@ package com.ar.vuforiatemplate.core;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -60,6 +61,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		implements SampleApplicationControl, ActivityTargetsEvents,
 		MultiGestureListener {
 	private static final String LOGTAG = "ImageTargets";
+	public static final int MAX_TRACKABLES = 10;
 
 	// AR Mediator
 	protected ARObjectsMediator _arObjectsMediator;
@@ -100,6 +102,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	private RefFreeFrame refFreeFrame;
 
 	protected String _lastTargetName;
+
+	private Vector<String> _neededTextTextures = new Vector<String>();
 
 	public FragmentActivityImageTargets(int aLoadingIndicatorId,
 			int aCameraOverlayLayout) {
@@ -419,7 +423,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				// Clear the oldest target if the dataset is full or the dataset
 				// already contains five user-defined targets.
 				if (_currentDataset.hasReachedTrackableLimit()
-						|| _currentDataset.getNumTrackables() >= 5)
+						|| _currentDataset.getNumTrackables() >= MAX_TRACKABLES)
 					_currentDataset.destroy(_currentDataset.getTrackable(0));
 
 				// if (mExtendedTracking && dataSetUserDef.getNumTrackables() >
@@ -734,6 +738,20 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 	public void customTargetRenderer() {
 		refFreeFrame.render();
+
+		if (_neededTextTextures.size() != 0) {
+			Log.i(LOGTAG, "!!!!!!!!!!!!!!! TEXTURE UPDATE !");
+			for (int i = 0; i < _neededTextTextures.size(); i++) {
+				Log.i(LOGTAG, "!!!!!!!!!!!!!!! TEXTURE UPDATE :"
+						+ _neededTextTextures.get(i));
+				_arObjectsMediator.addTextTexture(_neededTextTextures.get(i));
+			}
+			_neededTextTextures.clear();
+		}
+	}
+
+	public void needTextTexture(String aText) {
+		_neededTextTextures.add(aText);
 	}
 
 }

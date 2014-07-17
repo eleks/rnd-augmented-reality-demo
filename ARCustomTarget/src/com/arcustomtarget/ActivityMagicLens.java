@@ -393,7 +393,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		List<String> files = new ArrayList<String>();
 		files.add("images/wikipedia_mask.png");
 		files.add("images/www_icon.png");
-
+		
 		_arObjectsMediator.loadTextures(files, getAssets());
 	}
 
@@ -556,7 +556,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				&& (_lastTakePictureId < mTargetsList.length)) {
 			ARModule arModule = _arObjectsMediator.getModule();
 			ARObjectManagement mngmnt = mTargetsList[_lastTakePictureId]
-					.getARObjectManagement(this, arModule);
+					.getARObjectManagement(this, _arObjectsMediator);
 			arModule.addARObjectManagement(_lastTargetName, mngmnt);
 
 			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);

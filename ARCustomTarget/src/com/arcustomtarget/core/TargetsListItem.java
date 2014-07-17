@@ -3,19 +3,23 @@ package com.arcustomtarget.core;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
-import com.ar.vuforiatemplate.core.ARModule;
+import com.ar.vuforiatemplate.core.ARObjectsMediator;
+import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
 
 public class TargetsListItem {
+	private static final String LOGTAG = "TargetsListItem";
+
 	public final static int TARGET_TEXT = 0;
 	public final static int TARGET_URL = 1;
 	public final static int TARGET_VIDEO = 2;
 
 	public String mCaption = "caption";
 	public int mType = TARGET_TEXT;
-	public String mData = "www.google.com";
+	public String mData = "http://www.google.com";
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;
@@ -64,18 +68,27 @@ public class TargetsListItem {
 		}
 	}
 
-	public ARObjectManagement getARObjectManagement(Activity aActivity,
-			ARModule arModule) {
+	public ARObjectManagement getARObjectManagement(
+			FragmentActivityImageTargets aActivity, ARObjectsMediator arMediator) {
 		if (mType == TARGET_URL) {
-			ARTexture ar = new ARTexture(arModule.getMeshObject("texture"),
-					arModule.getShader("transparent", true),
-					"images/www_icon.png");
+			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
+					"texture"), arMediator.getModule().getShader("transparent",
+					true), "images/www_icon.png");
 			ar.mCallBack = new URLCallBack(aActivity, mData);
 			return ar;
 		}
 
-		return new ARTexture(arModule.getMeshObject("texture"),
-				arModule.getShader("hue_animation", true),
+		if (mType == TARGET_TEXT) {
+			Log.i(LOGTAG, "!!!! " + mData);
+			aActivity.needTextTexture(mData);
+			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
+					"texture"), arMediator.getModule().getShader("transparent",
+					true), mData);
+			return ar;
+		}
+
+		return new ARTexture(arMediator.getModule().getMeshObject("texture"),
+				arMediator.getModule().getShader("hue_animation", true),
 				"images/wikipedia_mask.png");
 	}
 
@@ -90,8 +103,12 @@ public class TargetsListItem {
 
 		@Override
 		public void callBackMethod() {
-			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(_URL));
-			_activity.startActivity(i);
+			try {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(_URL));
+				_activity.startActivity(i);
+			} catch (Exception e) {
+				Log.e(LOGTAG, "ERROR: " + e.getMessage());
+			}
 		}
 	}
 }
