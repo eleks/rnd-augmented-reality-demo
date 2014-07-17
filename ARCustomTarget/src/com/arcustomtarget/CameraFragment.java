@@ -35,6 +35,7 @@ public class CameraFragment extends Fragment {
 
 		getActivity().setTitle(menuItemName);
 
+		// Take A Picture button
 		_takeAPictureButton = (Button) _rootView
 				.findViewById(R.id.mainFragmentCaptureButton);
 		_takeAPictureButton.setOnClickListener(new OnClickListener() {
@@ -46,6 +47,14 @@ public class CameraFragment extends Fragment {
 					_activity.startBuild();
 					mTargetId = -1;
 				}
+			}
+		});
+
+		// Touch Listener
+		_rootView.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				_activity.onTouchEvent(event);
+				return true;
 			}
 		});
 
