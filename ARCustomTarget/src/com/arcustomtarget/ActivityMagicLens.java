@@ -50,6 +50,7 @@ import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.shaders.HueAnimationShaders;
 import com.ar.vuforiatemplate.shaders.OpenGLShaders;
 import com.ar.vuforiatemplate.shaders.TransparentShaders;
+import com.ar.vuforiatemplate.shaders.VideoShaders;
 import com.ar.vuforiatemplate.utils.SampleApplicationException;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
@@ -432,7 +433,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		// shaders.put("simple_normal", new NormalsShaders());
 		shaders.put("transparent", new TransparentShaders());
 		shaders.put("hue_animation", new HueAnimationShaders());
-		// shaders.put("video", new VideoShaders());
+		shaders.put("video", new VideoShaders());
 
 		_arObjectsMediator.compileShaders(shaders);
 	}

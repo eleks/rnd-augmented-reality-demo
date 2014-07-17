@@ -9,6 +9,7 @@ import com.ar.vuforiatemplate.core.ARObjectsMediator;
 import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
+import com.ar.vuforiatemplate.objects.ARVideo;
 
 public class TargetsListItem {
 	private static final String LOGTAG = "TargetsListItem";
@@ -84,6 +85,12 @@ public class TargetsListItem {
 			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
 					"texture"), arMediator.getModule().getShader("transparent",
 					true), mData);
+			return ar;
+		}
+
+		if (mType == TARGET_VIDEO) {
+			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
+					"texture"), arMediator.getModule().getShader("video", true), "video/MedicineVideo.mp4", aActivity);
 			return ar;
 		}
 
