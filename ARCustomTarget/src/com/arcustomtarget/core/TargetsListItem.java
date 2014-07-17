@@ -10,6 +10,7 @@ import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.objects.ARVideo;
+import com.ar.vuforiatemplate.video.FullscreenPlayback;
 
 public class TargetsListItem {
 	private static final String LOGTAG = "TargetsListItem";
@@ -84,13 +85,18 @@ public class TargetsListItem {
 			aActivity.needTextTexture(mData);
 			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
 					"texture"), arMediator.getModule().getShader("transparent",
-					true), mData);
+					true), "abc"); // mData);
+			//FIXME: hardcode !!! top line
 			return ar;
 		}
 
 		if (mType == TARGET_VIDEO) {
 			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
-					"texture"), arMediator.getModule().getShader("video", true), "video/MedicineVideo.mp4", aActivity);
+					"texture"),
+					arMediator.getModule().getShader("video", true),
+					"video/MedicineVideo.mp4", aActivity);
+			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity,
+					"video/MedicineVideo.mp4");
 			return ar;
 		}
 
@@ -118,4 +124,24 @@ public class TargetsListItem {
 			}
 		}
 	}
+
+	class VideoFullscreenCallBack implements ARObjectManagement.CallBack {
+		private Activity _activity;
+		private String _fileName;
+
+		public VideoFullscreenCallBack(Activity aActivity, String aFileName) {
+			_activity = aActivity;
+			_fileName = aFileName;
+		}
+
+		public void callBackMethod() {
+			Intent intent = new Intent(_activity, FullscreenPlayback.class);
+			intent.putExtra("movieName", _fileName);
+			intent.putExtra("shouldPlayImmediately", true);
+			intent.putExtra("currentSeekPosition", 0);
+			intent.putExtra("requestedOrientation", 0);
+			_activity.startActivityForResult(intent, 1);
+		}
+	}
+
 }

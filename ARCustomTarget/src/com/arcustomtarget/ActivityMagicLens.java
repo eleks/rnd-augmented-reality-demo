@@ -394,8 +394,11 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		List<String> files = new ArrayList<String>();
 		files.add("images/wikipedia_mask.png");
 		files.add("images/www_icon.png");
-		
+
 		_arObjectsMediator.loadTextures(files, getAssets());
+
+		// FIXME: hardcode !!!
+		_arObjectsMediator.addTextTexture("abc");
 	}
 
 	@Override
@@ -564,4 +567,5 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			_lastTakePictureId = -1;
 		}
 	}
+
 }
