@@ -19,9 +19,9 @@ public class GestureInfo {
 
 	public int mType = GESTURE_NONE;
 	public int mState;
-	public double mValue;
+	public float mValue;
 
-	public GestureInfo(int aType, int aState, double aValue) {
+	public GestureInfo(int aType, int aState, float aValue) {
 		mType = aType;
 		mState = aState;
 		mValue = aValue;

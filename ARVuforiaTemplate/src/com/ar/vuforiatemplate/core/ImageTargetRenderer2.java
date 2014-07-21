@@ -159,22 +159,8 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			_modelViewMatrix.put(targetName, modelViewMatrix_Vuforia);
 			_targetPositiveDimensions.put(targetName, imageTarget.getSize());
 
-			double objectScaleX = renderObject.mScaleX;
-			double objectScaleY = renderObject.mScaleY;
-			double objectScaleZ = renderObject.mScaleZ;
-
 			int textureIndex = 0;
 			int glTextureType = GLES20.GL_TEXTURE_2D;
-			// if (renderObject.mGLTextureIndex != -1) {
-			// textureIndex = renderObject.mGLTextureIndex;
-			// } else
-			// {
-			// // if (_textures.size() > renderObject.mTextureIndex )
-			// // textureIndex =
-			// _textures.get(renderObject.mTextureIndex).mTextureID[0];
-			// Texture t = renderObject.mTexture;
-			// textureIndex = t.mTextureID[0];
-			// }
 
 			Texture tex = _activity.getARObjectsMediator().getTexture(
 					renderObject.mTextureName);
@@ -187,24 +173,14 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			// deal with the modelview and projection matrices
 			float[] modelViewProjection = new float[16];
 
-			// if (renderObject.mMeshObject.getClass() !=
-			// SampleApplication3DModel.class) {
-			// Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f,
-			// (float) objectScaleZ);
-			// } else {
-			// Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
-			// Matrix.rotateM(modelViewMatrix, 0, 90.0f, 0, 1.0f, 0);
-			// }
+			Vec3F rot = renderObject.getRotation();
+			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[0], 1.0f, 0, 0);
+			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[1], 0, 1.0f, 0);
+			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[2], 0, 0, 1.0f);
 
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationX,
-					1.0f, 0, 0);
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationY,
-					0, 1.0f, 0);
-			Matrix.rotateM(modelViewMatrix, 0, (float) renderObject.mRotationZ,
-					0, 0, 1.0f);
-
-			Matrix.scaleM(modelViewMatrix, 0, (float) objectScaleX,
-					(float) objectScaleY, (float) objectScaleZ);
+			Vec3F scale = renderObject.getScale();
+			Matrix.scaleM(modelViewMatrix, 0, scale.getData()[0],
+					scale.getData()[1], scale.getData()[2]);
 
 			Matrix.multiplyMM(modelViewProjection, 0, _vuforiaAppSession
 					.getProjectionMatrix().getData(), 0, modelViewMatrix, 0);

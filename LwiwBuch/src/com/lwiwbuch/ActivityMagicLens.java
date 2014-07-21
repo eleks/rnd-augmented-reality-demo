@@ -73,8 +73,8 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		try {
 			WavefrontModelObject wavefrontObject = new WavefrontModelObject();
 			wavefrontObject.loadModel(getResources().getAssets(),
-			 "obj/ZolochivCastle.obj");
-//					"obj/sphere.obj");
+//			 "obj/ZolochivCastle.obj");
+					"obj/sphere.obj");
 			arModule.addMeshObject("castle", wavefrontObject);
 		} catch (IOException e) {
 			Log.e(LOGTAG, "Unable to load monkey.obj");
@@ -131,8 +131,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		// Boim Kapelle
 		ARVideo boimKapelle = new ARVideo(arModule.getMeshObject("texture"),
 				arModule.getShader("video", true), "Video.mp4", this);
-		boimKapelle.mObjectRender.mScaleRelX = 0.8f;
-		boimKapelle.mObjectRender.mScaleRelY = 0.4f;
+		boimKapelle.mObjectRender.setScaleRelDeprecated(.8f, .4f, .1f);
 		boimKapelle.mInternalCallBack = new VideoFullscreenCallBack(this,
 				"Video.mp4");
 		arModule.addARObjectManagement("BoimKapelle", boimKapelle);

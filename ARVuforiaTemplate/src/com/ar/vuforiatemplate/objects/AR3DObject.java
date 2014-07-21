@@ -6,13 +6,12 @@ import com.ar.vuforiatemplate.meshobjects.MeshObject;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.qualcomm.vuforia.TrackableResult;
+import com.qualcomm.vuforia.Vec3F;
 
 public class AR3DObject extends ARObjectManagement {
 	private static String LOGTAG = "AR3DObject";
 
-	private double _startScaleX;
-	private double _startScaleY;
-	private double _startScaleZ;
+	private Vec3F _startScale;
 
 	public AR3DObject(MeshObject aMeshObject, OpenGLBinaryShaders aShader,
 			String aFileName) {
@@ -27,15 +26,11 @@ public class AR3DObject extends ARObjectManagement {
 	}
 
 	public void setScale(float aScale) {
-		mObjectRender.mScaleX = aScale;
-		mObjectRender.mScaleY = aScale;
-		mObjectRender.mScaleZ = aScale;
+		mObjectRender.setScale(aScale, aScale, aScale);
 	}
 
 	public void setRotation(float aX, float aY, float aZ) {
-		mObjectRender.mRotationX = aX;
-		mObjectRender.mRotationY = aY;
-		mObjectRender.mRotationZ = aZ;
+		mObjectRender.setRotation(aX, aY, aZ);
 	}
 
 	@Override
@@ -47,14 +42,14 @@ public class AR3DObject extends ARObjectManagement {
 		case GestureInfo.GESTURE_PINCH:
 			switch (aInfo.mState) {
 			case GestureInfo.STATE_START:
-				_startScaleX = mObjectRender.mScaleX;
-				_startScaleY = mObjectRender.mScaleY;
-				_startScaleZ = mObjectRender.mScaleZ;
+				_startScale = mObjectRender.getScale();
 				return true;
 			case GestureInfo.STATE_MOVE:
-				mObjectRender.mScaleX = _startScaleX * aInfo.mValue;
-				mObjectRender.mScaleY = _startScaleY * aInfo.mValue;
-				mObjectRender.mScaleZ = _startScaleZ * aInfo.mValue;
+				Vec3F scale = new Vec3F(_startScale);
+				scale.getData()[0] *= aInfo.mValue;
+				scale.getData()[1] *= aInfo.mValue;
+				scale.getData()[2] *= aInfo.mValue;
+				mObjectRender.setScale(scale);
 				return true;
 			case GestureInfo.STATE_FINISH:
 				return true;
@@ -64,7 +59,7 @@ public class AR3DObject extends ARObjectManagement {
 		// Move
 		case GestureInfo.GESTURE_MOVE_X:
 		case GestureInfo.GESTURE_MOVE_Y:
-			mObjectRender.mRotationY += 4.0f * aInfo.mValue;
+			mObjectRender.addRotation(0.f, 4.0f * aInfo.mValue, 0.f);
 			return true;
 		}
 

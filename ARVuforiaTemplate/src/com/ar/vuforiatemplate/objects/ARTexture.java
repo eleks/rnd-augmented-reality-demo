@@ -19,9 +19,11 @@ public class ARTexture extends ARObjectManagement {
 		super.onTrackingStart(aResult);
 
 		ImageTarget imageTarget = (ImageTarget) aResult.getTrackable();
-		mObjectRender.mScaleX = imageTarget.getSize().getData()[0] / 2.0f;
-		mObjectRender.mScaleY = imageTarget.getSize().getData()[1] / 2.0f;
-		mObjectRender.mScaleZ = 1.0f;
+		float aX = imageTarget.getSize().getData()[0] / 2.0f;
+		float aY = imageTarget.getSize().getData()[1] / 2.0f;
+		float aZ = 1.0f;
+
+		mObjectRender.setScaleDeprecated(aX, aY, aZ);
 	}
 
 }
