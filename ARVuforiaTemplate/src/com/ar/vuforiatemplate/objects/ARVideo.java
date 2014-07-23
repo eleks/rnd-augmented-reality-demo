@@ -7,6 +7,7 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.ar.vuforiatemplate.utils.Texture;
 import com.ar.vuforiatemplate.ux.GestureInfo;
@@ -40,6 +41,8 @@ public class ARVideo extends ARObjectManagement {
 		_videoPlayerHelper = new VideoPlayerHelper();
 		_videoPlayerHelper.init();
 		_videoPlayerHelper.setActivity(aActivity);
+		
+		mObjectRender.mAspectRatio = AspectRatio.FIT_ISIDE;
 	}
 
 	@Override

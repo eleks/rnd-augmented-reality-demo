@@ -1,6 +1,7 @@
 package com.ar.vuforiatemplate.objects;
 
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.qualcomm.vuforia.ImageTarget;
 import com.qualcomm.vuforia.TrackableResult;
@@ -12,6 +13,7 @@ public class ARTexture extends ARObjectManagement {
 		super(aMeshObject, aShader);
 
 		mObjectRender.mTextureName = aTexture;
+		mObjectRender.mAspectRatio = AspectRatio.FIT_ISIDE;
 	}
 
 	@Override

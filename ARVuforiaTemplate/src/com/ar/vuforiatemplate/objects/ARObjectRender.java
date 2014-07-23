@@ -11,7 +11,7 @@ public class ARObjectRender {
 	};
 
 	AspectRatio mAspectRatio = AspectRatio.FILL_TARGET;
-	public float mWidthDivHeight = 1.0f;
+//	public float mWidthDivHeight = 1.0f;
 
 	public MeshObject mMeshObject;
 
