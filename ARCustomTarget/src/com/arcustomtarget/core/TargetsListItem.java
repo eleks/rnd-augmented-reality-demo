@@ -8,6 +8,7 @@ import android.util.Log;
 import com.ar.vuforiatemplate.core.ARObjectsMediator;
 import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatioType;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.objects.ARVideo;
 import com.ar.vuforiatemplate.video.FullscreenPlayback;
@@ -76,6 +77,7 @@ public class TargetsListItem {
 			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
 					"texture"), arMediator.getModule().getShader("transparent",
 					true), "images/www_icon.png");
+			ar.mObjectRender.mAspectRatioType = AspectRatioType.QUADRATE_INSIDE;
 			ar.mCallBack = new URLCallBack(aActivity, mData);
 			return ar;
 		}
@@ -87,6 +89,7 @@ public class TargetsListItem {
 					"texture"), arMediator.getModule().getShader("transparent",
 					true), "abc"); // mData);
 			//FIXME: hardcode !!! top line
+			ar.mObjectRender.mAspectRatioType = AspectRatioType.FILL_TARGET;
 			return ar;
 		}
 
@@ -97,6 +100,8 @@ public class TargetsListItem {
 					"video/MedicineVideo.mp4", aActivity);
 			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity,
 					"video/MedicineVideo.mp4");
+			ar.mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
+			ar.mObjectRender.setAspectRatio(2.0f);
 			return ar;
 		}
 

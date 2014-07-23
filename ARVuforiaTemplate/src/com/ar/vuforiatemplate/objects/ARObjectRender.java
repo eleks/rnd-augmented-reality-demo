@@ -7,15 +7,15 @@ import com.qualcomm.vuforia.Vec3F;
 
 public class ARObjectRender {
 	public ARObjectRender() {
-		mAspectRatio = AspectRatio.FILL_TARGET;
+		mAspectRatioType = AspectRatioType.FILL_TARGET;
 	}
 
-	public enum AspectRatio {
+	public enum AspectRatioType {
 		FILL_TARGET, FIT_INSIDE, FIT_OUTSIDE, QUADRATE_INSIDE, CUSTOM
 	};
 
-	public AspectRatio mAspectRatio;
-	public float mWidthDivHeight = 1.0f;
+	public AspectRatioType mAspectRatioType;
+	private float mAspectRatio = 1.0f;
 
 	public MeshObject mMeshObject;
 
@@ -51,31 +51,31 @@ public class ARObjectRender {
 	}
 
 	public Vec3F getScale(Vec2F imageTargetSize) {
-		if (mAspectRatio == AspectRatio.CUSTOM)
+		if (mAspectRatioType == AspectRatioType.CUSTOM)
 			return new Vec3F(_scaleCustom);
 
 		float scaleX = imageTargetSize.getData()[0] / 2.0f;
 		float scaleY = imageTargetSize.getData()[1] / 2.0f;
 
-		switch (mAspectRatio) {
+		switch (mAspectRatioType) {
 		case FILL_TARGET:
 			return new Vec3F(scaleX, scaleY, 1.0f);
 		case FIT_INSIDE: {
 			float sx = scaleX;
 			float sy = scaleY;
-			if (mWidthDivHeight < 1.0f)
-				sx *= mWidthDivHeight;
+			if (mAspectRatio < 1.0f)
+				sx *= mAspectRatio;
 			else
-				sy /= mWidthDivHeight;
+				sy /= mAspectRatio;
 			return new Vec3F(sx, sy, 1.0f);
 		}
 		case FIT_OUTSIDE: {
 			float sx = scaleX;
 			float sy = scaleY;
-			if (mWidthDivHeight > 1.0f)
-				sx *= mWidthDivHeight;
+			if (mAspectRatio > 1.0f)
+				sx *= mAspectRatio;
 			else
-				sy /= mWidthDivHeight;
+				sy /= mAspectRatio;
 			return new Vec3F(sx, sy, 1.0f);
 		}
 		case QUADRATE_INSIDE: {
@@ -103,4 +103,7 @@ public class ARObjectRender {
 		_scaleCustom.getData()[2] += dZ;
 	}
 
+	public void setAspectRatio(float aAspRatio) {
+		mAspectRatio = aAspRatio;
+	}
 }

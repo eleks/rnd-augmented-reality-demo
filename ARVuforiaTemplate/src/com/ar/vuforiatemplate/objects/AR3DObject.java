@@ -3,7 +3,7 @@ package com.ar.vuforiatemplate.objects;
 import android.util.Log;
 
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
-import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatioType;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.qualcomm.vuforia.TrackableResult;
@@ -19,7 +19,7 @@ public class AR3DObject extends ARObjectManagement {
 		super(aMeshObject, aShader);
 
 		mObjectRender.mTextureName = aFileName;
-		mObjectRender.mAspectRatio = AspectRatio.CUSTOM;
+		mObjectRender.mAspectRatioType = AspectRatioType.CUSTOM;
 	}
 
 	@Override

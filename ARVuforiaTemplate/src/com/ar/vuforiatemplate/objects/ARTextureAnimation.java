@@ -3,7 +3,7 @@ package com.ar.vuforiatemplate.objects;
 import java.util.Vector;
 
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
-import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatioType;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.qualcomm.vuforia.TrackableResult;
 
@@ -20,7 +20,7 @@ public class ARTextureAnimation extends ARObjectManagement {
 
 		_textures = aTextures;
 
-		mObjectRender.mAspectRatio = AspectRatio.FIT_INSIDE;
+		mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
 	}
 
 	private long getTime() {
