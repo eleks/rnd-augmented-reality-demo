@@ -440,8 +440,9 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				// }
 
 				// Add new trackable source
-				Trackable trackable = _currentDataset
-						.createTrackable(refFreeFrame.getNewTrackableSource());
+				// Trackable trackable =
+				_currentDataset.createTrackable(refFreeFrame
+						.getNewTrackableSource());
 
 				// Reactivate current dataset
 				imageTracker.activateDataSet(_currentDataset);

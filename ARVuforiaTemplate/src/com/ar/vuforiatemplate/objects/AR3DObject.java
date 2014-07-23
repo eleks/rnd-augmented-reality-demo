@@ -3,6 +3,7 @@ package com.ar.vuforiatemplate.objects;
 import android.util.Log;
 
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.qualcomm.vuforia.TrackableResult;
@@ -18,6 +19,7 @@ public class AR3DObject extends ARObjectManagement {
 		super(aMeshObject, aShader);
 
 		mObjectRender.mTextureName = aFileName;
+		mObjectRender.mAspectRatio = AspectRatio.CUSTOM;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class AR3DObject extends ARObjectManagement {
 	}
 
 	public void setScale(float aScale) {
-		mObjectRender.setScale(aScale, aScale, aScale);
+		mObjectRender.setCustomScale(aScale, aScale, aScale);
 	}
 
 	public void setRotation(float aX, float aY, float aZ) {
@@ -42,14 +44,14 @@ public class AR3DObject extends ARObjectManagement {
 		case GestureInfo.GESTURE_PINCH:
 			switch (aInfo.mState) {
 			case GestureInfo.STATE_START:
-				_startScale = mObjectRender.getScale();
+				_startScale = mObjectRender.getCustomScale();
 				return true;
 			case GestureInfo.STATE_MOVE:
 				Vec3F scale = new Vec3F(_startScale);
 				scale.getData()[0] *= aInfo.mValue;
 				scale.getData()[1] *= aInfo.mValue;
 				scale.getData()[2] *= aInfo.mValue;
-				mObjectRender.setScale(scale);
+				mObjectRender.setCustomScale(scale);
 				return true;
 			case GestureInfo.STATE_FINISH:
 				return true;

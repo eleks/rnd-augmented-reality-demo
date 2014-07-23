@@ -13,9 +13,7 @@ import com.ar.vuforiatemplate.utils.Texture;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.video.VideoPlayerHelper;
 import com.ar.vuforiatemplate.video.VideoPlayerHelper.MEDIA_TYPE;
-import com.qualcomm.vuforia.ImageTarget;
 import com.qualcomm.vuforia.TrackableResult;
-import com.qualcomm.vuforia.Vec3F;
 
 public class ARVideo extends ARObjectManagement {
 	private static final String LOGTAG = "ARVideo";
@@ -42,27 +40,7 @@ public class ARVideo extends ARObjectManagement {
 		_videoPlayerHelper.init();
 		_videoPlayerHelper.setActivity(aActivity);
 		
-		mObjectRender.mAspectRatio = AspectRatio.FIT_ISIDE;
-	}
-
-	@Override
-	public void onTrackingStart(TrackableResult aResult) {
-		super.onTrackingStart(aResult);
-
-		ImageTarget imageTarget = (ImageTarget) aResult.getTrackable();
-//		mObjectRender.mScaleX = imageTarget.getSize().getData()[0] / 2.0f
-//				* mObjectRender.mScaleRelX;
-//		mObjectRender.mScaleY = imageTarget.getSize().getData()[1] / 2.0f
-//				* mObjectRender.mScaleRelY;
-//		mObjectRender.mScaleZ = 1.0f * mObjectRender.mScaleRelZ;
-
-		Vec3F scaleRel = mObjectRender.getScaleRel();
-		
-		float aX = imageTarget.getSize().getData()[0] / 2.0f * scaleRel.getData()[0];
-		float aY = imageTarget.getSize().getData()[1] / 2.0f * scaleRel.getData()[1];
-		float aZ =  scaleRel.getData()[2];
-
-		mObjectRender.setScaleDeprecated(aX, aY, aZ);
+		mObjectRender.mAspectRatio = AspectRatio.FIT_INSIDE;
 	}
 
 	@Override

@@ -37,7 +37,6 @@ public class RefFreeFrame {
 
 	// / Keep track of the time between frames for color transitions
 	private long lastFrameTime;
-	private long lastSuccessTime;
 
 	// All rendering methods are contained in this class for easy
 	// extraction/abstraction
@@ -66,7 +65,6 @@ public class RefFreeFrame {
 		vuforiaAppSession = session;
 		colorFrame = new float[4];
 		curStatus = STATUS.STATUS_IDLE;
-		lastSuccessTime = 0;
 		trackableSource = null;
 		colorFrame[0] = 1.0f;
 		colorFrame[1] = 0.0f;
@@ -173,7 +171,6 @@ public class RefFreeFrame {
 					.getTrackableSource();
 			if (newTrackableSource != null) {
 				newStatus = STATUS.STATUS_SUCCESS;
-				lastSuccessTime = lastFrameTime;
 				trackableSource = newTrackableSource;
 
 				mActivity.targetCreated();

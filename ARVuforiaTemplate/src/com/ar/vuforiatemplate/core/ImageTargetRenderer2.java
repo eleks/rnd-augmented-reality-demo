@@ -178,7 +178,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[1], 0, 1.0f, 0);
 			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[2], 0, 0, 1.0f);
 
-			Vec3F scale = renderObject.getScale();
+			Vec3F scale = renderObject.getScale( imageTarget.getSize() );
 			Matrix.scaleM(modelViewMatrix, 0, scale.getData()[0],
 					scale.getData()[1], scale.getData()[2]);
 

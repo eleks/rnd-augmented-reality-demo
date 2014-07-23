@@ -69,7 +69,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		// Video
 		ARVideo medicineVideo = new ARVideo(arModule.getMeshObject("texture"),
 				arModule.getShader("video", true), "video/MedicineVideo.mp4", this);
-		medicineVideo.mObjectRender.setScaleRelDeprecated(.8f, .2f, .1f);
+		medicineVideo.mObjectRender.mWidthDivHeight = 2.0f;
 		medicineVideo.mInternalCallBack = new VideoFullscreenCallBack(this,
 				"video/MedicineVideo.mp4");
 		arModule.addARObjectManagement("medicineVideo", medicineVideo);

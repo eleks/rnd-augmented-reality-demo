@@ -27,6 +27,7 @@ import com.ar.vuforiatemplate.meshobjects.TextureObject;
 import com.ar.vuforiatemplate.meshobjects.WavefrontModelObject;
 import com.ar.vuforiatemplate.objects.AR3DObject;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
+import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatio;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.objects.ARTextureAnimation;
 import com.ar.vuforiatemplate.objects.ARVideo;
@@ -101,12 +102,14 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		ARTexture lev = new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("transparent", true), "wiki_logo.png");
 		lev.mCallBack = new LevCallBack();
+		lev.mObjectRender.mAspectRatio = AspectRatio.QUADRATE_INSIDE;
 		arModule.addARObjectManagement("LevDanylovych", lev);
 
 		// Lviv Map
 		ARTexture lvivMap = new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("transparent", true), "googlemaps_icon.png");
 		lvivMap.mCallBack = new LvivMapCallBack();
+		lvivMap.mObjectRender.mAspectRatio = AspectRatio.QUADRATE_INSIDE;
 		arModule.addARObjectManagement("LvivMap", lvivMap);
 
 		// Zolochiv Map
@@ -114,24 +117,27 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 				arModule.getMeshObject("texture"), arModule.getShader(
 						"transparent", true), "googlemaps_icon.png");
 		zolochivMap.mCallBack = new ZolochivMapCallBack();
+		zolochivMap.mObjectRender.mAspectRatio = AspectRatio.QUADRATE_INSIDE;
 		arModule.addARObjectManagement("MapZolochiv", zolochivMap);
 
 		// Rynok sq.
 		ARTexture rynokSq = new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("transparent", true), "directions_icon.png");
 		rynokSq.mCallBack = new RynokSqCallBack();
+		rynokSq.mObjectRender.mAspectRatio = AspectRatio.QUADRATE_INSIDE;
 		arModule.addARObjectManagement("RynokSq", rynokSq);
 
 		// Svobody ave.
 		ARTexture svobodyAve = new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("transparent", true), "directions_icon.png");
 		svobodyAve.mCallBack = new SvobodyAveCallBack();
+		svobodyAve.mObjectRender.mAspectRatio = AspectRatio.QUADRATE_INSIDE;
 		arModule.addARObjectManagement("SvobodyAve", svobodyAve);
 
 		// Boim Kapelle
 		ARVideo boimKapelle = new ARVideo(arModule.getMeshObject("texture"),
 				arModule.getShader("video", true), "Video.mp4", this);
-		boimKapelle.mObjectRender.setScaleRelDeprecated(.8f, .4f, .1f);
+		boimKapelle.mObjectRender.mWidthDivHeight = 2.0f;
 		boimKapelle.mInternalCallBack = new VideoFullscreenCallBack(this,
 				"Video.mp4");
 		arModule.addARObjectManagement("BoimKapelle", boimKapelle);
@@ -140,7 +146,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		AR3DObject backCover = new AR3DObject(arModule.getMeshObject("castle"),
 				arModule.getShader("simple_normal", true),
 				"building/Buildings.jpeg");
-		backCover.setScale(5.0f);
+		backCover.setScale(50.0f);
 		backCover.setRotation(90.0f, 0.0f, 0.0f);
 		backCover.mNeedsExtendedTracking = true;
 		arModule.addARObjectManagement("CoverLast", backCover);
