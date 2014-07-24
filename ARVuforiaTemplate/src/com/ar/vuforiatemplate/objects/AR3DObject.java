@@ -47,11 +47,10 @@ public class AR3DObject extends ARObjectManagement {
 				_startScale = mObjectRender.getCustomScale();
 				return true;
 			case GestureInfo.STATE_MOVE:
-				Vec3F scale = new Vec3F(_startScale);
-				scale.getData()[0] *= aInfo.mValue;
-				scale.getData()[1] *= aInfo.mValue;
-				scale.getData()[2] *= aInfo.mValue;
-				mObjectRender.setCustomScale(scale);
+				mObjectRender.setCustomScale(new Vec3F(_startScale.getData()[0]
+						* aInfo.mValue,
+						_startScale.getData()[1] * aInfo.mValue, _startScale
+								.getData()[2] * aInfo.mValue));
 				return true;
 			case GestureInfo.STATE_FINISH:
 				return true;

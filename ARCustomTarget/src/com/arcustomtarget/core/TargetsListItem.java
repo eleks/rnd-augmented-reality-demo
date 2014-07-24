@@ -42,13 +42,13 @@ public class TargetsListItem {
 	public int getDrawableId() {
 		switch (mType) {
 		case TargetsListItem.TARGET_TEXT:
-			return android.R.drawable.ic_dialog_email;
+			return android.R.drawable.ic_menu_edit;
 
 		case TargetsListItem.TARGET_URL:
-			return android.R.drawable.ic_dialog_info;
+			return android.R.drawable.ic_menu_directions;
 
 		case TargetsListItem.TARGET_VIDEO:
-			return android.R.drawable.ic_dialog_map;
+			return android.R.drawable.ic_menu_gallery;
 
 		default:
 			return android.R.color.transparent;

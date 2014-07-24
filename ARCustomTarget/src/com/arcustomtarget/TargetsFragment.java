@@ -49,7 +49,8 @@ public class TargetsFragment extends Fragment {
 		newTarget.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				TargetsListItem item = new TargetsListItem("new");
+				TargetsListItem item = new TargetsListItem("target ¹"
+						+ (ActivityMagicLens.mTargetsList.length+1) );
 				addTarget(item);
 			}
 		});

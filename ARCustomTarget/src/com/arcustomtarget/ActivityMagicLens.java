@@ -183,41 +183,13 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu, menu);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (_drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+
 		// Handle action buttons
-		switch (item.getItemId()) {
-		case R.id.action_statadd:
-			Log.i(LOGTAG, "action_statadd");
-			return true;
-
-		case R.id.action_http_get:
-			Log.i(LOGTAG, "action_http_get");
-			return true;
-
-		case R.id.action_sqlite_query:
-			Log.i(LOGTAG, "action_sqlite_query");
-			return true;
-
-		case R.id.action_about:
-			Log.i(LOGTAG, "action_about");
-			return true;
-
-		case R.id.action_settings:
-			Log.i(LOGTAG, "action_settings");
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@SuppressLint("NewApi")
