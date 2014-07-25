@@ -88,7 +88,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	// Targets
 	static public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
-	private int _lastTakePictureId = -1;
+	private int _buildTargetId = -1;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
@@ -518,26 +518,43 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			Log.e(LOGTAG, "saveTargets: file does not exists: " + DAT_FILE_NAME);
 	}
 
-	public void prepateToTakeAPicture(int id) {
-		_lastTakePictureId = id;
-		_cameraFragment.prepareToTakeAPicture(id);
-	}
+	// public void prepateToTakeAPicture(int id) {
+	// // !!!
+	// // _lastTakePictureId = id;
+	// _cameraFragment.prepareToTakeAPicture(id);
+	// }
 
 	@Override
 	public void targetCreated() {
 		super.targetCreated();
-		Log.i(LOGTAG, "Target created " + _lastTargetName);
+		Log.i(LOGTAG, "!!! Target created " + _lastTargetName);
 
-		if ((_lastTakePictureId >= 0)
-				&& (_lastTakePictureId < mTargetsList.length)) {
+		if ((_buildTargetId >= 0) && (_buildTargetId < mTargetsList.length)) {
 			ARModule arModule = _arObjectsMediator.getModule();
-			ARObjectManagement mngmnt = mTargetsList[_lastTakePictureId]
+			ARObjectManagement mngmnt = mTargetsList[_buildTargetId]
 					.getARObjectManagement(this, _arObjectsMediator);
 			arModule.addARObjectManagement(_lastTargetName, mngmnt);
 
 			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);
-			_lastTakePictureId = -1;
+			_buildTargetId = -1;
+
+			_cameraFragment.onTargetCreated();
 		}
+
+	}
+
+	public void requestTargetFromCamera(int aTargetId) {
+		selectItem(ActivityMagicLens.FRAGMENT_CAMERA_POSITION);
+		_cameraFragment.requestTargetFromCamera(aTargetId);
+	}
+
+	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
+		_targetsFragment.responceTargetFromCamera(aTargetId, aSuccess);
+	}
+
+	public boolean startBuild(int aTargetId) {
+		_buildTargetId = aTargetId;
+		return super.startBuild();
 	}
 
 }

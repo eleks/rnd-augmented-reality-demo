@@ -2,14 +2,19 @@ package com.arcustomtarget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,8 +25,12 @@ import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
 public class TargetsFragment extends Fragment {
-	// private final String LOGTAG = "TargetsFragment";
+	private final String LOGTAG = "TargetsFragment";
 	public static final String ARG_NUMBER = "menu_item_number";
+	
+	private final String DATA_TEXT = "Hello world !";
+	private final String DATA_URL = "http://www.google.com/";
+	private final String DATA_VIDEO = "vide ...";
 
 	private ListView _targetsListView;
 
@@ -50,7 +59,7 @@ public class TargetsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				TargetsListItem item = new TargetsListItem("target ¹"
-						+ (ActivityMagicLens.mTargetsList.length+1) );
+						+ (ActivityMagicLens.mTargetsList.length + 1));
 				addTarget(item);
 			}
 		});
@@ -172,6 +181,8 @@ public class TargetsFragment extends Fragment {
 		dialog.show();
 	}
 
+	private static boolean _sCreateItem = false;
+
 	private void showEditDialog(int id, boolean newItem) {
 		final int fId = id;
 		final boolean fNewItem = newItem;
@@ -181,6 +192,14 @@ public class TargetsFragment extends Fragment {
 
 		final Dialog dialog = new Dialog(context);
 		dialog.setContentView(R.layout.target_edit_dialog_layout);
+		dialog.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				if (fNewItem && !_sCreateItem)
+					removeTargetWithId(fId);
+				_sCreateItem = false;
+			}
+		});
 
 		// Caption
 		dialog.setTitle(ActivityMagicLens.mTargetsList[id].mCaption);
@@ -190,13 +209,45 @@ public class TargetsFragment extends Fragment {
 				.findViewById(R.id.targetEditDialogTextCaption);
 		editTextCaption.setText(ActivityMagicLens.mTargetsList[id].mCaption);
 
+		// Data text
+		final EditText editTextData = (EditText) dialog
+				.findViewById(R.id.targetEditDialogTextData);
+		String data = ActivityMagicLens.mTargetsList[id].mData;
+		if (data.length() > 0)
+			editTextData.setText(data);
+		else
+			editTextData.setText(DATA_TEXT);
+
 		// Radio buttons
 		final RadioButton textRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonText);
+		textRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				if (textRadioButton.isChecked())
+					changeDataTextIfItIsVirgin(editTextData, DATA_TEXT);
+			}
+		});
+		
 		final RadioButton urlRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonURL);
+		urlRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				if (urlRadioButton.isChecked())
+					changeDataTextIfItIsVirgin(editTextData, DATA_URL);
+			}
+		});
+
 		final RadioButton videoRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonVideo);
+		videoRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				if (videoRadioButton.isChecked())
+					changeDataTextIfItIsVirgin(editTextData, DATA_VIDEO);
+			}
+		});
 
 		if (ActivityMagicLens.mTargetsList[id].mType == TargetsListItem.TARGET_TEXT)
 			textRadioButton.setChecked(true);
@@ -205,11 +256,7 @@ public class TargetsFragment extends Fragment {
 		else if (ActivityMagicLens.mTargetsList[id].mType == TargetsListItem.TARGET_VIDEO)
 			videoRadioButton.setChecked(true);
 
-		// Data text
-		final EditText editTextData = (EditText) dialog
-				.findViewById(R.id.targetEditDialogTextData);
-		editTextData.setText(ActivityMagicLens.mTargetsList[id].mData);
-
+		
 		// OK button
 		Button dialogButtonOK = (Button) dialog
 				.findViewById(R.id.targetEditDialogButtonOK);
@@ -232,13 +279,13 @@ public class TargetsFragment extends Fragment {
 
 				changeTargetWithId(fId, item);
 
+				_sCreateItem = true;
+
 				_activity.saveTargets();
 				dialog.dismiss();
 
 				if (fNewItem) {
-					_activity.prepateToTakeAPicture(fId);
-					_activity
-							.selectItem(ActivityMagicLens.FRAGMENT_CAMERA_POSITION);
+					_activity.requestTargetFromCamera(fId);
 				}
 			}
 		});
@@ -256,6 +303,17 @@ public class TargetsFragment extends Fragment {
 		});
 
 		dialog.show();
+	}
+
+	void changeDataTextIfItIsVirgin(EditText aEditText, String aStr) {
+		String text = aEditText.getText().toString(); 
+		if (text.equals(DATA_TEXT) || text.equals(DATA_URL) || text.equals(DATA_VIDEO)) {
+			aEditText.setText(aStr);
+		}
+	}
+
+	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
+		// TODO Auto-generated method stub
 	}
 
 }

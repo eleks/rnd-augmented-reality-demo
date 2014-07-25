@@ -22,7 +22,7 @@ public class TargetsListItem {
 
 	public String mCaption = "caption";
 	public int mType = TARGET_TEXT;
-	public String mData = "http://www.google.com";
+	public String mData = "";
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;

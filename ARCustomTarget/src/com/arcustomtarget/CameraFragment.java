@@ -1,6 +1,8 @@
 package com.arcustomtarget;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +21,9 @@ public class CameraFragment extends Fragment {
 	private View _rootView;
 	private Button _takeAPictureButton;
 
-	private int mTargetId = -1;
+	private boolean _firstTimeShow = true;
+
+	private int _targetId = -1;
 
 	public void setActivity(ActivityMagicLens aActivity) {
 		_activity = aActivity;
@@ -41,14 +45,20 @@ public class CameraFragment extends Fragment {
 		_takeAPictureButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i(LOGTAG, "prepareToTakeAPicture id: " + mTargetId);
+				Log.i(LOGTAG, "prepareToTakeAPicture id: " + _targetId);
 				// Create custom target
-				if (mTargetId != -1) {
-					_activity.startBuild();
-					mTargetId = -1;
+				if (_targetId != -1) {
+					if (_activity.startBuild(_targetId)) {
+						_targetId = -1;
+						disableButton();
+					}
 				}
 			}
 		});
+		if (_firstTimeShow) {
+			hideButton();
+			_firstTimeShow = false;
+		}
 
 		// Touch Listener
 		_rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -61,10 +71,64 @@ public class CameraFragment extends Fragment {
 		return _rootView;
 	}
 
-	public void prepareToTakeAPicture(int id) {
-		mTargetId = id;
-		// _rootView.bringToFront();
-		// _takeAPictureButton.setVisibility(View.VISIBLE);
+	public void requestTargetFromCamera(int aTargetId) {
+		_targetId = aTargetId;
+		enableButton();
+		showButton();
+	}
+
+	public void onTargetCreated() {
+		hideButton();
+		enableButton();
+	}
+
+	public void onTargetFailedToCreate(int aTargetId) {
+		_targetId = aTargetId;
+		enableButton();
+		showButton();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (_targetId != -1) {
+			_activity.responceTargetFromCamera(_targetId, false);
+			_targetId = -1;
+			hideButton();
+			enableButton();
+		}
+	}
+
+	private void disableButton() {
+		// _takeAPictureButton.setEnabled(false);
+	}
+
+	private void enableButton() {
+		// _takeAPictureButton.setEnabled(true);
+	}
+
+	private void showButton() {
+		Log.i(LOGTAG, "!!! show button");
+		Handler refresh = new Handler(_activity.getMainLooper());
+		refresh.post(new Runnable() {
+			public void run() {
+				// _takeAPictureButton.setVisibility(View.VISIBLE);
+				// _takeAPictureButton.setEnabled(true);
+			}
+		});
+		// _takeAPictureButton.setEnabled(true);
+	}
+
+	private void hideButton() {
+		Log.i(LOGTAG, "!!! hide button");
+		Handler refresh = new Handler(_activity.getMainLooper());
+		refresh.post(new Runnable() {
+			public void run() {
+				// _takeAPictureButton.setVisibility(View.INVISIBLE);
+				// _takeAPictureButton.setEnabled(false);
+			}
+		});
+		// _takeAPictureButton.setEnabled(false);
 	}
 
 }

@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.ar.vuforiatemplate.customTarget.RefFreeFrame;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
@@ -50,12 +52,14 @@ import com.qualcomm.vuforia.CameraDevice;
 import com.qualcomm.vuforia.DataSet;
 import com.qualcomm.vuforia.ImageTargetBuilder;
 import com.qualcomm.vuforia.ImageTracker;
+import com.qualcomm.vuforia.STORAGE_TYPE;
 import com.qualcomm.vuforia.State;
 import com.qualcomm.vuforia.Trackable;
 import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.Tracker;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vuforia;
+import com.qualcomm.vuforia.STORAGE_TYPE;
 
 public abstract class FragmentActivityImageTargets extends FragmentActivity
 		implements SampleApplicationControl, ActivityTargetsEvents,
@@ -311,7 +315,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		if ((_datasetStrings.size() > _currentDatasetSelectionIndex)
 				&& (!_currentDataset.load(
 						_datasetStrings.get(_currentDatasetSelectionIndex),
-						DataSet.STORAGE_TYPE.STORAGE_APPRESOURCE)))
+						STORAGE_TYPE.STORAGE_APPRESOURCE)))
 			return false;
 
 		if (!imageTracker.activateDataSet(_currentDataset))
@@ -653,7 +657,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		return Texture.loadTextureFromApk(string, getAssets());
 	}
 
-	public void startBuild() {
+	public boolean startBuild() {
 		TrackerManager trackerManager = TrackerManager.getInstance();
 		ImageTracker imageTracker = (ImageTracker) trackerManager
 				.getTracker(ImageTracker.getClassType());
@@ -662,13 +666,16 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			ImageTargetBuilder targetBuilder = imageTracker
 					.getImageTargetBuilder();
 			if (targetBuilder != null) {
-				// Uncomment this block to show and error message if
-				// the frame quality is Low
-				// if (targetBuilder.getFrameQuality() ==
-				// ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW)
-				// {
-				// showErrorDialogInUIThread();
-				// }
+				// show toast if the frame quality is Low
+				if (targetBuilder.getFrameQuality() == ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW) {
+					Context context = getApplicationContext();
+					CharSequence text = "Frame quality is low !";
+					int duration = Toast.LENGTH_LONG;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+
+					return false;
+				}
 
 				String name;
 				do {
@@ -679,8 +686,11 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				} while (!targetBuilder.build(name, 320.0f));
 
 				refFreeFrame.setCreating();
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	void updateRendering() {

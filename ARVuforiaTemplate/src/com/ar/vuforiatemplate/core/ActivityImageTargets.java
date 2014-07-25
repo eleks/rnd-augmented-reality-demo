@@ -50,6 +50,7 @@ import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.Tracker;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vuforia;
+import com.qualcomm.vuforia.STORAGE_TYPE;
 
 public abstract class ActivityImageTargets extends Activity implements
 		SampleApplicationControl, ActivityTargetsEvents, MultiGestureListener {
@@ -286,7 +287,7 @@ public abstract class ActivityImageTargets extends Activity implements
 
 		if (!_currentDataset.load(
 				_datasetStrings.get(_currentDatasetSelectionIndex),
-				DataSet.STORAGE_TYPE.STORAGE_APPRESOURCE))
+				STORAGE_TYPE.STORAGE_APPRESOURCE))
 			return false;
 
 		if (!imageTracker.activateDataSet(_currentDataset))
