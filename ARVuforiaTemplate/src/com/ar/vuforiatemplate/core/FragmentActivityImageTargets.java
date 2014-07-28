@@ -778,10 +778,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				imageTracker.deactivateDataSet(_currentDataset);
 				_currentDataset.destroy(tr);
 				imageTracker.activateDataSet(_currentDataset);
-				Log.i(LOGTAG, "!!! target removed : "+targetName);
+				Log.i(LOGTAG, "!!! target removed : " + targetName);
 				break;
 			}
 		}
-
 	}
+
 }

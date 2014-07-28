@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
@@ -57,9 +59,18 @@ public class TargetsFragment extends Fragment {
 		newTarget.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				TargetsListItem item = new TargetsListItem("target ¹"
-						+ (_activity.mTargetsList.length + 1));
-				addTarget(item);
+				boolean canCreate = _activity.mTargetsList.length < FragmentActivityImageTargets.MAX_TRACKABLES;
+				if (canCreate) {
+					TargetsListItem item = new TargetsListItem("target ¹"
+							+ (_activity.mTargetsList.length + 1));
+					addTarget(item);
+				} else {
+					Context context = _activity.getApplicationContext();
+					CharSequence text = "You reached limit of user targets;\nPlease, remove one.";
+					int duration = Toast.LENGTH_LONG;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+				}
 			}
 		});
 
