@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,9 +24,9 @@ import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
 public class TargetsFragment extends Fragment {
-	private final String LOGTAG = "TargetsFragment";
+	// private final String LOGTAG = "TargetsFragment";
 	public static final String ARG_NUMBER = "menu_item_number";
-	
+
 	private final String DATA_TEXT = "Hello world !";
 	private final String DATA_URL = "http://www.google.com/";
 	private final String DATA_VIDEO = "vide ...";
@@ -59,7 +58,7 @@ public class TargetsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				TargetsListItem item = new TargetsListItem("target ¹"
-						+ (ActivityMagicLens.mTargetsList.length + 1));
+						+ (_activity.mTargetsList.length + 1));
 				addTarget(item);
 			}
 		});
@@ -73,37 +72,40 @@ public class TargetsFragment extends Fragment {
 	}
 
 	private synchronized void updateList() {
-		_targetsListView.setAdapter(new TargetsListArrayAdapter(getActivity(),
-				ActivityMagicLens.mTargetsList));
+		_targetsListView.setAdapter(new TargetsListArrayAdapter(_activity,
+				_activity.mTargetsList));
 	}
 
 	private synchronized void removeTargetWithId(int id) {
-		TargetsListItem[] tmp = new TargetsListItem[ActivityMagicLens.mTargetsList.length - 1];
-		for (int i = 0; i < id; i++)
-			tmp[i] = ActivityMagicLens.mTargetsList[i];
-		for (int i = id + 1; i < ActivityMagicLens.mTargetsList.length; i++)
-			tmp[i - 1] = ActivityMagicLens.mTargetsList[i];
+		if (id < 0 || id >= _activity.mTargetsList.length)
+			return;
 
-		ActivityMagicLens.mTargetsList = tmp;
+		TargetsListItem[] tmp = new TargetsListItem[_activity.mTargetsList.length - 1];
+		for (int i = 0; i < id; i++)
+			tmp[i] = _activity.mTargetsList[i];
+		for (int i = id + 1; i < _activity.mTargetsList.length; i++)
+			tmp[i - 1] = _activity.mTargetsList[i];
+
+		_activity.mTargetsList = tmp;
 
 		updateList();
 	}
 
 	private synchronized void changeTargetWithId(int id, TargetsListItem item) {
-		ActivityMagicLens.mTargetsList[id] = item;
+		_activity.mTargetsList[id] = item;
 		updateList();
 	}
 
 	private synchronized void addTarget(TargetsListItem item) {
-		TargetsListItem[] tmp = new TargetsListItem[ActivityMagicLens.mTargetsList.length + 1];
+		TargetsListItem[] tmp = new TargetsListItem[_activity.mTargetsList.length + 1];
 
-		for (int i = 0; i < ActivityMagicLens.mTargetsList.length; i++)
-			tmp[i] = ActivityMagicLens.mTargetsList[i];
-		tmp[ActivityMagicLens.mTargetsList.length] = item;
+		for (int i = 0; i < _activity.mTargetsList.length; i++)
+			tmp[i] = _activity.mTargetsList[i];
+		tmp[_activity.mTargetsList.length] = item;
 
-		ActivityMagicLens.mTargetsList = tmp;
+		_activity.mTargetsList = tmp;
 
-		showEditDialog(ActivityMagicLens.mTargetsList.length - 1, true);
+		showEditDialog(_activity.mTargetsList.length - 1, true);
 
 		updateList();
 	}
@@ -112,7 +114,7 @@ public class TargetsFragment extends Fragment {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			if (position < ActivityMagicLens.mTargetsList.length)
+			if (position < _activity.mTargetsList.length)
 				showInfoDialog(position);
 		}
 
@@ -128,23 +130,22 @@ public class TargetsFragment extends Fragment {
 		dialog.setContentView(R.layout.target_dialog_layout);
 
 		// Caption
-		dialog.setTitle(ActivityMagicLens.mTargetsList[id].mCaption);
+		dialog.setTitle(_activity.mTargetsList[id].mCaption);
 
 		// Target Icon
 		ImageView image = (ImageView) dialog
 				.findViewById(R.id.targetDialogImage);
-		image.setImageResource(ActivityMagicLens.mTargetsList[id]
-				.getDrawableId());
+		image.setImageResource(_activity.mTargetsList[id].getDrawableId());
 
 		// Target Icon Caption
 		TextView targetIconCaption = (TextView) dialog
 				.findViewById(R.id.targetDialogImageCaption);
-		targetIconCaption.setText(ActivityMagicLens.mTargetsList[id]
+		targetIconCaption.setText(_activity.mTargetsList[id]
 				.getDrawableCaption());
 
 		// Target data text
 		TextView text = (TextView) dialog.findViewById(R.id.targetDialogText);
-		text.setText(ActivityMagicLens.mTargetsList[id].mData);
+		text.setText(_activity.mTargetsList[id].mData);
 
 		// OK button
 		Button dialogButtonOK = (Button) dialog
@@ -202,17 +203,17 @@ public class TargetsFragment extends Fragment {
 		});
 
 		// Caption
-		dialog.setTitle(ActivityMagicLens.mTargetsList[id].mCaption);
+		dialog.setTitle(_activity.mTargetsList[id].mCaption);
 
 		// Caption text
 		final EditText editTextCaption = (EditText) dialog
 				.findViewById(R.id.targetEditDialogTextCaption);
-		editTextCaption.setText(ActivityMagicLens.mTargetsList[id].mCaption);
+		editTextCaption.setText(_activity.mTargetsList[id].mCaption);
 
 		// Data text
 		final EditText editTextData = (EditText) dialog
 				.findViewById(R.id.targetEditDialogTextData);
-		String data = ActivityMagicLens.mTargetsList[id].mData;
+		String data = _activity.mTargetsList[id].mData;
 		if (data.length() > 0)
 			editTextData.setText(data);
 		else
@@ -221,42 +222,47 @@ public class TargetsFragment extends Fragment {
 		// Radio buttons
 		final RadioButton textRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonText);
-		textRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-				if (textRadioButton.isChecked())
-					changeDataTextIfItIsVirgin(editTextData, DATA_TEXT);
-			}
-		});
-		
+		textRadioButton
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean arg1) {
+						if (textRadioButton.isChecked())
+							changeDataTextIfItIsVirgin(editTextData, DATA_TEXT);
+					}
+				});
+
 		final RadioButton urlRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonURL);
-		urlRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-				if (urlRadioButton.isChecked())
-					changeDataTextIfItIsVirgin(editTextData, DATA_URL);
-			}
-		});
+		urlRadioButton
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean arg1) {
+						if (urlRadioButton.isChecked())
+							changeDataTextIfItIsVirgin(editTextData, DATA_URL);
+					}
+				});
 
 		final RadioButton videoRadioButton = (RadioButton) dialog
 				.findViewById(R.id.radioButtonVideo);
-		videoRadioButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-				if (videoRadioButton.isChecked())
-					changeDataTextIfItIsVirgin(editTextData, DATA_VIDEO);
-			}
-		});
+		videoRadioButton
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean arg1) {
+						if (videoRadioButton.isChecked())
+							changeDataTextIfItIsVirgin(editTextData, DATA_VIDEO);
+					}
+				});
 
-		if (ActivityMagicLens.mTargetsList[id].mType == TargetsListItem.TARGET_TEXT)
+		if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_TEXT)
 			textRadioButton.setChecked(true);
-		else if (ActivityMagicLens.mTargetsList[id].mType == TargetsListItem.TARGET_URL)
+		else if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_URL)
 			urlRadioButton.setChecked(true);
-		else if (ActivityMagicLens.mTargetsList[id].mType == TargetsListItem.TARGET_VIDEO)
+		else if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_VIDEO)
 			videoRadioButton.setChecked(true);
 
-		
 		// OK button
 		Button dialogButtonOK = (Button) dialog
 				.findViewById(R.id.targetEditDialogButtonOK);
@@ -306,14 +312,16 @@ public class TargetsFragment extends Fragment {
 	}
 
 	void changeDataTextIfItIsVirgin(EditText aEditText, String aStr) {
-		String text = aEditText.getText().toString(); 
-		if (text.equals(DATA_TEXT) || text.equals(DATA_URL) || text.equals(DATA_VIDEO)) {
+		String text = aEditText.getText().toString();
+		if (text.equals(DATA_TEXT) || text.equals(DATA_URL)
+				|| text.equals(DATA_VIDEO)) {
 			aEditText.setText(aStr);
 		}
 	}
 
 	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
-		// TODO Auto-generated method stub
+		if (aSuccess == false)
+			removeTargetWithId(aTargetId);
 	}
 
 }

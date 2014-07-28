@@ -87,12 +87,21 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	TargetsFragment _targetsFragment;
 
 	// Targets
-	static public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
+//	private TargetsListItem[] _targetsList = new TargetsListItem[] {};
+	public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
 	private int _buildTargetId = -1;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
 	}
+
+//	public synchronized TargetsListItem[] getList() {
+//		return _targetsList;
+//	}
+//
+//	public synchronized void setList(TargetsListItem[] aList) {
+//		_targetsList = aList;
+//	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

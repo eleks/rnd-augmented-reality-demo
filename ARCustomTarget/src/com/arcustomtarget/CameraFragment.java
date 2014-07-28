@@ -2,7 +2,6 @@ package com.arcustomtarget;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,13 +89,18 @@ public class CameraFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		super.onPause();
+		Log.i(LOGTAG, "!!! on Pause");
+
 		if (_targetId != -1) {
+			Log.i(LOGTAG, "!!! on Pause +");
+
 			_activity.responceTargetFromCamera(_targetId, false);
 			_targetId = -1;
 			hideButton();
 			enableButton();
 		}
+
+		super.onPause();
 	}
 
 	private void disableButton() {
