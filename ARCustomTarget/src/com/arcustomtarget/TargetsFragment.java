@@ -80,6 +80,8 @@ public class TargetsFragment extends Fragment {
 		if (id < 0 || id >= _activity.mTargetsList.length)
 			return;
 
+		String targetName = _activity.mTargetsList[id].mTargetName;
+
 		TargetsListItem[] tmp = new TargetsListItem[_activity.mTargetsList.length - 1];
 		for (int i = 0; i < id; i++)
 			tmp[i] = _activity.mTargetsList[i];
@@ -87,6 +89,7 @@ public class TargetsFragment extends Fragment {
 			tmp[i - 1] = _activity.mTargetsList[i];
 
 		_activity.mTargetsList = tmp;
+		_activity.removeTargetFromCurrentDataset(targetName);
 
 		updateList();
 	}

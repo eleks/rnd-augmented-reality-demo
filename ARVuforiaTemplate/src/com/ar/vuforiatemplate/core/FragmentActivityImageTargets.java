@@ -455,6 +455,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				// {
 				// trackable.startExtendedTracking();
 				// }
+
 			}
 		}
 
@@ -765,4 +766,22 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		_neededTextTextures.add(aText);
 	}
 
+	public void removeTargetFromCurrentDataset(String targetName) {
+		TrackerManager tManager = TrackerManager.getInstance();
+		ImageTracker imageTracker = (ImageTracker) tManager
+				.getTracker(ImageTracker.getClassType());
+
+		int sz = _currentDataset.getNumTrackables();
+		for (int i = 0; i < sz; i++) {
+			Trackable tr = _currentDataset.getTrackable(i);
+			if (tr.getName().equals(targetName)) {
+				imageTracker.deactivateDataSet(_currentDataset);
+				_currentDataset.destroy(tr);
+				imageTracker.activateDataSet(_currentDataset);
+				Log.i(LOGTAG, "!!! target removed : "+targetName);
+				break;
+			}
+		}
+
+	}
 }

@@ -23,6 +23,7 @@ public class TargetsListItem {
 	public String mCaption = "caption";
 	public int mType = TARGET_TEXT;
 	public String mData = "";
+	public String mTargetName = "";
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;

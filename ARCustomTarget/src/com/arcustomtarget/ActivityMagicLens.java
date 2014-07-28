@@ -58,7 +58,11 @@ import com.ar.vuforiatemplate.ux.MultiGestureListener;
 import com.arcustomtarget.core.TargetsListItem;
 import com.arcustomtarget.ui.DrawerMenuArrayAdapter;
 import com.arcustomtarget.ui.DrawerMenuItem;
+import com.qualcomm.vuforia.ImageTargetBuilder;
+import com.qualcomm.vuforia.ImageTracker;
 import com.qualcomm.vuforia.Trackable;
+import com.qualcomm.vuforia.Tracker;
+import com.qualcomm.vuforia.TrackerManager;
 
 public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		ActivityTargetsEvents, MultiGestureListener {
@@ -87,7 +91,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	TargetsFragment _targetsFragment;
 
 	// Targets
-//	private TargetsListItem[] _targetsList = new TargetsListItem[] {};
+	// private TargetsListItem[] _targetsList = new TargetsListItem[] {};
 	public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
 	private int _buildTargetId = -1;
 
@@ -95,13 +99,13 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
 	}
 
-//	public synchronized TargetsListItem[] getList() {
-//		return _targetsList;
-//	}
-//
-//	public synchronized void setList(TargetsListItem[] aList) {
-//		_targetsList = aList;
-//	}
+	// public synchronized TargetsListItem[] getList() {
+	// return _targetsList;
+	// }
+	//
+	// public synchronized void setList(TargetsListItem[] aList) {
+	// _targetsList = aList;
+	// }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -543,6 +547,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			ARObjectManagement mngmnt = mTargetsList[_buildTargetId]
 					.getARObjectManagement(this, _arObjectsMediator);
 			arModule.addARObjectManagement(_lastTargetName, mngmnt);
+
+			mTargetsList[_buildTargetId].mTargetName = _lastTargetName;
 
 			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);
 			_buildTargetId = -1;
