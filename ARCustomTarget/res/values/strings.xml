@@ -17,5 +17,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="take_a_picture">Take a Picture</string>
+    <string name="add_new_target">Add New Target</string>
 
 </resources>

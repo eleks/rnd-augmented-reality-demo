@@ -20,6 +20,9 @@ public class CameraFragment extends Fragment {
 	private View _rootView;
 	private Button _takeAPictureButton;
 
+	private String _takeAPictureStr = "";
+	private String _addNewTargetStr = "";
+
 	private boolean _firstTimeShow = true;
 
 	private int _targetId = -1;
@@ -45,14 +48,23 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Log.i(LOGTAG, "prepareToTakeAPicture id: " + _targetId);
-				// Create custom target
-				if (_targetId != -1) {
-					if (_activity.startBuild(_targetId)) {
+
+				String buttonName = _takeAPictureButton.getText().toString();
+
+				if (buttonName.equals(_takeAPictureStr)) {
+					// Create custom target
+					if ((_targetId != -1) && (_activity.startBuild(_targetId))) {
 						_targetId = -1;
 						disableButton();
 					}
 				}
+
+				if (buttonName.equals(_addNewTargetStr)) {
+					_activity.requestAddNewTarget();
+				}
+
 			}
+
 		});
 		if (_firstTimeShow) {
 			hideButton();
@@ -66,6 +78,12 @@ public class CameraFragment extends Fragment {
 				return true;
 			}
 		});
+
+		_takeAPictureStr = getResources().getString(R.string.take_a_picture);
+		_addNewTargetStr = getResources().getString(R.string.add_new_target);
+
+		Log.i(LOGTAG, "!!! @@@ " + _takeAPictureStr);
+		Log.i(LOGTAG, "!!! @@@ " + _addNewTargetStr);
 
 		return _rootView;
 	}
@@ -112,27 +130,23 @@ public class CameraFragment extends Fragment {
 	}
 
 	private void showButton() {
-		Log.i(LOGTAG, "!!! show button");
 		Handler refresh = new Handler(_activity.getMainLooper());
 		refresh.post(new Runnable() {
 			public void run() {
-				// _takeAPictureButton.setVisibility(View.VISIBLE);
-				// _takeAPictureButton.setEnabled(true);
+				if (_takeAPictureStr.length() > 0) //FIXME: bad code
+					_takeAPictureButton.setText(_takeAPictureStr);
 			}
 		});
-		// _takeAPictureButton.setEnabled(true);
 	}
 
 	private void hideButton() {
-		Log.i(LOGTAG, "!!! hide button");
 		Handler refresh = new Handler(_activity.getMainLooper());
 		refresh.post(new Runnable() {
 			public void run() {
-				// _takeAPictureButton.setVisibility(View.INVISIBLE);
-				// _takeAPictureButton.setEnabled(false);
+				if (_addNewTargetStr.length() > 0) //FIXME: bad code
+					_takeAPictureButton.setText(_addNewTargetStr);
 			}
 		});
-		// _takeAPictureButton.setEnabled(false);
 	}
 
 }

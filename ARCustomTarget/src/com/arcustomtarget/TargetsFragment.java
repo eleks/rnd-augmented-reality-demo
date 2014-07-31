@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,9 +60,21 @@ public class TargetsFragment extends Fragment {
 		newTarget.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				createNewTarget();
+			}
+		});
+
+		return _rootView;
+	}
+
+	public void createNewTarget() {
+		Handler refresh = new Handler(_activity.getMainLooper());
+		refresh.post(new Runnable() {
+			public void run() {
+
 				boolean canCreate = _activity.mTargetsList.length < FragmentActivityImageTargets.MAX_TRACKABLES;
 				if (canCreate) {
-					TargetsListItem item = new TargetsListItem("target ¹"
+					TargetsListItem item = new TargetsListItem("target ï¿½"
 							+ (_activity.mTargetsList.length + 1));
 					addTarget(item);
 				} else {
@@ -71,10 +84,9 @@ public class TargetsFragment extends Fragment {
 					Toast toast = Toast.makeText(context, text, duration);
 					toast.show();
 				}
+
 			}
 		});
-
-		return _rootView;
 	}
 
 	@Override

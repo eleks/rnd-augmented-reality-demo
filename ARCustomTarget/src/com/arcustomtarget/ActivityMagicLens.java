@@ -159,7 +159,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		PrepareDrawerMenu(savedInstanceState);
 
 		// Custom targets
-		loadTargets();
+		// loadTargets();
 	}
 
 	@Override
@@ -570,6 +570,11 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public boolean startBuild(int aTargetId) {
 		_buildTargetId = aTargetId;
 		return super.startBuild();
+	}
+
+	public void requestAddNewTarget() {
+		selectItem(ActivityMagicLens.FRAGMENT_TARGETS_POSITION);
+		_targetsFragment.createNewTarget();
 	}
 
 }
