@@ -31,13 +31,14 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent" >
 
-        <TextView
+        <ImageView
             android:id="@+id/openDrawerMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&lt;- Menu (slide right to open)"
-            android:textColor="@android:color/white"
-            android:textSize="20dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/drawer_menu" />
 
         <ProgressBar
             android:id="@+id/loading_indicator2"

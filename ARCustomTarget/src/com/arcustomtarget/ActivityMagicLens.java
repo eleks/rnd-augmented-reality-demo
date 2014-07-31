@@ -39,9 +39,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.ar.vuforiatemplate.core.ARModule;
 import com.ar.vuforiatemplate.core.ARObjectsMediator;
@@ -137,7 +136,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		// loadTargets();
 
 		// button Open Menu
-		TextView openMenu = (TextView) findViewById(R.id.openDrawerMenu);
+		ImageView openMenu = (ImageView) findViewById(R.id.openDrawerMenu);
 		openMenu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
