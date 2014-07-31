@@ -84,12 +84,11 @@ public class TargetsListItem {
 		}
 
 		if (mType == TARGET_TEXT) {
-			Log.i(LOGTAG, "!!!! " + mData);
+			Log.i(LOGTAG, "!!!! new text target : " + mData);
 			aActivity.needTextTexture(mData);
 			ARTexture ar = new ARTexture(arMediator.getModule().getMeshObject(
 					"texture"), arMediator.getModule().getShader("transparent",
-					true), "abc"); // mData);
-			//FIXME: hardcode !!! top line
+					true), mData);
 			ar.mObjectRender.mAspectRatioType = AspectRatioType.FILL_TARGET;
 			return ar;
 		}
@@ -98,9 +97,9 @@ public class TargetsListItem {
 			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
 					"texture"),
 					arMediator.getModule().getShader("video", true),
-					"video/MedicineVideo.mp4", aActivity);
+					mData, aActivity);
 			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity,
-					"video/MedicineVideo.mp4");
+					mData);
 			ar.mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
 			ar.mObjectRender.setAspectRatio(2.0f);
 			return ar;

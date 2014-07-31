@@ -59,7 +59,6 @@ import com.qualcomm.vuforia.TrackableResult;
 import com.qualcomm.vuforia.Tracker;
 import com.qualcomm.vuforia.TrackerManager;
 import com.qualcomm.vuforia.Vuforia;
-import com.qualcomm.vuforia.STORAGE_TYPE;
 
 public abstract class FragmentActivityImageTargets extends FragmentActivity
 		implements SampleApplicationControl, ActivityTargetsEvents,
@@ -108,6 +107,9 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	protected String _lastTargetName;
 
 	private Vector<String> _neededTextTextures = new Vector<String>();
+
+	//
+	private String _targetNameTrackPrev = "";
 
 	public FragmentActivityImageTargets(int aLoadingIndicatorId,
 			int aCameraOverlayLayout) {
@@ -645,7 +647,9 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	}
 
 	public void onTargetTrack(Trackable arg0) {
-		Log.i(LOGTAG, "!!! target :" + arg0.getName());
+		if (!_targetNameTrackPrev.equals(arg0.getName()) )
+				Log.i(LOGTAG, "!!! target :" + arg0.getName());
+		_targetNameTrackPrev = arg0.getName();
 	}
 
 	// Custom target methods
@@ -751,6 +755,14 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	public void customTargetRenderer() {
 		refFreeFrame.render();
 
+		updateTextTexturesIfNeeded();
+	}
+
+	public void needTextTexture(String aText) {
+		_neededTextTextures.add(aText);
+	}
+
+	public void updateTextTexturesIfNeeded() {
 		if (_neededTextTextures.size() != 0) {
 			Log.i(LOGTAG, "!!!!!!!!!!!!!!! TEXTURE UPDATE !");
 			for (int i = 0; i < _neededTextTextures.size(); i++) {
@@ -760,10 +772,6 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			}
 			_neededTextTextures.clear();
 		}
-	}
-
-	public void needTextTexture(String aText) {
-		_neededTextTextures.add(aText);
 	}
 
 	public void removeTargetFromCurrentDataset(String targetName) {
@@ -782,6 +790,15 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				break;
 			}
 		}
+	}
+
+	public boolean changeDataSet(String aNewDataSet) {
+		_datasetStrings.clear();
+		_datasetStrings.add(aNewDataSet);
+
+		doUnloadTrackersData();
+		doLoadTrackersData();
+		return true;
 	}
 
 }

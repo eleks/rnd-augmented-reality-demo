@@ -4,9 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,16 +32,19 @@ import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
 public class TargetsFragment extends Fragment {
-	// private final String LOGTAG = "TargetsFragment";
+	private final String LOGTAG = "TargetsFragment";
 	public static final String ARG_NUMBER = "menu_item_number";
 
 	private final String DATA_TEXT = "Hello world !";
 	private final String DATA_URL = "http://www.google.com/";
 	private final String DATA_VIDEO = "vide ...";
 
+	public static final int RESULT_LOAD_VIDEO = 1;
+
 	private ListView _targetsListView;
 
 	private View _rootView;
+	private Dialog _editDialog;
 
 	private ActivityMagicLens _activity;
 
@@ -217,9 +225,9 @@ public class TargetsFragment extends Fragment {
 		// custom dialog
 		Context context = getActivity();
 
-		final Dialog dialog = new Dialog(context);
-		dialog.setContentView(R.layout.target_edit_dialog_layout);
-		dialog.setOnDismissListener(new OnDismissListener() {
+		_editDialog = new Dialog(context);
+		_editDialog.setContentView(R.layout.target_edit_dialog_layout);
+		_editDialog.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss(DialogInterface arg0) {
 				if (fNewItem && !_sCreateItem)
@@ -229,15 +237,15 @@ public class TargetsFragment extends Fragment {
 		});
 
 		// Caption
-		dialog.setTitle(_activity.mTargetsList[id].mCaption);
+		_editDialog.setTitle(_activity.mTargetsList[id].mCaption);
 
 		// Caption text
-		final EditText editTextCaption = (EditText) dialog
+		final EditText editTextCaption = (EditText) _editDialog
 				.findViewById(R.id.targetEditDialogTextCaption);
 		editTextCaption.setText(_activity.mTargetsList[id].mCaption);
 
 		// Data text
-		final EditText editTextData = (EditText) dialog
+		final EditText editTextData = (EditText) _editDialog
 				.findViewById(R.id.targetEditDialogTextData);
 		String data = _activity.mTargetsList[id].mData;
 		if (data.length() > 0)
@@ -245,8 +253,19 @@ public class TargetsFragment extends Fragment {
 		else
 			editTextData.setText(DATA_TEXT);
 
+		editTextData.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final Intent galleryIntent = new Intent(
+						Intent.ACTION_GET_CONTENT);
+				galleryIntent.setType("video/*");
+				getActivity().startActivityForResult(galleryIntent,
+						RESULT_LOAD_VIDEO);
+			}
+		});
+
 		// Radio buttons
-		final RadioButton textRadioButton = (RadioButton) dialog
+		final RadioButton textRadioButton = (RadioButton) _editDialog
 				.findViewById(R.id.radioButtonText);
 		textRadioButton
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -258,7 +277,7 @@ public class TargetsFragment extends Fragment {
 					}
 				});
 
-		final RadioButton urlRadioButton = (RadioButton) dialog
+		final RadioButton urlRadioButton = (RadioButton) _editDialog
 				.findViewById(R.id.radioButtonURL);
 		urlRadioButton
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -270,7 +289,7 @@ public class TargetsFragment extends Fragment {
 					}
 				});
 
-		final RadioButton videoRadioButton = (RadioButton) dialog
+		final RadioButton videoRadioButton = (RadioButton) _editDialog
 				.findViewById(R.id.radioButtonVideo);
 		videoRadioButton
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -290,7 +309,7 @@ public class TargetsFragment extends Fragment {
 			videoRadioButton.setChecked(true);
 
 		// OK button
-		Button dialogButtonOK = (Button) dialog
+		Button dialogButtonOK = (Button) _editDialog
 				.findViewById(R.id.targetEditDialogButtonOK);
 		if (newItem) {
 			dialogButtonOK.setText("OK, take a picture");
@@ -314,7 +333,7 @@ public class TargetsFragment extends Fragment {
 				_sCreateItem = true;
 
 				_activity.saveTargets();
-				dialog.dismiss();
+				_editDialog.dismiss();
 
 				if (fNewItem) {
 					_activity.requestTargetFromCamera(fId);
@@ -323,18 +342,18 @@ public class TargetsFragment extends Fragment {
 		});
 
 		// Cancel button
-		Button dialogButtonCancel = (Button) dialog
+		Button dialogButtonCancel = (Button) _editDialog
 				.findViewById(R.id.targetEditDialogButtonCancel);
 		dialogButtonCancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				dialog.dismiss();
+				_editDialog.dismiss();
 				if (fNewItem)
 					removeTargetWithId(fId);
 			}
 		});
 
-		dialog.show();
+		_editDialog.show();
 	}
 
 	void changeDataTextIfItIsVirgin(EditText aEditText, String aStr) {
@@ -348,6 +367,35 @@ public class TargetsFragment extends Fragment {
 	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
 		if (aSuccess == false)
 			removeTargetWithId(aTargetId);
+	}
+
+	public void onActivityResultVideo(Uri aFileName) {
+		Log.i(LOGTAG, "!!! onActivityResultVideo : " + aFileName);
+
+		if (_editDialog != null) {
+			EditText editTextData = (EditText) _editDialog
+					.findViewById(R.id.targetEditDialogTextData);
+			if (editTextData != null) {
+				editTextData.setText( getRealPathFromURI(getActivity(), aFileName) );
+			}
+		}
+	}
+
+	public String getRealPathFromURI(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri, proj, null,
+					null, null);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 	}
 
 }

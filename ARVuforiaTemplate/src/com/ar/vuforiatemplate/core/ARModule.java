@@ -83,6 +83,7 @@ public class ARModule {
 	}
 
 	public void addTexture(String aTextureName, Texture aTexture) {
+		Log.i(LOGTAG, "!!! @@@ addTexture : "+aTextureName);
 		_textures.put(aTextureName, aTexture);
 	}
 

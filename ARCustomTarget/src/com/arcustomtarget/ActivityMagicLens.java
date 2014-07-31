@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -87,21 +88,12 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	TargetsFragment _targetsFragment;
 
 	// Targets
-	// private TargetsListItem[] _targetsList = new TargetsListItem[] {};
 	public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
 	private int _buildTargetId = -1;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
 	}
-
-	// public synchronized TargetsListItem[] getList() {
-	// return _targetsList;
-	// }
-	//
-	// public synchronized void setList(TargetsListItem[] aList) {
-	// _targetsList = aList;
-	// }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +107,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		_targetsFragment.setActivity(this);
 
 		// Vuforia
-		// addDataset("vuforia/test.xml");
-
 		// AR Module
 		ARModule arModule = new ARModule();
 
@@ -377,7 +367,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		_arObjectsMediator.loadTextures(files, getAssets());
 
 		// FIXME: hardcode !!!
-		_arObjectsMediator.addTextTexture("abc");
+		// _arObjectsMediator.addTextTexture("abc");
+		// _arObjectsMediator.addTextTexture("Hello world !");
 	}
 
 	@Override
@@ -419,7 +410,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	private void onTravelBookClicked() {
 		if (isPackageExists("com.lwiwbuch")) {
 			final Intent intent = new Intent(
-					"com.lwiwbuch/.ActivitySplashScreen"); // .ActivitySplashScreen");
+					"com.lwiwbuch/.ActivitySplashScreen");
 			intent.setPackage("com.lwiwbuch");
 			intent.setAction("android.intent.action.MAIN");
 			try {
@@ -509,12 +500,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			Log.e(LOGTAG, "saveTargets: file does not exists: " + DAT_FILE_NAME);
 	}
 
-	// public void prepateToTakeAPicture(int id) {
-	// // !!!
-	// // _lastTakePictureId = id;
-	// _cameraFragment.prepareToTakeAPicture(id);
-	// }
-
 	@Override
 	public void targetCreated() {
 		super.targetCreated();
@@ -553,6 +538,18 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public void requestAddNewTarget() {
 		selectItem(ActivityMagicLens.FRAGMENT_TARGETS_POSITION);
 		_targetsFragment.createNewTarget();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == TargetsFragment.RESULT_LOAD_VIDEO) {
+			if (resultCode == RESULT_OK) {
+				if (null != _targetsFragment ) {
+					Uri selectedUri = data.getData();
+					_targetsFragment.onActivityResultVideo(selectedUri);
+				}
+			}
+		}
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.opengles.GL;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -21,6 +22,8 @@ import android.util.Log;
 // You can use your own OpenGL implementation.
 public class SampleApplicationGLView extends GLSurfaceView {
 	private static final String LOGTAG = "Vuforia_SampleGLView";
+	
+	public static ContextFactory mContextFactory = new ContextFactory();
 
 	// Constructor.
 	public SampleApplicationGLView(Context context) {
@@ -50,7 +53,7 @@ public class SampleApplicationGLView extends GLSurfaceView {
 		}
 
 		// Setup the context factory for 2.0 rendering
-		setEGLContextFactory(new ContextFactory());
+		setEGLContextFactory(mContextFactory);
 
 		// We need to choose an EGLConfig that matches the format of
 		// our surface exactly. This is going to be done in our
@@ -61,9 +64,15 @@ public class SampleApplicationGLView extends GLSurfaceView {
 	}
 
 	// Creates OpenGL contexts.
-	private static class ContextFactory implements
+	public static class ContextFactory implements
 			GLSurfaceView.EGLContextFactory {
 		private static int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
+		private GL _glContext;
+
+		public GL getGLContext()
+		{
+			return _glContext;
+		}
 
 		public EGLContext createContext(EGL10 egl, EGLDisplay display,
 				EGLConfig eglConfig) {
@@ -75,6 +84,8 @@ public class SampleApplicationGLView extends GLSurfaceView {
 					EGL10.EGL_NONE };
 			context = egl.eglCreateContext(display, eglConfig,
 					EGL10.EGL_NO_CONTEXT, attrib_list_gl20);
+
+			_glContext = context.getGL();
 
 			checkEglError("After eglCreateContext", egl);
 			return context;

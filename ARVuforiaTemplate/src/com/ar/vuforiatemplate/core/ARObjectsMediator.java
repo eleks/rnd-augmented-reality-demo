@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.R.string;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.opengl.GLES20;
@@ -23,6 +24,7 @@ public class ARObjectsMediator {
 
 	private ARModule _arModule;
 	private Set<String> _activeARObjects = new TreeSet<String>();
+	private Set<String> _textTextures = new TreeSet<String>();
 
 	public ARObjectsMediator(ARModule aARModule) {
 		_arModule = aARModule;
@@ -55,7 +57,7 @@ public class ARObjectsMediator {
 
 	public void compileShaders(Map<String, OpenGLShaders> aShaders) {
 		for (String shaderName : aShaders.keySet()) {
-			_arModule.compileShader( shaderName, aShaders.get(shaderName));
+			_arModule.compileShader(shaderName, aShaders.get(shaderName));
 		}
 
 	}
@@ -81,6 +83,10 @@ public class ARObjectsMediator {
 		return _arModule.getTexture(aTextureName);
 	}
 
+	public boolean isTextTexture(String aTexture) {
+		return _textTextures.contains(aTexture);
+	}
+
 	public void loadTextures(List<String> aTextureFiles, AssetManager aAssetMngr) {
 		for (String fileName : aTextureFiles) {
 			Texture t = Texture.loadTextureFromApk(fileName, aAssetMngr);
@@ -90,12 +96,16 @@ public class ARObjectsMediator {
 	}
 
 	public void addTextTexture(String aText) {
-		Texture t = Texture.createTextureWithText(aText, 100, Color.YELLOW);
-		_arModule.addTexture(aText, t);
+		if (!_textTextures.contains(aText)) {
+			Texture t = Texture.createTextureWithText(aText, 100, Color.YELLOW);
+			_arModule.addTexture(aText, t);
+			_textTextures.add(aText);
+		}
 	}
 
 	public void clearTextures() {
 		_arModule.clearTextures();
+		_textTextures.clear();
 	}
 
 	public void initRendering() {
