@@ -74,8 +74,7 @@ public class CameraFragment extends Fragment {
 		// Touch Listener
 		_rootView.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				_activity.onTouchEvent(event);
-				return true;
+				return _activity.onTouchEvent(event);
 			}
 		});
 

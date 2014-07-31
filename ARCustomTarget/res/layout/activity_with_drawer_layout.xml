@@ -26,10 +26,18 @@
          space available using match_parent in both dimensions.
     -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@android:color/transparent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" >
+
+        <TextView
+            android:id="@+id/openDrawerMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&lt;- Menu (slide right to open)"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <ProgressBar
             android:id="@+id/loading_indicator2"
@@ -37,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/content_frame"

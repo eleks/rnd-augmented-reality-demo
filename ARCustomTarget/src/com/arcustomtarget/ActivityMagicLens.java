@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import android.annotation.SuppressLint;
@@ -32,13 +31,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ar.vuforiatemplate.core.ARModule;
 import com.ar.vuforiatemplate.core.ARObjectsMediator;
@@ -58,11 +60,7 @@ import com.ar.vuforiatemplate.ux.MultiGestureListener;
 import com.arcustomtarget.core.TargetsListItem;
 import com.arcustomtarget.ui.DrawerMenuArrayAdapter;
 import com.arcustomtarget.ui.DrawerMenuItem;
-import com.qualcomm.vuforia.ImageTargetBuilder;
-import com.qualcomm.vuforia.ImageTracker;
 import com.qualcomm.vuforia.Trackable;
-import com.qualcomm.vuforia.Tracker;
-import com.qualcomm.vuforia.TrackerManager;
 
 public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		ActivityTargetsEvents, MultiGestureListener {
@@ -74,8 +72,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public static int FRAGMENT_TARGETS_POSITION = 1;
 
 	// UI
-	Button _extendedTrackingButton;
-
 	// Drawer menu
 	private DrawerLayout _drawerLayout;
 	private ListView _drawerList;
@@ -137,17 +133,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		// create Objects Mediator
 		_arObjectsMediator = new ARObjectsMediator(arModule);
 
-		// UI
-		// Extended tracking button
-		// _extendedTrackingButton = (Button) findViewById(R.id.buttonExtended);
-		// _extendedTrackingButton.setOnClickListener(new OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// if (stopExtendedTracking())
-		// _extendedTrackingButton.setVisibility(View.INVISIBLE);
-		// }
-		// });
-
 		// gestures
 		_gestures = new Gestures(this, this);
 
@@ -160,6 +145,15 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		// Custom targets
 		// loadTargets();
+
+		// button Open Menu
+		TextView openMenu = (TextView) findViewById(R.id.openDrawerMenu);
+		openMenu.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				_drawerLayout.openDrawer(Gravity.LEFT);
+			}
+		});
 	}
 
 	@Override
@@ -384,22 +378,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		// FIXME: hardcode !!!
 		_arObjectsMediator.addTextTexture("abc");
-	}
-
-	@Override
-	public void updateActiveARObjects(Set<String> trackablesName) {
-		super.updateActiveARObjects(trackablesName);
-
-		// Extended tracking
-		if (startExtendedTrackingIfNeeded(trackablesName)
-				&& (null != _extendedTrackingButton)) {
-			runOnUiThread(new Runnable() {
-				public void run() {
-					_extendedTrackingButton.setVisibility(View.VISIBLE);
-				}
-			});
-		}
-
 	}
 
 	@Override
