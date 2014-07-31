@@ -366,8 +366,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		_arObjectsMediator.loadTextures(files, getAssets());
 
 		// FIXME: hardcode !!!
-		// _arObjectsMediator.addTextTexture("abc");
-		// _arObjectsMediator.addTextTexture("Hello world !");
+		_arObjectsMediator.addTextTexture("Hello world !");
 	}
 
 	@Override

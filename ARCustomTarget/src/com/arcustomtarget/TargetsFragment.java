@@ -37,7 +37,7 @@ public class TargetsFragment extends Fragment {
 
 	private final String DATA_TEXT = "Hello world !";
 	private final String DATA_URL = "http://www.google.com/";
-	private final String DATA_VIDEO = "vide ...";
+	private final String DATA_VIDEO = "video ...";
 
 	public static final int RESULT_LOAD_VIDEO = 1;
 
@@ -82,7 +82,7 @@ public class TargetsFragment extends Fragment {
 
 				boolean canCreate = _activity.mTargetsList.length < FragmentActivityImageTargets.MAX_TRACKABLES;
 				if (canCreate) {
-					TargetsListItem item = new TargetsListItem("target �"
+					TargetsListItem item = new TargetsListItem("target no.: "
 							+ (_activity.mTargetsList.length + 1));
 					addTarget(item);
 				} else {
@@ -376,7 +376,8 @@ public class TargetsFragment extends Fragment {
 			EditText editTextData = (EditText) _editDialog
 					.findViewById(R.id.targetEditDialogTextData);
 			if (editTextData != null) {
-				editTextData.setText( getRealPathFromURI(getActivity(), aFileName) );
+				editTextData.setText(getRealPathFromURI(getActivity(),
+						aFileName));
 			}
 		}
 	}

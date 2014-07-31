@@ -94,14 +94,16 @@ public class TargetsListItem {
 		}
 
 		if (mType == TARGET_VIDEO) {
+			// FIXME: hardcode
+			mData = "video/MedicineVideo.mp4";
+
 			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
 					"texture"),
-					arMediator.getModule().getShader("video", true),
-					mData, aActivity);
-			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity,
-					mData);
+					arMediator.getModule().getShader("video", true), mData,
+					aActivity);
+			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity, mData);
 			ar.mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
-			ar.mObjectRender.setAspectRatio(2.0f);
+			ar.mObjectRender.setAspectRatio(0.5f);
 			return ar;
 		}
 
