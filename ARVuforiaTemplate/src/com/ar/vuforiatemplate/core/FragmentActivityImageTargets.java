@@ -324,6 +324,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			return false;
 
 		int numTrackables = _currentDataset.getNumTrackables();
+		Log.d(LOGTAG, "doLoadTrackersData with size : " + numTrackables);
 		for (int count = 0; count < numTrackables; count++) {
 			Trackable trackable = _currentDataset.getTrackable(count);
 
@@ -394,6 +395,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			Log.e(LOGTAG, exception.getString());
 			finish();
 		}
+
+		Log.i(LOGTAG, "onInitARDone");
 	}
 
 	@Override
@@ -409,8 +412,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				return;
 			}
 
-			doUnloadTrackersData();
-			doLoadTrackersData();
+			changeDataSet("");
 		}
 
 		// Custom target
@@ -644,11 +646,13 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	public void updateActiveARObjects(Set<String> trackablesName) {
 		// AR mediator update active object
 		_arObjectsMediator.updateActiveAR(trackablesName);
+
+		// changeDataSet("");
 	}
 
 	public void onTargetTrack(Trackable arg0) {
-		if (!_targetNameTrackPrev.equals(arg0.getName()) )
-				Log.i(LOGTAG, "!!! target :" + arg0.getName());
+		if (!_targetNameTrackPrev.equals(arg0.getName()))
+			Log.i(LOGTAG, "!!! target :" + arg0.getName());
 		_targetNameTrackPrev = arg0.getName();
 	}
 
@@ -793,12 +797,44 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	}
 
 	public boolean changeDataSet(String aNewDataSet) {
-		_datasetStrings.clear();
-		_datasetStrings.add(aNewDataSet);
+		Log.i(LOGTAG, "Change DataSet to : " + aNewDataSet);
 
-		doUnloadTrackersData();
-		doLoadTrackersData();
-		return true;
+		String oldDatasets = "";
+
+		if (aNewDataSet == null || aNewDataSet.length() == 0) {
+			if (_datasetStrings.size() > 0) {
+				oldDatasets = _datasetStrings.get(0);
+				for (int i = 1; i < _datasetStrings.size(); ++i)
+					oldDatasets += " " + _datasetStrings.get(i);
+			}
+		}
+
+		if (!aNewDataSet.equals(oldDatasets)) {
+			_datasetStrings.clear();
+			_datasetStrings.add(aNewDataSet);
+
+			doUnloadTrackersData();
+			doLoadTrackersData();
+
+			onNewDataSet(oldDatasets, aNewDataSet);
+			return true;
+		}
+
+		return false;
 	}
 
+	public void onNewDataSet(String aOldDataset, String aNewDataset) {
+	}
+
+	public Vector<String> getTargetsFromCurrentDataset() {
+		Vector<String> vec = new Vector<String>();
+
+		if (null != _currentDataset) {
+			int numTrackables = _currentDataset.getNumTrackables();
+			for (int count = 0; count < numTrackables; count++)
+				vec.add(_currentDataset.getTrackable(count).getName());
+		}
+
+		return vec;
+	}
 }
