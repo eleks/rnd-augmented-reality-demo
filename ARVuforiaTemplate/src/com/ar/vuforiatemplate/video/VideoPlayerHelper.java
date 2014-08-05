@@ -136,11 +136,15 @@ public class VideoPlayerHelper implements OnPreparedListener,
 						// However, if you would like to load the movie from the
 						// sdcard or from a network location
 						// simply comment the three lines below
-						AssetFileDescriptor afd = mParentActivity.getAssets()
-								.openFd(filename);
-						mMediaPlayer.setDataSource(afd.getFileDescriptor(),
-								afd.getStartOffset(), afd.getLength());
-						afd.close();
+						if (filename.startsWith("/")) {
+							mMediaPlayer.setDataSource(filename);
+						} else {
+							AssetFileDescriptor afd = mParentActivity.getAssets()
+									.openFd(filename);
+							mMediaPlayer.setDataSource(afd.getFileDescriptor(),
+									afd.getStartOffset(), afd.getLength());
+							afd.close();
+						}
 
 						// and uncomment this one
 						// mMediaPlayer.setDataSource("/sdcard/myMovie.m4v");

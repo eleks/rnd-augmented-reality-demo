@@ -35,9 +35,9 @@ public class TargetsFragment extends Fragment {
 	private final String LOGTAG = "TargetsFragment";
 	public static final String ARG_NUMBER = "menu_item_number";
 
-	private final String DATA_TEXT = "Hello world !";
-	private final String DATA_URL = "http://www.google.com/";
-	private final String DATA_VIDEO = "video ...";
+	public final static String DATA_TEXT = "Hello world !";
+	public final static String DATA_URL = "http://www.google.com/";
+	public final static String DATA_VIDEO = "video ...";
 
 	public static final int RESULT_LOAD_VIDEO = 1;
 

@@ -12,6 +12,7 @@ import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatioType;
 import com.ar.vuforiatemplate.objects.ARTexture;
 import com.ar.vuforiatemplate.objects.ARVideo;
 import com.ar.vuforiatemplate.video.FullscreenPlayback;
+import com.arcustomtarget.TargetsFragment;
 
 public class TargetsListItem {
 	private static final String LOGTAG = "TargetsListItem";
@@ -94,8 +95,10 @@ public class TargetsListItem {
 		}
 
 		if (mType == TARGET_VIDEO) {
-			// FIXME: hardcode
-			mData = "video/MedicineVideo.mp4";
+			if (mData.equals(TargetsFragment.DATA_VIDEO)) {
+				// FIXME: hardcode
+				mData = "video/MedicineVideo.mp4";
+			}
 
 			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
 					"texture"),

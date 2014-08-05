@@ -113,6 +113,8 @@ public class Texture {
 		Canvas canvas = new Canvas(image);
 		canvas.drawText(text, 0, baseline, paint);
 
+		Log.i(LOGTAG, "!!! textAsBitmap : " + width + " x " + height);
+
 		return image;
 	}
 
@@ -129,8 +131,8 @@ public class Texture {
 				bitMap.getHeight());
 	}
 
-//	public static Texture createTextureWithText(String text, float aSize,
-//			int aColor) {
+	// public static Texture createTextureWithText(String text, float aSize,
+	// int aColor) {
 	public static Texture createTextureWithText2(String text) {
 		Log.i(LOGTAG, "!!! createTextureWithText2 start");
 
@@ -202,8 +204,8 @@ public class Texture {
 		return tex;
 	}
 
-	static public Texture loadTexture(GL10 gl, IntBuffer ib,
-			int img_width, int img_height) {
+	static public Texture loadTexture(GL10 gl, IntBuffer ib, int img_width,
+			int img_height) {
 		Log.i(LOGTAG, "!!! loadTexture start");
 
 		int id;
