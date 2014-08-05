@@ -678,12 +678,11 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				// show toast if the frame quality is Low
 				if (targetBuilder.getFrameQuality() == ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW) {
 					Context context = getApplicationContext();
-					CharSequence text = "Frame quality is low !";
+					CharSequence text = "Frame quality was low ! Target is unreliable.";
 					int duration = Toast.LENGTH_LONG;
 					Toast toast = Toast.makeText(context, text, duration);
 					toast.show();
-
-					return false;
+//					return false;
 				}
 
 				String name;

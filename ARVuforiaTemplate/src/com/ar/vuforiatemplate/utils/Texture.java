@@ -113,8 +113,6 @@ public class Texture {
 		Canvas canvas = new Canvas(image);
 		canvas.drawText(text, 0, baseline, paint);
 
-		Log.i(LOGTAG, "!!! textAsBitmap : " + width + " x " + height);
-
 		return image;
 	}
 
