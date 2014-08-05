@@ -573,7 +573,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	@Override
 	public boolean onGesture(GestureInfo aGestureInfo) {
 		// focus on tap
-		if (aGestureInfo.mType == GestureInfo.GESTURE_SINGLE_TAP_UP) {
+		if (aGestureInfo.mType == GestureInfo.GESTURE_POINTER_TAP) {
 			final Handler autofocusHandler = new Handler();
 			autofocusHandler.postDelayed(new Runnable() {
 				public void run() {
