@@ -364,9 +364,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		files.add("images/www_icon.png");
 
 		_arObjectsMediator.loadTextures(files, getAssets());
-
-		// FIXME: hardcode !!!
-		_arObjectsMediator.addTextTexture("Hello world !");
 	}
 
 	@Override

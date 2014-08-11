@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -53,6 +54,8 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 	private Map<String, Matrix44F> _modelViewMatrix = new TreeMap<String, Matrix44F>();
 	private Map<String, Vec2F> _targetPositiveDimensions = new TreeMap<String, Vec2F>();
 
+	private Vector<String> _neededTextTextures = new Vector<String>();
+
 	public ImageTargetRenderer2(FragmentActivityImageTargets activity,
 			SampleApplicationSession session) {
 		_activity = activity;
@@ -66,7 +69,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			return;
 
 		// Call our function to render content
-		renderFrame();
+		renderFrame(gl);
 	}
 
 	// Called when the surface is created or recreated.
@@ -109,7 +112,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 	}
 
 	// The render function.
-	private void renderFrame() {
+	private void renderFrame(GL10 gl) {
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
 		State state = _renderer.begin();
@@ -131,6 +134,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 
 		Set<String> trackableNames = new TreeSet<String>();
 
+		updateTextTexturesIfNeeded(gl);
 		_activity.customTargetRenderer();
 
 		// did we find any trackables this frame?
@@ -178,7 +182,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[1], 0, 1.0f, 0);
 			Matrix.rotateM(modelViewMatrix, 0, rot.getData()[2], 0, 0, 1.0f);
 
-			Vec3F scale = renderObject.getScale( imageTarget.getSize() );
+			Vec3F scale = renderObject.getScale(imageTarget.getSize());
 			Matrix.scaleM(modelViewMatrix, 0, scale.getData()[0],
 					scale.getData()[1], scale.getData()[2]);
 
@@ -298,6 +302,23 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 			return true;
 		else
 			return false;
+	}
+
+	// Text texture
+	public void needTextTexture(String aText) {
+		_neededTextTextures.add(aText);
+	}
+
+	public void updateTextTexturesIfNeeded(GL10 gl) {
+		if (_neededTextTextures.size() != 0) {
+			for (int i = 0; i < _neededTextTextures.size(); i++) {
+				Log.i(LOGTAG, "Create texture with text :"
+						+ _neededTextTextures.get(i));
+				_activity.getARObjectsMediator().addTextTexture(gl,
+						_neededTextTextures.get(i));
+			}
+			_neededTextTextures.clear();
+		}
 	}
 
 }

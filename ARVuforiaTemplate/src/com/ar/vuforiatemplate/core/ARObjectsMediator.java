@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.R.string;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -95,9 +97,9 @@ public class ARObjectsMediator {
 
 	}
 
-	public void addTextTexture(String aText) {
+	public void addTextTexture(GL10 gl, String aText) {
 		if (!_textTextures.contains(aText)) {
-			Texture t = Texture.createTextureWithText(aText, 100, Color.YELLOW);
+			Texture t = Texture.createTextureWithText(gl, aText, 100, Color.YELLOW);
 			_arModule.addTexture(aText, t);
 			_textTextures.add(aText);
 		}

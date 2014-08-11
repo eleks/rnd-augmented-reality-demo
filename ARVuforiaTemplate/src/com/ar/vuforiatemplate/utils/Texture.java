@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -99,106 +100,61 @@ public class Texture {
 		return texture;
 	}
 
-	private static Bitmap textAsBitmap(String text, float textSize,
-			int textColor) {
-		Paint paint = new Paint();
-		paint.setTextSize(textSize);
-		paint.setColor(textColor);
-		paint.setTextAlign(Paint.Align.LEFT);
-		int width = (int) (paint.measureText(text) + 0.5f); // round
-		float baseline = (int) (-paint.ascent() + 0.5f); // ascent() is negative
-		int height = (int) (baseline + paint.descent() + 0.5f);
-		Bitmap image = Bitmap.createBitmap(width, height,
-				Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(image);
-		canvas.drawText(text, 0, baseline, paint);
-
-		return image;
+	private static int powOf2(int a) {
+		int r = 2;
+		while (a > r)
+			r *= 2;
+		return r;
 	}
 
-	public static Texture createTextureWithText(String aText, float aSize,
-			int aColor) {
+	public static Texture createTextureWithText(GL10 gl, String aText,
+			float aSize, int aColor) {
+		// Prepare text renderer
+		Paint textPaint = new Paint();
+		textPaint.setTextSize(aSize);
+		textPaint.setAntiAlias(true);
+		textPaint.setColor(aColor);
+		textPaint.setTextAlign(Paint.Align.LEFT);
 
-		Bitmap bitMap = textAsBitmap(aText, aSize, aColor);
+		int width = (int) (textPaint.measureText(aText) + 0.5f);
+		float baseline = (int) (-textPaint.ascent() + 0.5f);
+		int height = (int) (baseline + textPaint.descent() + 0.5f);
 
-		int[] data = new int[bitMap.getWidth() * bitMap.getHeight()];
-		bitMap.getPixels(data, 0, bitMap.getWidth(), 0, 0, bitMap.getWidth(),
-				bitMap.getHeight());
+		int texWidth = powOf2(width);
+		int texHeight = powOf2(height);
 
-		return loadTextureFromIntBuffer(data, bitMap.getWidth(),
-				bitMap.getHeight());
-	}
+		int dX = (texWidth - width) / 2;
 
-	// public static Texture createTextureWithText(String text, float aSize,
-	// int aColor) {
-	public static Texture createTextureWithText2(String text) {
-		Log.i(LOGTAG, "!!! createTextureWithText2 start");
+		// Create an empty, mutable bitmap
+		Bitmap bitmap = Bitmap.createBitmap(texWidth, texHeight,
+				Bitmap.Config.ARGB_4444);
+		// get a canvas to paint over the bitmap
+		Canvas canvas = new Canvas(bitmap);
+		bitmap.eraseColor(0);
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		float m_display_density = metrics.density;
+		// draw the text
+		canvas.scale(-1.0f, 1.0f);
+		canvas.drawText(aText, -width - dX, baseline, textPaint);
 
-		int text_size = (int) (14 * m_display_density);
-		int padding = (int) (5 * m_display_density);
+		Texture tex = new Texture();
 
-		Paint paint = new Paint();
-		paint.setColor(0xFFFFFFFF);
-		paint.setTextSize(text_size);
-		paint.setAntiAlias(true);
-		paint.setTypeface(Typeface.DEFAULT_BOLD);
+		gl.glGenTextures(1, tex.mTextureID, 0);
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, tex.mTextureID[0]);
 
-		Rect bounds = new Rect();
-		paint.getTextBounds(text, 0, text.length(), bounds);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
+				GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER,
+				GL10.GL_LINEAR);
 
-		if (bounds.width() <= 0 || bounds.height() <= 0) {
-			Log.i(LOGTAG, "!!! createTextureWithText2 return err 1");
-			return null;
-		}
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S,
+				GL10.GL_REPEAT);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T,
+				GL10.GL_REPEAT);
 
-		Bitmap bmp = Bitmap.createBitmap(bounds.width(), bounds.height() + 2
-				* padding, Config.ARGB_8888);
-		Canvas canvas = new Canvas(bmp);
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
 
-		// Typeface chops = Typeface.createFromAsset(getAssets(),
-		// "ChopinScript.ttf");
-		// canvas.drawARGB(255, 255, 0, 0);
-		canvas.drawText(text, 0, text_size + padding, paint);
+		bitmap.recycle();
 
-		Texture tex = createTextureFromBitmap(bmp);
-		tex.mWidth = bounds.width();
-		tex.mHeight = bounds.height() + 2 * padding;
-
-		Log.i(LOGTAG, "!!! createTextureWithText2 finish");
-		return tex;
-	}
-
-	public static Texture createTextureFromBitmap(Bitmap bmp) {
-		Log.i(LOGTAG, "!!! createTextureFromBitmap start");
-		GL10 gl = (GL10) SampleApplicationGLView.mContextFactory.getGLContext();
-
-		if (gl == null) {
-			Log.i(LOGTAG, "!!! createTextureFromBitmap return err 1");
-			return null;
-		}
-
-		int tex_width = bmp.getWidth();
-		int tex_height = bmp.getHeight();
-
-		IntBuffer ib;
-
-		Texture tex;
-
-		try {
-			ib = IntBuffer.allocate(tex_width * tex_height);
-			bmp.getPixels(ib.array(), 0, tex_width, 0, 0, tex_width, tex_height);
-			tex = loadTexture(gl, ib, tex_width, tex_height);
-		} catch (OutOfMemoryError ex) {
-			Log.i(LOGTAG, "!!! createTextureFromBitmap catch err2");
-			bmp.recycle();
-			return null;
-		}
-
-		bmp.recycle();
-		Log.i(LOGTAG, "!!! createTextureFromBitmap finish");
 		return tex;
 	}
 
@@ -255,9 +211,6 @@ public class Texture {
 
 		Texture tex = new Texture();
 		tex.mTextureID[0] = id;
-
-		// tex.mWidth = img_width;
-		// tex.mHeight = img_height;
 
 		tex.mWidth = tex_width;
 		tex.mHeight = tex_height;

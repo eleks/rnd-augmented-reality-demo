@@ -106,8 +106,6 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 	protected String _lastTargetName;
 
-	private Vector<String> _neededTextTextures = new Vector<String>();
-
 	//
 	private String _targetNameTrackPrev = "";
 
@@ -757,24 +755,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 	public void customTargetRenderer() {
 		refFreeFrame.render();
-
-		updateTextTexturesIfNeeded();
 	}
 
 	public void needTextTexture(String aText) {
-		_neededTextTextures.add(aText);
-	}
-
-	public void updateTextTexturesIfNeeded() {
-		if (_neededTextTextures.size() != 0) {
-			Log.i(LOGTAG, "!!!!!!!!!!!!!!! TEXTURE UPDATE !");
-			for (int i = 0; i < _neededTextTextures.size(); i++) {
-				Log.i(LOGTAG, "!!!!!!!!!!!!!!! TEXTURE UPDATE :"
-						+ _neededTextTextures.get(i));
-				_arObjectsMediator.addTextTexture(_neededTextTextures.get(i));
-			}
-			_neededTextTextures.clear();
-		}
+		_renderer.needTextTexture(aText);
 	}
 
 	public void removeTargetFromCurrentDataset(String targetName) {
