@@ -539,8 +539,14 @@ public class VideoPlayerHelper implements OnPreparedListener,
 		mSurfaceTextureLock.lock();
 		if (mSurfaceTexture != null) {
 			// Only request an update if currently playing
-			if (mCurrentState == MEDIA_STATE.PLAYING)
-				mSurfaceTexture.updateTexImage();
+			if (mCurrentState == MEDIA_STATE.PLAYING) {
+				try {
+					mSurfaceTexture.updateTexImage();
+				}
+				catch (Exception e) {
+					Log.e(LOGTAG, "Error : "+e.toString() + " " + e.getMessage() );
+				}
+			}
 
 			result = mTextureID;
 		}

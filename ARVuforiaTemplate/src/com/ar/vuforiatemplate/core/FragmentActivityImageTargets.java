@@ -649,9 +649,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	}
 
 	public void onTargetTrack(Trackable arg0) {
-		if (!_targetNameTrackPrev.equals(arg0.getName()))
+		if (!_targetNameTrackPrev.equals(arg0.getName())) {
 			Log.i(LOGTAG, "!!! target :" + arg0.getName());
-		_targetNameTrackPrev = arg0.getName();
+			_targetNameTrackPrev = arg0.getName();
+		}
 	}
 
 	// Custom target methods

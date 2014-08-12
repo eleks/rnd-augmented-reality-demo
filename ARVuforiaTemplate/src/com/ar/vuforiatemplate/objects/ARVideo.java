@@ -39,7 +39,7 @@ public class ARVideo extends ARObjectManagement {
 		_videoPlayerHelper = new VideoPlayerHelper();
 		_videoPlayerHelper.init();
 		_videoPlayerHelper.setActivity(aActivity);
-		
+
 		mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
 	}
 
@@ -132,9 +132,6 @@ public class ARVideo extends ARObjectManagement {
 		}
 		return false;
 	}
-
-	// if (_videoPlayerHelper.isPlayableOnTexture()) {
-	// } else if (_videoPlayerHelper.isPlayableFullscreen()) {
 
 	private boolean pause() {
 		if (null != _videoPlayerHelper) {

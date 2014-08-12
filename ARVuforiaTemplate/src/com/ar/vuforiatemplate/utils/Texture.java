@@ -16,15 +16,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 // Support class for the Vuforia samples applications.

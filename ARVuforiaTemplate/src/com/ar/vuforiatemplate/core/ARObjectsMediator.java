@@ -7,7 +7,6 @@ import java.util.TreeSet;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.R.string;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.opengl.GLES20;
