@@ -23,11 +23,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnDoubleTapListener;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -81,9 +77,6 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	// Our renderer:
 	private ImageTargetRenderer2 _renderer;
 
-	private GestureDetector _gestureDetector = null;
-	private SimpleOnGestureListener _simpleListener = null;
-
 	private boolean _switchDatasetAsap = false;
 	private boolean _flash = false;
 
@@ -129,40 +122,10 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		_vuforiaAppSession.initAR(this,
 				ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		_simpleListener = new SimpleOnGestureListener();
-		_gestureDetector = new GestureDetector(this, _simpleListener);
-
 		// Load any sample specific textures:
 		loadTextures();
 
 		_isDroidDevice = android.os.Build.MODEL.startsWith("Droid");
-
-		_gestureDetector.setOnDoubleTapListener(new OnDoubleTapListener() {
-			public boolean onDoubleTapEvent(MotionEvent e) {
-				// We do not react to this event
-				return false;
-			}
-
-			@Override
-			public boolean onDoubleTap(MotionEvent arg0) {
-				return false;
-			}
-
-			@Override
-			public boolean onSingleTapConfirmed(MotionEvent e) {
-				int numTrackables = _currentDataset.getNumTrackables();
-				for (int i = 0; i < numTrackables; i++) {
-					Trackable trackable = _currentDataset.getTrackable(i);
-					String targetName = trackable.getName();
-					if (_renderer != null
-							&& _renderer.isTapOnScreenInsideTarget(targetName,
-									e.getX(), e.getY())) {
-						onTargetClicked(targetName);
-					}
-				}
-				return false;
-			}
-		});
 	}
 
 	protected void addDataset(String aDataSet) {
@@ -525,11 +488,6 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		return result;
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		return _gestureDetector.onTouchEvent(event);
-	}
-
 	final public static int CMD_BACK = -1;
 	final public static int CMD_EXTENDED_TRACKING = 1;
 	final public static int CMD_AUTOFOCUS = 2;
@@ -570,8 +528,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 
 	@Override
 	public boolean onGesture(GestureInfo aGestureInfo) {
-		// focus on tap
 		if (aGestureInfo.mType == GestureInfo.GESTURE_POINTER_TAP) {
+			// focus on tap
 			final Handler autofocusHandler = new Handler();
 			autofocusHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -583,7 +541,20 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				}
 			}, 500L);
 
-			return true;
+			// tap on AR object
+			int numTrackables = _currentDataset.getNumTrackables();
+			for (int i = 0; i < numTrackables; i++) {
+				Trackable trackable = _currentDataset.getTrackable(i);
+				String targetName = trackable.getName();
+				if (_renderer != null
+						&& _renderer.isTapOnScreenInsideTarget(targetName,
+						// e.getX(), e.getY())) {
+								0, 0)) {
+					onTargetClicked(targetName);
+				}
+			}
+
+			return false; // do not block gestures on AR Objects
 		}
 
 		return false;
@@ -681,7 +652,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 					int duration = Toast.LENGTH_LONG;
 					Toast toast = Toast.makeText(context, text, duration);
 					toast.show();
-//					return false;
+					// return false;
 				}
 
 				String name;

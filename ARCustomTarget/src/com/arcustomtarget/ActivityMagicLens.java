@@ -351,6 +351,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.i(LOGTAG, "onTouchEvent - "+event.toString() );
+
 		if (null != _gestures)
 			_gestures.onTouchEvent(event);
 
@@ -368,9 +370,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	@Override
 	public boolean onGesture(GestureInfo aGestureInfo) {
-		boolean result = super.onGesture(aGestureInfo);
-
-		return _arObjectsMediator.onGesture(aGestureInfo) || result;
+		boolean res_super = super.onGesture(aGestureInfo);
+		boolean res_aro = _arObjectsMediator.onGesture(aGestureInfo);
+		return res_super || res_aro;
 	}
 
 	@Override
