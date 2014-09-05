@@ -530,16 +530,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	public boolean onGesture(GestureInfo aGestureInfo) {
 		if (aGestureInfo.mType == GestureInfo.GESTURE_POINTER_TAP) {
 			// focus on tap
-			final Handler autofocusHandler = new Handler();
-			autofocusHandler.postDelayed(new Runnable() {
-				public void run() {
-					boolean result = CameraDevice.getInstance().setFocusMode(
-							CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
-
-					if (!result)
-						Log.e("SingleTapUp", "Unable to trigger focus");
-				}
-			}, 500L);
+			focusCamera();
 
 			// tap on AR object
 			int numTrackables = _currentDataset.getNumTrackables();
@@ -558,6 +549,19 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		}
 
 		return false;
+	}
+
+	public void focusCamera() {
+		final Handler autofocusHandler = new Handler();
+		autofocusHandler.postDelayed(new Runnable() {
+			public void run() {
+				boolean result = CameraDevice.getInstance().setFocusMode(
+						CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
+
+				if (!result)
+					Log.e("SingleTapUp", "Unable to trigger focus");
+			}
+		}, 500L);
 	}
 
 	public class VideoFullscreenCallBack implements ARObjectManagement.CallBack {
