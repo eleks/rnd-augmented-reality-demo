@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -29,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.ar.vuforiatemplate.customTarget.RefFreeFrame;
 import com.ar.vuforiatemplate.objects.ARObjectManagement;
@@ -651,12 +649,13 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 			if (targetBuilder != null) {
 				// show toast if the frame quality is Low
 				if (targetBuilder.getFrameQuality() == ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW) {
-					Context context = getApplicationContext();
-					CharSequence text = "Frame quality was low ! Target is unreliable.";
-					int duration = Toast.LENGTH_LONG;
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.show();
-					// return false;
+					// Context context = getApplicationContext();
+					// CharSequence text =
+					// "Frame quality was low ! Target is unreliable.";
+					// int duration = Toast.LENGTH_LONG;
+					// Toast toast = Toast.makeText(context, text, duration);
+					// toast.show();
+					return false;
 				}
 
 				String name;

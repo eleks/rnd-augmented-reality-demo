@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,9 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
@@ -65,42 +62,34 @@ public class TargetsFragment extends Fragment {
 
 		// Add new target
 		Button newTarget = (Button) _rootView.findViewById(R.id.target_add_new);
-		newTarget.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createNewTarget();
-			}
-		});
+		newTarget.setVisibility(View.GONE); // temporary
 
 		return _rootView;
 	}
 
-	public void createNewTarget() {
-		Handler refresh = new Handler(_activity.getMainLooper());
-		refresh.post(new Runnable() {
-			public void run() {
-
-				boolean canCreate = _activity.mTargetsList.length < FragmentActivityImageTargets.MAX_TRACKABLES;
-				if (canCreate) {
-					TargetsListItem item = new TargetsListItem("target no.: "
-							+ (_activity.mTargetsList.length + 1));
-					addTarget(item);
-				} else {
-					Context context = _activity.getApplicationContext();
-					CharSequence text = "You reached limit of user targets;\nPlease, remove one.";
-					int duration = Toast.LENGTH_LONG;
-					Toast toast = Toast.makeText(context, text, duration);
-					toast.show();
-				}
-
-			}
-		});
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
+	// public void createNewTarget() {
+	// Handler refresh = new Handler(_activity.getMainLooper());
+	// refresh.post(new Runnable() {
+	// public void run() {
+	//
+	// boolean canCreate = _activity.mTargetsList.length <
+	// FragmentActivityImageTargets.MAX_TRACKABLES;
+	// if (canCreate) {
+	// TargetsListItem item = new TargetsListItem("target no.: "
+	// + (_activity.mTargetsList.length + 1));
+	// addTarget(item);
+	// } else {
+	// Context context = _activity.getApplicationContext();
+	// CharSequence text =
+	// "You reached limit of user targets;\nPlease, remove one.";
+	// int duration = Toast.LENGTH_LONG;
+	// Toast toast = Toast.makeText(context, text, duration);
+	// toast.show();
+	// }
+	//
+	// }
+	// });
+	// }
 
 	private synchronized void updateList() {
 		_targetsListView.setAdapter(new TargetsListArrayAdapter(_activity,
@@ -108,39 +97,18 @@ public class TargetsFragment extends Fragment {
 	}
 
 	private synchronized void removeTargetWithId(int id) {
-		if (id < 0 || id >= _activity.mTargetsList.length)
+		if (id < 0 || id >= _activity.mTargetsList.size())
 			return;
 
-		String targetName = _activity.mTargetsList[id].mTargetName;
-
-		TargetsListItem[] tmp = new TargetsListItem[_activity.mTargetsList.length - 1];
-		for (int i = 0; i < id; i++)
-			tmp[i] = _activity.mTargetsList[i];
-		for (int i = id + 1; i < _activity.mTargetsList.length; i++)
-			tmp[i - 1] = _activity.mTargetsList[i];
-
-		_activity.mTargetsList = tmp;
+		String targetName = _activity.mTargetsList.get(id).mTargetName;
+		_activity.mTargetsList.remove(id);
 		_activity.removeTargetFromCurrentDataset(targetName);
 
 		updateList();
 	}
 
 	private synchronized void changeTargetWithId(int id, TargetsListItem item) {
-		_activity.mTargetsList[id] = item;
-		updateList();
-	}
-
-	private synchronized void addTarget(TargetsListItem item) {
-		TargetsListItem[] tmp = new TargetsListItem[_activity.mTargetsList.length + 1];
-
-		for (int i = 0; i < _activity.mTargetsList.length; i++)
-			tmp[i] = _activity.mTargetsList[i];
-		tmp[_activity.mTargetsList.length] = item;
-
-		_activity.mTargetsList = tmp;
-
-		showEditDialog(_activity.mTargetsList.length - 1, true);
-
+		_activity.mTargetsList.set(id, item);
 		updateList();
 	}
 
@@ -148,7 +116,7 @@ public class TargetsFragment extends Fragment {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			if (position < _activity.mTargetsList.length)
+			if (position < _activity.mTargetsList.size())
 				showInfoDialog(position);
 		}
 
@@ -163,23 +131,25 @@ public class TargetsFragment extends Fragment {
 		final Dialog dialog = new Dialog(context);
 		dialog.setContentView(R.layout.target_dialog_layout);
 
+		TargetsListItem item = _activity.mTargetsList.get(id);
+		
 		// Caption
-		dialog.setTitle(_activity.mTargetsList[id].mCaption);
+		dialog.setTitle(item.mCaption);
 
 		// Target Icon
 		ImageView image = (ImageView) dialog
 				.findViewById(R.id.targetDialogImage);
-		image.setImageResource(_activity.mTargetsList[id].getDrawableId());
+		image.setImageResource(item.getDrawableId());
 
 		// Target Icon Caption
 		TextView targetIconCaption = (TextView) dialog
 				.findViewById(R.id.targetDialogImageCaption);
-		targetIconCaption.setText(_activity.mTargetsList[id]
+		targetIconCaption.setText(item
 				.getDrawableCaption());
 
 		// Target data text
 		TextView text = (TextView) dialog.findViewById(R.id.targetDialogText);
-		text.setText(_activity.mTargetsList[id].mData);
+		text.setText(item.mData);
 
 		// OK button
 		Button dialogButtonOK = (Button) dialog
@@ -223,9 +193,7 @@ public class TargetsFragment extends Fragment {
 		final boolean fNewItem = newItem;
 
 		// custom dialog
-		Context context = getActivity();
-
-		_editDialog = new Dialog(context);
+		_editDialog = new Dialog(_activity);
 		_editDialog.setContentView(R.layout.target_edit_dialog_layout);
 		_editDialog.setOnDismissListener(new OnDismissListener() {
 			@Override
@@ -237,17 +205,18 @@ public class TargetsFragment extends Fragment {
 		});
 
 		// Caption
-		_editDialog.setTitle(_activity.mTargetsList[id].mCaption);
+		TargetsListItem item = _activity.mTargetsList.get(id);
+		_editDialog.setTitle(item.mCaption);
 
 		// Caption text
 		final EditText editTextCaption = (EditText) _editDialog
 				.findViewById(R.id.targetEditDialogTextCaption);
-		editTextCaption.setText(_activity.mTargetsList[id].mCaption);
+		editTextCaption.setText(item.mCaption);
 
 		// Data text
 		final EditText editTextData = (EditText) _editDialog
 				.findViewById(R.id.targetEditDialogTextData);
-		String data = _activity.mTargetsList[id].mData;
+		String data = item.mData;
 		if (data.length() > 0)
 			editTextData.setText(data);
 		else
@@ -301,11 +270,11 @@ public class TargetsFragment extends Fragment {
 					}
 				});
 
-		if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_TEXT)
+		if (item.mType == TargetsListItem.TARGET_TEXT)
 			textRadioButton.setChecked(true);
-		else if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_URL)
+		else if (item.mType == TargetsListItem.TARGET_URL)
 			urlRadioButton.setChecked(true);
-		else if (_activity.mTargetsList[id].mType == TargetsListItem.TARGET_VIDEO)
+		else if (item.mType == TargetsListItem.TARGET_VIDEO)
 			videoRadioButton.setChecked(true);
 
 		// OK button
@@ -335,9 +304,8 @@ public class TargetsFragment extends Fragment {
 				_activity.saveTargets();
 				_editDialog.dismiss();
 
-				if (fNewItem) {
-					_activity.requestTargetFromCamera(fId);
-				}
+				_activity.selectItem(_activity.FRAGMENT_CAMERA_POSITION);
+				_activity.connectTargetToVuforia(item);
 			}
 		});
 
@@ -362,11 +330,6 @@ public class TargetsFragment extends Fragment {
 				|| text.equals(DATA_VIDEO)) {
 			aEditText.setText(aStr);
 		}
-	}
-
-	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
-		if (aSuccess == false)
-			removeTargetWithId(aTargetId);
 	}
 
 	public void onActivityResultVideo(Uri aFileName) {
@@ -397,6 +360,15 @@ public class TargetsFragment extends Fragment {
 				cursor.close();
 			}
 		}
+	}
+
+	public void AddNewAR(int aID) {
+		final int fID = aID;
+		_activity.runOnUiThread(new Runnable() {
+			public void run() {
+				showEditDialog(fID, true);
+			}
+		});
 	}
 
 }

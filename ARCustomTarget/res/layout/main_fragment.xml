@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="Take a Picture"
+        android:text="@string/add_new_ar_object"
         android:visibility="visible" />
 
 </RelativeLayout>

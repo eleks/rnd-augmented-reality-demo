@@ -19,5 +19,8 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="take_a_picture">Take a Picture</string>
     <string name="add_new_target">Add New Target</string>
+    <string name="there_are_no_targets">There are no targets.\nPlease create new one.</string>
+    <string name="put_object_behind">Put object behind the camera</string>
+    <string name="add_new_ar_object">Add new AR object</string>
 
 </resources>

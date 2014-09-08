@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -41,6 +42,8 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ar.vuforiatemplate.core.ARModule;
 import com.ar.vuforiatemplate.core.ARObjectsMediator;
@@ -86,9 +89,12 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	CameraFragment _cameraFragment;
 	TargetsFragment _targetsFragment;
 
+	// Hint on screen center
+	boolean _hintPutCameraBehind = false;
+	TextView _hintText;
+
 	// Targets
-	public TargetsListItem[] mTargetsList = new TargetsListItem[] {};
-	private int _buildTargetId = -1;
+	public Vector<TargetsListItem> mTargetsList = new Vector<TargetsListItem>();
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
@@ -128,6 +134,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_with_drawer_layout);
+
+		_hintText = (TextView) findViewById(R.id.hintText);
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);
@@ -351,7 +359,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.i(LOGTAG, "onTouchEvent - "+event.toString() );
+		Log.i(LOGTAG, "onTouchEvent - " + event.toString());
 
 		if (null != _gestures)
 			_gestures.onTouchEvent(event);
@@ -378,6 +386,17 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	@Override
 	public void onTargetTrack(Trackable arg0) {
 		super.onTargetTrack(arg0);
+
+		Log.i(LOGTAG, "Track: " + arg0.getName());
+
+		if (!_hintPutCameraBehind) {
+			_hintPutCameraBehind = true;
+			runOnUiThread(new Runnable() {
+				public void run() {
+					_hintText.setVisibility(View.INVISIBLE);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -502,51 +521,81 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		super.targetCreated();
 		Log.i(LOGTAG, "!!! Target created " + _lastTargetName);
 
-		if ((_buildTargetId >= 0) && (_buildTargetId < mTargetsList.length)) {
-			ARModule arModule = _arObjectsMediator.getModule();
-			ARObjectManagement mngmnt = mTargetsList[_buildTargetId]
-					.getARObjectManagement(this, _arObjectsMediator);
-			arModule.addARObjectManagement(_lastTargetName, mngmnt);
+		TargetsListItem item = new TargetsListItem("new AR #"
+				+ mTargetsList.size() + 1);
+		mTargetsList.add(item);
 
-			mTargetsList[_buildTargetId].mTargetName = _lastTargetName;
+		_targetsFragment.AddNewAR(mTargetsList.size() - 1);
 
-			Log.i(LOGTAG, "ARObjectManagement created " + _lastTargetName);
-			_buildTargetId = -1;
+		runOnUiThread(new Runnable() {
+			public void run() {
+				_hintText.setText(R.string.put_object_behind);
+				selectItem(FRAGMENT_TARGETS_POSITION);
+			}
+		});
 
-			_cameraFragment.onTargetCreated();
-		}
-
-	}
-
-	public void requestTargetFromCamera(int aTargetId) {
-		selectItem(ActivityMagicLens.FRAGMENT_CAMERA_POSITION);
-		_cameraFragment.requestTargetFromCamera(aTargetId);
-	}
-
-	public void responceTargetFromCamera(int aTargetId, boolean aSuccess) {
-		_targetsFragment.responceTargetFromCamera(aTargetId, aSuccess);
-	}
-
-	public boolean startBuild(int aTargetId) {
-		_buildTargetId = aTargetId;
-		return super.startBuild();
-	}
-
-	public void requestAddNewTarget() {
-		selectItem(ActivityMagicLens.FRAGMENT_TARGETS_POSITION);
-		_targetsFragment.createNewTarget();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == TargetsFragment.RESULT_LOAD_VIDEO) {
 			if (resultCode == RESULT_OK) {
-				if (null != _targetsFragment ) {
+				if (null != _targetsFragment) {
 					Uri selectedUri = data.getData();
 					_targetsFragment.onActivityResultVideo(selectedUri);
 				}
 			}
 		}
+	}
+
+	public void onAllTargetLose() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				// Hide target name
+				_hintText.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	public void onNewARButtonClicked() {
+		if (!startBuild()) {
+			showToast("Bad quality, please try again");
+			_cameraFragment.onBadFrameQuality();
+		}
+	}
+
+	public void showToast(String msg) {
+		Toast toast = Toast.makeText(getApplicationContext(), msg,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	public void connectTargetToVuforia(TargetsListItem item) {
+		ARModule arModule = _arObjectsMediator.getModule();
+		ARObjectManagement mngmnt = item.getARObjectManagement(this,
+				_arObjectsMediator);
+
+		arModule.addARObjectManagement(_lastTargetName, mngmnt);
+		item.mTargetName = _lastTargetName;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (_currentFragmentPosition != FRAGMENT_CAMERA_POSITION)
+			selectItem(FRAGMENT_CAMERA_POSITION);
+		else
+			super.onBackPressed();
+	}
+
+	@Override
+	public void removeTargetFromCurrentDataset(String targetName) {
+		super.removeTargetFromCurrentDataset(targetName);
+		testTargetsNumber();
+	}
+
+	public void testTargetsNumber() {
+		// TODO: this
+		if (_targetsFragment.)
 	}
 
 }

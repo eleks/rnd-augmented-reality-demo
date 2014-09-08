@@ -1,5 +1,7 @@
 package com.arcustomtarget;
 
+import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -47,21 +49,23 @@ public class CameraFragment extends Fragment {
 		_takeAPictureButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i(LOGTAG, "prepareToTakeAPicture id: " + _targetId);
+				disableButton();
+				_activity.onNewARButtonClicked();
 
-				String buttonName = _takeAPictureButton.getText().toString();
-
-				if (buttonName.equals(_takeAPictureStr)) {
-					// Create custom target
-					if ((_targetId != -1) && (_activity.startBuild(_targetId))) {
-						_targetId = -1;
-						disableButton();
-					}
-				}
-
-				if (buttonName.equals(_addNewTargetStr)) {
-					_activity.requestAddNewTarget();
-				}
+				// Log.i(LOGTAG, "prepareToTakeAPicture id: " + _targetId);
+				//
+				// String buttonName = _takeAPictureButton.getText().toString();
+				// if (buttonName.equals(_takeAPictureStr)) {
+				// // Create custom target
+				// if ((_targetId != -1) && (_activity.startBuild(_targetId))) {
+				// _targetId = -1;
+				// disableButton();
+				// }
+				// }
+				//
+				// if (buttonName.equals(_addNewTargetStr)) {
+				// _activity.requestAddNewTarget();
+				// }
 
 			}
 
@@ -111,7 +115,7 @@ public class CameraFragment extends Fragment {
 		if (_targetId != -1) {
 			Log.i(LOGTAG, "!!! on Pause +");
 
-			_activity.responceTargetFromCamera(_targetId, false);
+			// _activity.responceTargetFromCamera(_targetId, false);
 			_targetId = -1;
 			hideButton();
 			enableButton();
@@ -120,19 +124,23 @@ public class CameraFragment extends Fragment {
 		super.onPause();
 	}
 
+	public void onBadFrameQuality() {
+		enableButton();
+	}
+
 	private void disableButton() {
-		// _takeAPictureButton.setEnabled(false);
+		_takeAPictureButton.setEnabled(false);
 	}
 
 	private void enableButton() {
-		// _takeAPictureButton.setEnabled(true);
+		_takeAPictureButton.setEnabled(true);
 	}
 
 	private void showButton() {
 		Handler refresh = new Handler(_activity.getMainLooper());
 		refresh.post(new Runnable() {
 			public void run() {
-				if (_takeAPictureStr.length() > 0) //FIXME: bad code
+				if (_takeAPictureStr.length() > 0) // FIXME: bad code
 					_takeAPictureButton.setText(_takeAPictureStr);
 			}
 		});
@@ -142,10 +150,28 @@ public class CameraFragment extends Fragment {
 		Handler refresh = new Handler(_activity.getMainLooper());
 		refresh.post(new Runnable() {
 			public void run() {
-				if (_addNewTargetStr.length() > 0) //FIXME: bad code
+				if (_addNewTargetStr.length() > 0) // FIXME: bad code
 					_takeAPictureButton.setText(_addNewTargetStr);
 			}
 		});
+	}
+
+	public boolean testIfCanAddNewAR() {
+		return _activity.mTargetsList.size() >= FragmentActivityImageTargets.MAX_TRACKABLES;
+	}
+
+	public boolean testIfCanAddNewARAndUpdateButton() {
+		boolean res = testIfCanAddNewAR();
+
+		Handler refresh = new Handler(_activity.getMainLooper());
+		refresh.post(new Runnable() {
+			public void run() {
+				_takeAPictureButton.setEnabled(false);
+				// TODO: change caption
+			}
+		});
+
+		return res;
 	}
 
 }
