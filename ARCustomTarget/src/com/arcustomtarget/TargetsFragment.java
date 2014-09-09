@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.arcustomtarget.core.HintTargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
@@ -94,6 +95,7 @@ public class TargetsFragment extends Fragment {
 	private synchronized void updateList() {
 		_targetsListView.setAdapter(new TargetsListArrayAdapter(_activity,
 				_activity.mTargetsList));
+		_activity.updateTargetListView();
 	}
 
 	private synchronized void removeTargetWithId(int id) {
@@ -132,7 +134,7 @@ public class TargetsFragment extends Fragment {
 		dialog.setContentView(R.layout.target_dialog_layout);
 
 		TargetsListItem item = _activity.mTargetsList.get(id);
-		
+
 		// Caption
 		dialog.setTitle(item.mCaption);
 
@@ -144,8 +146,7 @@ public class TargetsFragment extends Fragment {
 		// Target Icon Caption
 		TextView targetIconCaption = (TextView) dialog
 				.findViewById(R.id.targetDialogImageCaption);
-		targetIconCaption.setText(item
-				.getDrawableCaption());
+		targetIconCaption.setText(item.getDrawableCaption());
 
 		// Target data text
 		TextView text = (TextView) dialog.findViewById(R.id.targetDialogText);
@@ -280,9 +281,6 @@ public class TargetsFragment extends Fragment {
 		// OK button
 		Button dialogButtonOK = (Button) _editDialog
 				.findViewById(R.id.targetEditDialogButtonOK);
-		if (newItem) {
-			dialogButtonOK.setText("OK, take a picture");
-		}
 
 		dialogButtonOK.setOnClickListener(new OnClickListener() {
 			@Override
@@ -304,7 +302,8 @@ public class TargetsFragment extends Fragment {
 				_activity.saveTargets();
 				_editDialog.dismiss();
 
-				_activity.selectItem(_activity.FRAGMENT_CAMERA_POSITION);
+				_activity
+						.selectItem(ActivityMagicLens.FRAGMENT_CAMERA_POSITION);
 				_activity.connectTargetToVuforia(item);
 			}
 		});

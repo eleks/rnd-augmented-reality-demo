@@ -26,6 +26,7 @@ public class CameraFragment extends Fragment {
 	private String _addNewTargetStr = "";
 
 	private boolean _firstTimeShow = true;
+	private boolean _buttonEnabled = true;
 
 	private int _targetId = -1;
 
@@ -91,21 +92,8 @@ public class CameraFragment extends Fragment {
 		return _rootView;
 	}
 
-	public void requestTargetFromCamera(int aTargetId) {
-		_targetId = aTargetId;
-		enableButton();
-		showButton();
-	}
-
 	public void onTargetCreated() {
-		hideButton();
 		enableButton();
-	}
-
-	public void onTargetFailedToCreate(int aTargetId) {
-		_targetId = aTargetId;
-		enableButton();
-		showButton();
 	}
 
 	@Override
@@ -124,26 +112,33 @@ public class CameraFragment extends Fragment {
 		super.onPause();
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		updataButtonState();
+	}
+
+	private boolean trackablesLimit() {
+		return (_activity.mTargetsList.size() >= ActivityMagicLens.MAX_TRACKABLES);
+	}
+
+	public void updataButtonState() {
+		_activity.hintTargetsLimitSetVisible(trackablesLimit());
+		_takeAPictureButton.setEnabled(_buttonEnabled && !trackablesLimit());
+	}
+
 	public void onBadFrameQuality() {
 		enableButton();
 	}
 
 	private void disableButton() {
-		_takeAPictureButton.setEnabled(false);
+		_buttonEnabled = false;
+		updataButtonState();
 	}
 
 	private void enableButton() {
-		_takeAPictureButton.setEnabled(true);
-	}
-
-	private void showButton() {
-		Handler refresh = new Handler(_activity.getMainLooper());
-		refresh.post(new Runnable() {
-			public void run() {
-				if (_takeAPictureStr.length() > 0) // FIXME: bad code
-					_takeAPictureButton.setText(_takeAPictureStr);
-			}
-		});
+		_buttonEnabled = true;
+		updataButtonState();
 	}
 
 	private void hideButton() {
@@ -166,7 +161,7 @@ public class CameraFragment extends Fragment {
 		Handler refresh = new Handler(_activity.getMainLooper());
 		refresh.post(new Runnable() {
 			public void run() {
-				_takeAPictureButton.setEnabled(false);
+				disableButton();
 				// TODO: change caption
 			}
 		});

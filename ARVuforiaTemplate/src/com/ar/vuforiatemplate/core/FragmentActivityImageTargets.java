@@ -728,7 +728,7 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 		return true;
 	}
 
-	public void customTargetRenderer() {
+	public void customTargetRenderer(int aTargetNumber) {
 		refFreeFrame.render();
 	}
 

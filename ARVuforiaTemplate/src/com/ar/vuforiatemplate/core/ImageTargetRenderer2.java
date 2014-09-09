@@ -135,7 +135,7 @@ public class ImageTargetRenderer2 implements GLSurfaceView.Renderer {
 		Set<String> trackableNames = new TreeSet<String>();
 
 		updateTextTexturesIfNeeded(gl);
-		_activity.customTargetRenderer();
+		_activity.customTargetRenderer(state.getNumTrackableResults());
 
 		// did we find any trackables this frame?
 		for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++) {

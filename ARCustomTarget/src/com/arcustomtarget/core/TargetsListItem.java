@@ -25,6 +25,7 @@ public class TargetsListItem {
 	public int mType = TARGET_TEXT;
 	public String mData = "";
 	public String mTargetName = "";
+	public boolean mTracking = false;
 
 	public TargetsListItem(String aName) {
 		mCaption = aName;

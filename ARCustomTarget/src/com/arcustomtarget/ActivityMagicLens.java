@@ -60,6 +60,7 @@ import com.ar.vuforiatemplate.utils.SampleApplicationException;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.ar.vuforiatemplate.ux.Gestures;
 import com.ar.vuforiatemplate.ux.MultiGestureListener;
+import com.arcustomtarget.core.HintTargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 import com.arcustomtarget.ui.DrawerMenuArrayAdapter;
 import com.arcustomtarget.ui.DrawerMenuItem;
@@ -85,6 +86,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	private CharSequence _title;
 	private DrawerMenuItem[] _menuDrawerTitles;
 
+	private ListView _hintTargetsListView;
+
 	// fragments
 	CameraFragment _cameraFragment;
 	TargetsFragment _targetsFragment;
@@ -92,9 +95,15 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	// Hint on screen center
 	boolean _hintPutCameraBehind = false;
 	TextView _hintText;
+	TextView _hintTargetLimitText;
 
 	// Targets
 	public Vector<TargetsListItem> mTargetsList = new Vector<TargetsListItem>();
+	private int _targetsNumberPrev = 0;
+
+	// Exit test
+	private long _backPressedTimestamp = 0;
+	public static int BACK_BUTTON_DELTA_TEST = 2000;
 
 	public ActivityMagicLens() {
 		super(R.id.loading_indicator2, R.layout.activity_with_drawer_layout);
@@ -136,6 +145,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		setContentView(R.layout.activity_with_drawer_layout);
 
 		_hintText = (TextView) findViewById(R.id.hintText);
+		_hintTargetLimitText = (TextView) findViewById(R.id.hintTargetsLimitText);
+		_hintTargetsListView = (ListView) findViewById(R.id.targetsList);
+		_hintTargetsListView.setEmptyView(findViewById(R.id.emptyElement));
 
 		UpdateActionBar(this);
 		PrepareDrawerMenu(savedInstanceState);
@@ -383,6 +395,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		return res_super || res_aro;
 	}
 
+	private String _trackTargetPrev = "";
+
 	@Override
 	public void onTargetTrack(Trackable arg0) {
 		super.onTargetTrack(arg0);
@@ -397,6 +411,19 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				}
 			});
 		}
+
+		if (!_trackTargetPrev.equals(arg0.getName())) {
+			_trackTargetPrev = arg0.getName();
+			for (TargetsListItem item : mTargetsList)
+				item.mTracking = item.mTargetName.equals(_trackTargetPrev);
+
+			runOnUiThread(new Runnable() {
+				public void run() {
+					updateTargetListView();
+				}
+			});
+		}
+
 	}
 
 	@Override
@@ -522,7 +549,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		Log.i(LOGTAG, "!!! Target created " + _lastTargetName);
 
 		TargetsListItem item = new TargetsListItem("new AR #"
-				+ mTargetsList.size() + 1);
+				+ (mTargetsList.size() + 1));
 		mTargetsList.add(item);
 
 		_targetsFragment.AddNewAR(mTargetsList.size() - 1);
@@ -531,9 +558,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			public void run() {
 				_hintText.setText(R.string.put_object_behind);
 				selectItem(FRAGMENT_TARGETS_POSITION);
+				_cameraFragment.updataButtonState();
 			}
 		});
-
 	}
 
 	@Override
@@ -551,8 +578,15 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public void onAllTargetLose() {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				// Hide target name
 				_hintText.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	public void onFirstTargetTrack() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				_hintText.setVisibility(View.INVISIBLE);
 			}
 		});
 	}
@@ -577,25 +611,63 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		arModule.addARObjectManagement(_lastTargetName, mngmnt);
 		item.mTargetName = _lastTargetName;
+		for (TargetsListItem i: mTargetsList)
+			i.mTracking = false;
+		item.mTracking = true;
+
+		_cameraFragment.onTargetCreated();
+
+		updateTargetListView();
 	}
 
 	@Override
 	public void onBackPressed() {
 		if (_currentFragmentPosition != FRAGMENT_CAMERA_POSITION)
 			selectItem(FRAGMENT_CAMERA_POSITION);
-		else
-			super.onBackPressed();
+		else {
+			long time_ms = System.currentTimeMillis();
+			if (_backPressedTimestamp + BACK_BUTTON_DELTA_TEST >= time_ms)
+				super.onBackPressed();
+			else {
+				_backPressedTimestamp = time_ms;
+				showToast(getResources()
+						.getString(R.string.press_again_to_exit));
+			}
+		}
 	}
 
 	@Override
 	public void removeTargetFromCurrentDataset(String targetName) {
 		super.removeTargetFromCurrentDataset(targetName);
-		testTargetsNumber();
+		_cameraFragment.updataButtonState();
 	}
 
-	public void testTargetsNumber() {
-		// TODO: this
-		if (_targetsFragment.)
+	public void hintTargetsLimitSetVisible(boolean aVisible) {
+		if (aVisible && (_hintTargetLimitText.getVisibility() != View.VISIBLE))
+			_hintTargetLimitText.setVisibility(View.VISIBLE);
+		else if (!aVisible
+				&& (_hintTargetLimitText.getVisibility() == View.VISIBLE))
+			_hintTargetLimitText.setVisibility(View.INVISIBLE);
+
+	}
+
+	@Override
+	public void customTargetRenderer(int aTargetsNumber) {
+		super.customTargetRenderer(aTargetsNumber);
+
+		if (_targetsNumberPrev != aTargetsNumber) {
+			if (aTargetsNumber == 0)
+				onAllTargetLose();
+			else if (aTargetsNumber == 1 && _targetsNumberPrev == 0)
+				onFirstTargetTrack();
+
+			_targetsNumberPrev = aTargetsNumber;
+		}
+	}
+
+	public void updateTargetListView() {
+		_hintTargetsListView.setAdapter(new HintTargetsListArrayAdapter(this,
+				mTargetsList));
 	}
 
 }
