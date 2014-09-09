@@ -91,7 +91,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:background="@android:color/white"
-                android:text="Targets:"
+                android:text="@string/targets"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
 
@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:text="None" />
+                android:text="@string/none" />
         </LinearLayout>
     </RelativeLayout>
 

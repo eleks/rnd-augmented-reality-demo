@@ -5,24 +5,16 @@
     <string name="app_description">AR Vuforia project with custom targets</string>
     <string name="button_extended_tracking">Stop extended tracking</string>
     <string name="splash_screen_description">Vuforia Splash</string>
-
-    <string-array name="menu_drawer_array">
-        <item>First</item>
-        <item>Second</item>
-        <item>Third</item>
-        <item>Forth</item>
-        <item>Fifth</item>
-        <item>Sixth</item>
-    </string-array>
-
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="take_a_picture">Take a Picture</string>
     <string name="add_new_target">Add New Target</string>
-    <string name="there_are_no_targets">There are no targets.\nPlease create new one.</string>
+    <string name="there_are_no_targets">There are no targets.\nPlease create new.</string>
     <string name="you_reached_limit_of_targets">You reached limit of targets.\nPlease remove some of them from Target menu.</string>
     <string name="put_object_behind">Put the object in front of camera</string>
-    <string name="add_new_ar_object">Add new AR object</string>
+    <string name="add_new_ar_object">Add new object</string>
     <string name="press_again_to_exit">Press again to exit</string>
-    
+    <string name="targets">Targets:</string>
+    <string name="none">None</string>
+
 </resources>

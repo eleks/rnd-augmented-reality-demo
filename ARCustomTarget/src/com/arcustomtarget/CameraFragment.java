@@ -38,11 +38,6 @@ public class CameraFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		_rootView = inflater.inflate(R.layout.main_fragment, container, false);
-		int i = getArguments().getInt(ARG_NUMBER);
-		String menuItemName = getResources().getStringArray(
-				R.array.menu_drawer_array)[i];
-
-		getActivity().setTitle(menuItemName);
 
 		// Take A Picture button
 		_takeAPictureButton = (Button) _rootView
