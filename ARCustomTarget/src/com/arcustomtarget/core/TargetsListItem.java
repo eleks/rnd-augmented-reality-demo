@@ -81,6 +81,7 @@ public class TargetsListItem {
 					"texture"), arMediator.getModule().getShader("transparent",
 					true), "images/www_icon.png");
 			ar.mObjectRender.mAspectRatioType = AspectRatioType.QUADRATE_INSIDE;
+			ar.mObjectRender.setRotation(0.f, 0.f, 90.f);
 			ar.mCallBack = new URLCallBack(aActivity, mData);
 			return ar;
 		}
@@ -98,7 +99,7 @@ public class TargetsListItem {
 		if (mType == TARGET_VIDEO) {
 			if (mData.equals(TargetsFragment.DATA_VIDEO)) {
 				// FIXME: hardcode
-				mData = "video/MedicineVideo.mp4";
+				mData = "video/Eleks.mp4";
 			}
 
 			ARVideo ar = new ARVideo(arMediator.getModule().getMeshObject(
@@ -108,6 +109,7 @@ public class TargetsListItem {
 			ar.mInternalCallBack = new VideoFullscreenCallBack(aActivity, mData);
 			ar.mObjectRender.mAspectRatioType = AspectRatioType.FIT_INSIDE;
 			ar.mObjectRender.setAspectRatio(0.5f);
+			ar.mObjectRender.setRotation(0.f, 0.f, 90.f);
 			return ar;
 		}
 
@@ -151,6 +153,7 @@ public class TargetsListItem {
 			intent.putExtra("shouldPlayImmediately", true);
 			intent.putExtra("currentSeekPosition", 0);
 			intent.putExtra("requestedOrientation", 0);
+			intent.putExtra(FullscreenPlayback.EXTRA_CLOSE_ON_TAP, true);
 			_activity.startActivityForResult(intent, 1);
 		}
 	}

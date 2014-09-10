@@ -2,11 +2,13 @@ package com.arcustomtarget.core;
 
 import java.util.Vector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ public class HintTargetsListArrayAdapter extends ArrayAdapter<TargetsListItem> {
 		this._values = aValues;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) _context
@@ -37,10 +40,16 @@ public class HintTargetsListArrayAdapter extends ArrayAdapter<TargetsListItem> {
 				.findViewById(R.id.hintTextTargetItem);
 		caption.setText(item.mCaption);
 
-		if (item.mTracking == true)
+		if (item.mTracking == true) {
 			caption.setBackgroundColor(Color.YELLOW);
-		else
+			AlphaAnimation animation1 = new AlphaAnimation(0.3f, 1.0f);
+			animation1.setDuration(300);
+			animation1.setStartOffset(150);
+			caption.startAnimation(animation1);
+		} else {
 			caption.setBackgroundColor(Color.WHITE);
+			caption.setAlpha(0.3f);
+		}
 
 		return rowView;
 	}

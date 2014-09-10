@@ -12,8 +12,10 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,7 +27,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.arcustomtarget.core.HintTargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListArrayAdapter;
 import com.arcustomtarget.core.TargetsListItem;
 
@@ -67,30 +68,6 @@ public class TargetsFragment extends Fragment {
 
 		return _rootView;
 	}
-
-	// public void createNewTarget() {
-	// Handler refresh = new Handler(_activity.getMainLooper());
-	// refresh.post(new Runnable() {
-	// public void run() {
-	//
-	// boolean canCreate = _activity.mTargetsList.length <
-	// FragmentActivityImageTargets.MAX_TRACKABLES;
-	// if (canCreate) {
-	// TargetsListItem item = new TargetsListItem("target no.: "
-	// + (_activity.mTargetsList.length + 1));
-	// addTarget(item);
-	// } else {
-	// Context context = _activity.getApplicationContext();
-	// CharSequence text =
-	// "You reached limit of user targets;\nPlease, remove one.";
-	// int duration = Toast.LENGTH_LONG;
-	// Toast toast = Toast.makeText(context, text, duration);
-	// toast.show();
-	// }
-	//
-	// }
-	// });
-	// }
 
 	private synchronized void updateList() {
 		_targetsListView.setAdapter(new TargetsListArrayAdapter(_activity,
@@ -213,6 +190,12 @@ public class TargetsFragment extends Fragment {
 		final EditText editTextCaption = (EditText) _editDialog
 				.findViewById(R.id.targetEditDialogTextCaption);
 		editTextCaption.setText(item.mCaption);
+		editTextCaption.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				editTextCaption.selectAll();
+			}
+		});
 
 		// Data text
 		final EditText editTextData = (EditText) _editDialog

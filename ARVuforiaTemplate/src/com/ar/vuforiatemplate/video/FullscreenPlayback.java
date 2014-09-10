@@ -33,6 +33,8 @@ public class FullscreenPlayback extends Activity implements OnPreparedListener,
 		OnCompletionListener {
 	private static final String LOGTAG = "FullscreenPlayback";
 
+	public static final String EXTRA_CLOSE_ON_TAP = "Close_on_tap";
+
 	private VideoView mVideoView = null;
 	private MediaPlayer mMediaPlayer = null;
 	private SurfaceHolder mHolder = null;
@@ -45,7 +47,8 @@ public class FullscreenPlayback extends Activity implements OnPreparedListener,
 	private SimpleOnGestureListener mSimpleListener = null;
 	private ReentrantLock mMediaPlayerLock = null;
 	private ReentrantLock mMediaControllerLock = null;
-	
+	private boolean _closeOnTap = false;
+
 	// This is called when we need to prepare the view for the media player
 	protected void prepareViewForMediaPlayer() {
 		// Create the view:
@@ -78,6 +81,7 @@ public class FullscreenPlayback extends Activity implements OnPreparedListener,
 				0);
 		mShouldPlayImmediately = getIntent().getBooleanExtra(
 				"shouldPlayImmediately", false);
+		_closeOnTap = getIntent().getBooleanExtra(EXTRA_CLOSE_ON_TAP, false);
 
 		// Create a gesture detector that will handle single and double taps:
 		mSimpleListener = new SimpleOnGestureListener();
@@ -95,20 +99,25 @@ public class FullscreenPlayback extends Activity implements OnPreparedListener,
 			}
 
 			public boolean onSingleTapConfirmed(MotionEvent e) {
-				boolean result = false;
-				mMediaControllerLock.lock();
-				// This simply toggles the MediaController visibility:
-				if (mMediaController != null) {
-					if (mMediaController.isShowing())
-						mMediaController.hide();
-					else
-						mMediaController.show();
+				if (_closeOnTap) {
+					finish();
+					return true;
+				} else {
+					boolean result = false;
+					mMediaControllerLock.lock();
+					// This simply toggles the MediaController visibility:
+					if (mMediaController != null) {
+						if (mMediaController.isShowing())
+							mMediaController.hide();
+						else
+							mMediaController.show();
 
-					result = true;
+						result = true;
+					}
+					mMediaControllerLock.unlock();
+
+					return result;
 				}
-				mMediaControllerLock.unlock();
-
-				return result;
 			}
 		});
 

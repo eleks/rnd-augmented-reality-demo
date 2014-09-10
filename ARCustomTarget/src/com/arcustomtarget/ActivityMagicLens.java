@@ -132,7 +132,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		// "wiki"
 		ARTexture wiki = new ARTexture(arModule.getMeshObject("texture"),
 				arModule.getShader("hue_animation", true),
-				"images/wikipedia_mask.png");
+				"images/www_icon.png");
 		arModule.addARObjectManagement("wiki", wiki);
 
 		// create Objects Mediator
@@ -383,7 +383,6 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	// @Override
 	public void loadTextures() {
 		List<String> files = new ArrayList<String>();
-		files.add("images/wikipedia_mask.png");
 		files.add("images/www_icon.png");
 
 		_arObjectsMediator.loadTextures(files, getAssets());
@@ -421,6 +420,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 			runOnUiThread(new Runnable() {
 				public void run() {
 					updateTargetListView();
+					animateTargetListView();
 				}
 			});
 		}
@@ -515,10 +515,12 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		TextView linkText = (TextView) dialog.findViewById(R.id.linkText);
 		linkText.setOnClickListener(ocl);
 
-		ImageView qrLinkImage = (ImageView) dialog.findViewById(R.id.qrSiteImage);
+		ImageView qrLinkImage = (ImageView) dialog
+				.findViewById(R.id.qrSiteImage);
 		qrLinkImage.setOnClickListener(ocl);
 
-		ImageView qrLinkContactsImage = (ImageView) dialog.findViewById(R.id.qrContactsSiteImage);
+		ImageView qrLinkContactsImage = (ImageView) dialog
+				.findViewById(R.id.qrContactsSiteImage);
 		qrLinkContactsImage.setOnClickListener(ocl_contacts);
 
 		dialog.show();
@@ -704,6 +706,10 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	public void updateTargetListView() {
 		_hintTargetsListView.setAdapter(new HintTargetsListArrayAdapter(this,
 				mTargetsList));
+	}
+
+	protected void animateTargetListView() {
+		// TODO Auto-generated method stub
 	}
 
 }

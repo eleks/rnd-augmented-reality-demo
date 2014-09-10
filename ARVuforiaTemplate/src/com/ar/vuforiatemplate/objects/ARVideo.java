@@ -172,7 +172,7 @@ public class ARVideo extends ARObjectManagement {
 
 	@Override
 	public boolean onActivityGesture(GestureInfo aInfo) {
-		if (aInfo.mType == GestureInfo.GESTURE_DOUBLE_TAP) {
+		if (aInfo.mType == GestureInfo.GESTURE_POINTER_TAP) {
 			if (null != mInternalCallBack) {
 				mInternalCallBack.callBackMethod();
 			}

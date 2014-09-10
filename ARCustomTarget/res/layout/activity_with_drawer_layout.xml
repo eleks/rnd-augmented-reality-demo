@@ -82,15 +82,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:alpha="0.5"
             android:orientation="vertical" >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:alpha="0.3"
+                android:background="@android:color/white"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:background="@android:color/white"
                 android:text="@string/targets"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
@@ -100,6 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:background="@android:color/transparent"
                 android:choiceMode="singleChoice"
                 android:dividerHeight="0dp" />
 
@@ -107,6 +108,7 @@
                 android:id="@+id/emptyElement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:alpha="0.3"
                 android:background="@android:color/white"
                 android:text="@string/none" />
         </LinearLayout>
