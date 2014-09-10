@@ -19,8 +19,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -476,16 +477,51 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 	}
 
 	private void onAboutClicked() {
-		new AlertDialog.Builder(this)
-				.setTitle("About")
-				.setMessage("Augmented Reality test app. Made by (r)Eleks")
-				.setPositiveButton(android.R.string.yes,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// continue with delete
-							}
-						}).setIcon(android.R.drawable.ic_dialog_info).show();
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.about_layout);
+		dialog.setTitle("Augmented Reality demo app");
+
+		Button dialogButton = (Button) dialog.findViewById(R.id.aboutOkButton);
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		OnClickListener ocl = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String url = "http://eleks.com";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		};
+
+		OnClickListener ocl_contacts = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String url = "http://eleks.com/company/contact-us";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		};
+
+		ImageView eleksLogo = (ImageView) dialog.findViewById(R.id.logoImage);
+		eleksLogo.setOnClickListener(ocl);
+
+		TextView linkText = (TextView) dialog.findViewById(R.id.linkText);
+		linkText.setOnClickListener(ocl);
+
+		ImageView qrLinkImage = (ImageView) dialog.findViewById(R.id.qrSiteImage);
+		qrLinkImage.setOnClickListener(ocl);
+
+		ImageView qrLinkContactsImage = (ImageView) dialog.findViewById(R.id.qrContactsSiteImage);
+		qrLinkContactsImage.setOnClickListener(ocl_contacts);
+
+		dialog.show();
 	}
 
 	public void loadTargets() {
@@ -611,7 +647,7 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		arModule.addARObjectManagement(_lastTargetName, mngmnt);
 		item.mTargetName = _lastTargetName;
-		for (TargetsListItem i: mTargetsList)
+		for (TargetsListItem i : mTargetsList)
 			i.mTracking = false;
 		item.mTracking = true;
 

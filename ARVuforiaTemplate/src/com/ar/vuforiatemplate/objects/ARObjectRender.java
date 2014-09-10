@@ -11,7 +11,7 @@ public class ARObjectRender {
 	}
 
 	public enum AspectRatioType {
-		FILL_TARGET, FIT_INSIDE, FIT_OUTSIDE, QUADRATE_INSIDE, CUSTOM
+		FILL_TARGET, FIT_INSIDE, FIT_OUTSIDE, QUADRATE_INSIDE, RELATIVE, CUSTOM
 	};
 
 	public AspectRatioType mAspectRatioType;
@@ -82,6 +82,11 @@ public class ARObjectRender {
 			float m = Math.min(scaleX, scaleY);
 			return new Vec3F(m, m, 1.0f);
 		}
+
+		case RELATIVE:
+			return new Vec3F(scaleX * _scaleCustom.getData()[0], scaleY
+					* _scaleCustom.getData()[1], _scaleCustom.getData()[2]);
+
 		default:
 			break;
 		}
