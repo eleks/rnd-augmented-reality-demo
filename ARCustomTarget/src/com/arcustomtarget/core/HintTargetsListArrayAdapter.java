@@ -2,7 +2,6 @@ package com.arcustomtarget.core;
 
 import java.util.Vector;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ public class HintTargetsListArrayAdapter extends ArrayAdapter<TargetsListItem> {
 		this._values = aValues;
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) _context

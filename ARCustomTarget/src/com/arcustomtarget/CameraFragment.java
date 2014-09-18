@@ -1,6 +1,7 @@
 package com.arcustomtarget;
 
 import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
+import com.qualcomm.vuforia.CameraDevice;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +47,8 @@ public class CameraFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				disableButton();
-				_activity.onNewARButtonClicked();
+				focusCameraAndRequestClick();
+//				_activity.onNewARButtonClicked();
 
 				// Log.i(LOGTAG, "prepareToTakeAPicture id: " + _targetId);
 				//
@@ -85,6 +87,26 @@ public class CameraFragment extends Fragment {
 		Log.i(LOGTAG, "!!! @@@ " + _addNewTargetStr);
 
 		return _rootView;
+	}
+
+	public void focusCameraAndRequestClick() {
+		final Handler autofocusHandler = new Handler();
+		autofocusHandler.postDelayed(new Runnable() {
+			public void run() {
+				CameraDevice.getInstance().setFocusMode(
+						CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
+				requestClick();
+			}
+		}, 500L);
+	}
+
+	public void requestClick() {
+		final Handler autofocusHandler = new Handler();
+		autofocusHandler.postDelayed(new Runnable() {
+			public void run() {
+				_activity.onNewARButtonClicked();
+			}
+		}, 500L);
 	}
 
 	public void onTargetCreated() {

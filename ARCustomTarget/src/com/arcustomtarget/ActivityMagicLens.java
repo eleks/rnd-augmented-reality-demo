@@ -233,9 +233,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 		// drawer menu
 		DrawerMenuItem item1 = new DrawerMenuItem("Camera", getResources()
-				.getDrawable(R.drawable.icon), _cameraFragment);
+				.getDrawable(R.drawable.drawer_menu), _cameraFragment);
 		DrawerMenuItem item2 = new DrawerMenuItem("Targets", getResources()
-				.getDrawable(R.drawable.icon), _targetsFragment);
+				.getDrawable(R.drawable.drawer_menu), _targetsFragment);
 		DrawerMenuItem item3 = new DrawerMenuItem("Travel Book");
 		DrawerMenuItem item4 = new DrawerMenuItem("About");
 
@@ -522,6 +522,9 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 		ImageView qrLinkContactsImage = (ImageView) dialog
 				.findViewById(R.id.qrContactsSiteImage);
 		qrLinkContactsImage.setOnClickListener(ocl_contacts);
+
+		TextView linkCText = (TextView) dialog.findViewById(R.id.linkContactsText);
+		linkCText.setOnClickListener(ocl_contacts);
 
 		dialog.show();
 	}
