@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import android.util.Log;
 
@@ -83,7 +84,7 @@ public class ARModule {
 	}
 
 	public void addTexture(String aTextureName, Texture aTexture) {
-		Log.i(LOGTAG, "!!! @@@ addTexture : "+aTextureName);
+		Log.i(LOGTAG, "!!! @@@ addTexture : " + aTextureName);
 		_textures.put(aTextureName, aTexture);
 	}
 
@@ -130,6 +131,12 @@ public class ARModule {
 			if (_arObjects.containsKey(name)) {
 				_arObjects.get(name).onTrackingResume();
 			}
+		}
+	}
+
+	public void getTextureNames(Vector<String> aTextures) {
+		for (ARObjectManagement obj : _arObjects.values()) {
+			obj.getTextureNames(aTextures);
 		}
 	}
 

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -382,8 +381,11 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 
 	// @Override
 	public void loadTextures() {
-		List<String> files = new ArrayList<String>();
-		files.add("images/www_icon.png");
+		Vector<String> files = new Vector<String>(); 
+		_arObjectsMediator.getModule().getTextureNames(files);
+		for (String str : files) {
+			Log.d(LOGTAG, "STRING: " + str);
+		}
 
 		_arObjectsMediator.loadTextures(files, getAssets());
 	}
@@ -523,7 +525,8 @@ public class ActivityMagicLens extends FragmentActivityImageTargets implements
 				.findViewById(R.id.qrContactsSiteImage);
 		qrLinkContactsImage.setOnClickListener(ocl_contacts);
 
-		TextView linkCText = (TextView) dialog.findViewById(R.id.linkContactsText);
+		TextView linkCText = (TextView) dialog
+				.findViewById(R.id.linkContactsText);
 		linkCText.setOnClickListener(ocl_contacts);
 
 		dialog.show();

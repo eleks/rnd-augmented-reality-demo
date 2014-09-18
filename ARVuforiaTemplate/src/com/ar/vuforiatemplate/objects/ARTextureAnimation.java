@@ -53,4 +53,12 @@ public class ARTextureAnimation extends ARObjectManagement {
 			_timePrev = time;
 		}
 	}
+
+	@Override
+	public void getTextureNames(Vector<String> aTextures) {
+		for (String tex : _textures) {
+			aTextures.add(tex);
+		}
+	}
+
 }

@@ -733,7 +733,8 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 	}
 
 	public void needTextTexture(String aText) {
-		_renderer.needTextTexture(aText);
+		if (null != _renderer)
+			_renderer.needTextTexture(aText);
 	}
 
 	public void removeTargetFromCurrentDataset(String targetName) {

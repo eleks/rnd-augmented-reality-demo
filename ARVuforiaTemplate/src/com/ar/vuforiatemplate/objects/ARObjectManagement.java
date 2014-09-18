@@ -1,12 +1,15 @@
 package com.ar.vuforiatemplate.objects;
 
+import java.util.Vector;
+
+import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
 import com.ar.vuforiatemplate.meshobjects.MeshObject;
 import com.ar.vuforiatemplate.shaders.OpenGLBinaryShaders;
 import com.ar.vuforiatemplate.ux.GestureInfo;
 import com.qualcomm.vuforia.TrackableResult;
 
 public class ARObjectManagement {
-//	private static String LOGTAG = "ARObjectManagement";
+	// private static String LOGTAG = "ARObjectManagement";
 
 	public ARObjectRender mObjectRender;
 	public CallBack mCallBack;
@@ -52,6 +55,9 @@ public class ARObjectManagement {
 	}
 
 	public void onTrackingResume() {
+	}
+
+	public void getTextureNames(Vector<String> aTextures) {
 	}
 
 }

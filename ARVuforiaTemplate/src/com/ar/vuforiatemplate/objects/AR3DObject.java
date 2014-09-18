@@ -66,4 +66,5 @@ public class AR3DObject extends ARObjectManagement {
 
 		return false;
 	}
+	
 }

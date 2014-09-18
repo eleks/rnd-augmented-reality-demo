@@ -68,7 +68,6 @@ public class ARVideo extends ARObjectManagement {
 		super.onTrackingRenderUpdate(aResult);
 
 		if (null != _videoPlayerHelper) {
-
 			// craete texture
 			if (_textureId[0] == -1) {
 				Log.i(LOGTAG, "onRenderUpdate: create texture");

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Eleks AR Example</string>
-    <string name="app_description">AR Vuforia project with custom targets</string>
+    <string name="app_description">Example of Augmented Reality.</string>
     <string name="button_extended_tracking">Stop extended tracking</string>
     <string name="splash_screen_description">Vuforia Splash</string>
     <string name="drawer_open">Open navigation drawer</string>
