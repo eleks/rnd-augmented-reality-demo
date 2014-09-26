@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Eleks AR Example</string>
-    <string name="app_description">Example of Augmented Reality.</string>
+    <string name="app_name">ELEKS AR Example</string>
+    <string name="app_description">Augmented reality by ELEKS! Try ELEKS AR Example to transform your printed or electronic materials into easy-to-use top-notch digital products.</string>
     <string name="button_extended_tracking">Stop extended tracking</string>
     <string name="splash_screen_description">Vuforia Splash</string>
     <string name="drawer_open">Open navigation drawer</string>
@@ -16,5 +16,6 @@
     <string name="press_again_to_exit">Press again to exit</string>
     <string name="targets">Targets:</string>
     <string name="none">None</string>
+    <string name="please_add_target">Please, add target</string>
 
 </resources>

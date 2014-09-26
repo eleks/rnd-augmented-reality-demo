@@ -57,7 +57,8 @@ public class TargetsFragment extends Fragment {
 
 		_targetsListView = (ListView) _rootView.findViewById(R.id.targets_list);
 		_targetsListView.setOnItemClickListener(new TargetClickListener());
-
+		_targetsListView.setEmptyView(_rootView.findViewById(R.id.addTargetText));
+		
 		updateList();
 
 		// Add new target

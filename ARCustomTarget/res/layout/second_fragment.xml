@@ -23,6 +23,15 @@
                 android:layout_gravity="start"
                 android:choiceMode="singleChoice"
                 android:dividerHeight="0dp" />
+
+            <TextView
+                android:id="@+id/addTargetText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/please_add_target"
+                android:textAlignment="gravity"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <Button

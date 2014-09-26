@@ -13,6 +13,14 @@
         android:scaleType="centerInside"
         android:src="@drawable/eleks_logo" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/app_description"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="230dp" >
