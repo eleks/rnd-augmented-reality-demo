@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.lwiwbuch.ActivityMagicLens;
+import com.lwiwbuch.R;
 
 public class ActivitySplashScreen extends Activity {
 	private static long SPLASH_MILLIS = 1000;

@@ -74,8 +74,8 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		try {
 			WavefrontModelObject wavefrontObject = new WavefrontModelObject();
 			wavefrontObject.loadModel(getResources().getAssets(),
-//			 "obj/ZolochivCastle.obj");
-					"obj/sphere.obj");
+					"obj/ZolochivCastle.obj");
+			// "obj/sphere.obj");
 			arModule.addMeshObject("castle", wavefrontObject);
 		} catch (IOException e) {
 			Log.e(LOGTAG, "Unable to load monkey.obj");
@@ -146,7 +146,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 		AR3DObject backCover = new AR3DObject(arModule.getMeshObject("castle"),
 				arModule.getShader("simple_normal", true),
 				"building/Buildings.jpeg");
-		backCover.setScale(50.0f);
+		backCover.setScale(10.0f);
 		backCover.setRotation(90.0f, 0.0f, 0.0f);
 		backCover.mNeedsExtendedTracking = true;
 		arModule.addARObjectManagement("CoverLast", backCover);
@@ -288,7 +288,7 @@ public class ActivityMagicLens extends ActivityImageTargets implements
 
 	@Override
 	public void onTargetTrack(Trackable trackable) {
-		Log.i(LOGTAG, "tracking: "+ trackable.getName() );
+		Log.i(LOGTAG, "tracking: " + trackable.getName());
 	}
 
 	@Override

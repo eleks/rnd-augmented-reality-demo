@@ -648,15 +648,16 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 					.getImageTargetBuilder();
 			if (targetBuilder != null) {
 				// show toast if the frame quality is Low
-				if (targetBuilder.getFrameQuality() == ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW) {
-					// Context context = getApplicationContext();
-					// CharSequence text =
-					// "Frame quality was low ! Target is unreliable.";
-					// int duration = Toast.LENGTH_LONG;
-					// Toast toast = Toast.makeText(context, text, duration);
-					// toast.show();
-					return false;
-				}
+				// if (targetBuilder.getFrameQuality() ==
+				// ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW) {
+				// Context context = getApplicationContext();
+				// CharSequence text =
+				// "Frame quality was low ! Target is unreliable.";
+				// int duration = Toast.LENGTH_LONG;
+				// Toast toast = Toast.makeText(context, text, duration);
+				// toast.show();
+				// return false;
+				// }
 
 				String name;
 				do {
@@ -720,7 +721,6 @@ public abstract class FragmentActivityImageTargets extends FragmentActivity
 				imageTracker.stop();
 
 				targetBuilder.startScan();
-
 			}
 		} else
 			return false;
