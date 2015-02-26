@@ -79,7 +79,7 @@
         -->
         <!-- Splash Screen Activity -->
         <activity
-            android:name="ActivitySplashScreen"
+            android:name="com.lwiwbuch.ActivitySplashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
             android:noHistory="true"
             android:screenOrientation="portrait" >
@@ -92,7 +92,7 @@
         </activity>
         <!-- Activity with camera -->
         <activity
-            android:name="ActivityMagicLens"
+            android:name="com.lwiwbuch.ActivityMagicLens"
             android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize"
             android:noHistory="false"
             android:screenOrientation="portrait" >

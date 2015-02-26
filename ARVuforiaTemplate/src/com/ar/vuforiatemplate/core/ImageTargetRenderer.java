@@ -240,14 +240,14 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer {
 			GLES20.glEnableVertexAttribArray(renderObject.mBinaryShader.mNormalHandle);
 			GLES20.glEnableVertexAttribArray(renderObject.mBinaryShader.mTextureCoordHandle);
 
-			if (renderObject.mMeshObject.selfDraw())
-				renderObject.mMeshObject.draw();
-			else {
+//			if (renderObject.mMeshObject.selfDraw())
+//				renderObject.mMeshObject.draw();
+//			else {
 				GLES20.glDrawElements(GLES20.GL_TRIANGLES,
 						renderObject.mMeshObject.getNumObjectIndex(),
 						renderObject.mMeshObject.getIndicesGLType(),
 						renderObject.mMeshObject.getIndices());
-			}
+//			}
 
 			// disable the enabled arrays
 			GLES20.glDisableVertexAttribArray(renderObject.mBinaryShader.mVertexHandle);
