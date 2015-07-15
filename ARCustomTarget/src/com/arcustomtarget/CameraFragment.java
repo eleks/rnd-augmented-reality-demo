@@ -1,8 +1,5 @@
 package com.arcustomtarget;
 
-import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
-import com.qualcomm.vuforia.CameraDevice;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -13,6 +10,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.ar.vuforia4template.core.FragmentActivityImageTargets;
+import com.qualcomm.vuforia.CameraDevice;
 
 public class CameraFragment extends Fragment {
 	private String LOGTAG = "CameraFragment";

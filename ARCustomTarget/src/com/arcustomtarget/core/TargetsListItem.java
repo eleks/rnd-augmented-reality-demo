@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.ar.vuforiatemplate.core.ARObjectsMediator;
-import com.ar.vuforiatemplate.core.FragmentActivityImageTargets;
-import com.ar.vuforiatemplate.objects.ARObjectManagement;
-import com.ar.vuforiatemplate.objects.ARObjectRender.AspectRatioType;
-import com.ar.vuforiatemplate.objects.ARTexture;
-import com.ar.vuforiatemplate.objects.ARVideo;
-import com.ar.vuforiatemplate.video.FullscreenPlayback;
+import com.ar.vuforia4template.core.ARObjectsMediator;
+import com.ar.vuforia4template.core.FragmentActivityImageTargets;
+import com.ar.vuforia4template.objects.ARObjectManagement;
+import com.ar.vuforia4template.objects.ARObjectRender.AspectRatioType;
+import com.ar.vuforia4template.objects.ARTexture;
+import com.ar.vuforia4template.objects.ARVideo;
+import com.ar.vuforia4template.video.FullscreenPlayback;
 import com.arcustomtarget.TargetsFragment;
 
 public class TargetsListItem {
