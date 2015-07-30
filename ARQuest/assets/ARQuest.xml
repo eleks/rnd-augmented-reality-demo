@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+    <Tracking>
+        <ImageTarget name="puzzle4_ok" size="100.000000 100.000000"/>
+        <ImageTarget name="text_key" size="100.000000 79.256966"/>
+        <ImageTarget name="escher_fish_duck" size="100.000000 107.024796"/>
+        <ImageTarget name="doodle_box.Back" size="100.000000 100.000000"/>
+        <ImageTarget name="doodle_box.Front" size="100.000000 100.000000"/>
+        <ImageTarget name="doodle_box.Right" size="100.000000 100.000000"/>
+        <ImageTarget name="doodle_box.Bottom" size="100.000000 100.000000"/>
+        <ImageTarget name="doodle_box.Left" size="100.000000 100.000000"/>
+        <ImageTarget name="doodle_box.Top" size="100.000000 100.000000"/>
+        <MultiTarget name="doodle_box">
+            <Part name="doodle_box.Left" translation="-50.0 0 0" rotation="AD: 0 1 0 -90"/>
+            <Part name="doodle_box.Right" translation="50.0 0 0" rotation="AD: 0 1 0 90"/>
+            <Part name="doodle_box.Front" translation="0 0 50.0" rotation="AD: 1 0 0 0"/>
+            <Part name="doodle_box.Back" translation="0 0 -50.0" rotation="AD: 0 1 0 180"/>
+            <Part name="doodle_box.Top" translation="0 50.0 0" rotation="AD: 1 0 0 -90"/>
+            <Part name="doodle_box.Bottom" translation="0 -50.0 0" rotation="AD: 1 0 0 90"/>
+        </MultiTarget>
+    </Tracking>
+</QCARConfig>
